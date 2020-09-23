@@ -65,8 +65,8 @@ function getTableProps(updateStockDetail) {
 }
 
 const handelGetDetail = async (stockNo, updateStockInfo) => {
-  let promis1 = fetch(`${helper.APIKey}/month/${stockNo}`);
-  let promis2 = fetch(`${helper.APIKey}/day/${helper.nowStr}/${stockNo}`);
+  let promis1 = fetch(`${helper.APIKey}/stock/month/${stockNo}`);
+  let promis2 = fetch(`${helper.APIKey}/stock/day/${helper.nowStr}/${stockNo}`);
 
   Promise.all([promis1, promis2]).then(async (values) => {
     let r1 = await values[0].json();

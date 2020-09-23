@@ -1,4 +1,4 @@
-const APIKey = "https://17ykt.sse.codesandbox.io";
+const APIKey = process.env.API || "http://localhost:8080";
 const now = new Date();
 let currentTimeWest = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
 let currentTime = [now.getFullYear() - 1911, now.getMonth() + 1, now.getDate()];
