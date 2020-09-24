@@ -1,4 +1,4 @@
-const APIKey = process.env.API || "http://localhost:8080";
+const APIKey = process.env.NODE_ENV === "development" ? "http://localhost:8080" : "/";
 const now = new Date();
 let currentTimeWest = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
 let currentTime = [now.getFullYear() - 1911, now.getMonth() + 1, now.getDate()];
