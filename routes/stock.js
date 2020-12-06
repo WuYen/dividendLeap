@@ -21,32 +21,31 @@ const getInfo = async () => {
 //FMSRFK => 月成交資訊
 const getStockMonth = async (date, stockNo) => {
   try {
-    let result = await MonthInfo.find({ stockNo: stockNo }).then((data) => {
+    return await MonthInfo.find({ stockNo: stockNo }).then(async (data) => {
       if (!data.length) {
-        axios
-          .get(`${API}FMSRFK?response=json&date=${date}&stockNo=${stockNo}`)
-          .then((response) => {
-            let data = {
-              stockNo: stockNo,
-              data: response.data.data,
-              updateDate: date,
-            };
-            const monthInfo = new MonthInfo(data);
-            monthInfo.save((error) => {
-              if (error) {
-                return;
-              }
-              console.log(`save ${stockNo} success`);
-              return data.data;
-            });
-          });
-      } else {
-        console.log("Data: ", data[0]);
-        return data[0].data;
-      }
-    });
+        let newData = await axios.get(
+          `${API}FMSRFK?response=json&date=${date}&stockNo=${stockNo}`
+        );
 
-    return result;
+        try {
+          let entity = {
+            stockNo: stockNo,
+            data: newData.data.data,
+            updateDate: date,
+          };
+          const monthInfo = new MonthInfo(entity);
+
+          let result = await monthInfo.save();
+          console.log(`save ${stockNo} success`, result);
+          return entity;
+        } catch (err) {
+          console.log(`save ${stockNo} fali`, err);
+          return {};
+        }
+      }
+
+      return data[0].data;
+    });
   } catch (error) {
     console.error("fetch month error: ", error);
     return error;
