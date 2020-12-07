@@ -1,11 +1,21 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { data, helper } from "../utility";
+import {  helper } from "../utility";
 import MaterialTable from "material-table";
 
 function MainContent(props) {
-  const [stockInfo] = useState(data);
+  const [stockInfo,setStockInfo] = useState([]);
   const [stockDetail, updateStockDetail] = useState([]);
   const { sortAndFilter } = helper;
+
+  useEffect(()=>{
+    fetch(`${helper.APIKey}/stock/info`).then(res=>{
+      console.log('res',res);
+      return res.json()
+    }).then(data =>{
+      console.log('data',data);
+      setStockInfo(data)
+    });
+  },[])
 
   let displayData = sortAndFilter(stockInfo).map((x) => {
     const [date, stockNo, name] = x;

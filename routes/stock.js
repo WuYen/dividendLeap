@@ -4,14 +4,29 @@ const router = express.Router();
 const API = "https://www.twse.com.tw/exchangeReport/";
 const data = require("./Data");
 const MonthInfo = require("../models/monthInfo");
+const Schedule = require("../models/schedule");
 
 const getInfo = async () => {
   try {
-    return await axios.get(`${API}TWT48U?response=json`).then((response) => {
-      //console.log(response.data.data);
-      return response.data.data;
-    });
+    let yyyymm = new Date().toISOString().slice(0, 8).replace(/-/g, "");
+    let data = await Schedule.find({ updateDate: yyyymm });
+    if (!data.length) {
+      let response = await axios.get(`${API}TWT48U?response=json`);
+
+      let entity = {
+        data: response.data.data,
+        updateDate: yyyymm,
+      };
+      const schedule = new Schedule(entity);
+
+      let result = await schedule.save();
+      console.log(`save schedule success`, result);
+
+      return entity.data;
+    }
+    return data[0].data;
   } catch (error) {
+    console.error("fetch schedule error: ", error);
     return error;
   }
 };
@@ -66,9 +81,12 @@ const getStockDay = async (date, stockNo) => {
 };
 
 //除權除息日期
-router.get("/info", (req, res) => {
+router.get("/info", async (req, res) => {
   //console.log("get stock info", data);
-  return res.send(data);
+  let result = await getInfo();
+  console.log("result", result);
+  return res.send(result);
+  //return res.send(data);
 });
 
 //月成交資訊
