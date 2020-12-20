@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "啟動程式",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\webRequest.js"
+      "program": "${workspaceFolder}\\server.js"
     }
   ]
 }

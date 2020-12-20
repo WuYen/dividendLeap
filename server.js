@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-
+const testGetData = require("./webRequest");
 // get config vars
 dotenv.config();
 
@@ -52,6 +52,12 @@ app.get("/test", authentication, (req, res) => {
   const user = req.user.username;
   const property = req.user.property;
   res.send(`welcom ${user} to hetelierPro, your property`);
+});
+
+app.get("/dividendInfo", async (req, res) => {
+  //get oo50 dividend info
+  let data = await testGetData();
+  res.send(data);
 });
 
 app.listen(PORT, console.log(`Server is starting at ${PORT}`));
