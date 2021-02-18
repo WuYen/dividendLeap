@@ -1,6 +1,32 @@
 #!/usr/bin/env node
 
-function sayHello() {
-    console.log('Hello');
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
+
+const TestModel = require("../models/test");
+
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost/mern_youtube",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
+
+mongoose.connection.on("connected", async () => {
+  console.log("Mongoose is connected!!!!");
+  await sayHello();
+  process.exit();
+});
+
+async function sayHello() {
+  console.log("Hello");
+
+  let entity = {
+    updateDate: +new Date(),
+  };
+  const data = new TestModel(entity);
+
+  let result = await data.save();
 }
-sayHello();
