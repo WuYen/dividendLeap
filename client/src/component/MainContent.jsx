@@ -1,21 +1,24 @@
 import React, { useEffect, useState, useMemo } from "react";
-import {  helper } from "../utility";
+import { helper } from "../utility";
 import MaterialTable from "material-table";
+import { Link } from "react-router-dom";
 
 function MainContent(props) {
-  const [stockInfo,setStockInfo] = useState([]);
+  const [stockInfo, setStockInfo] = useState([]);
   const [stockDetail, updateStockDetail] = useState([]);
   const { sortAndFilter } = helper;
 
-  useEffect(()=>{
-    fetch(`${helper.APIKey}/stock/info`).then(res=>{
-      console.log('res',res);
-      return res.json()
-    }).then(data =>{
-      console.log('data',data);
-      setStockInfo(data)
-    });
-  },[])
+  useEffect(() => {
+    fetch(`${helper.APIKey}/stock/info`)
+      .then((res) => {
+        console.log("res", res);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("data", data);
+        setStockInfo(data);
+      });
+  }, []);
 
   let displayData = sortAndFilter(stockInfo).map((x) => {
     const [date, stockNo, name] = x;
@@ -46,13 +49,23 @@ function getTableProps(updateStockDetail) {
   return {
     title: "Hello Stock",
     columns: [
-      { title: "股票", field: "name" },
+      {
+        title: "股票",
+        field: "name",
+        render: (props) => {
+          console.log("columns", props);
+          return (
+            <Link to={{ pathname: `/${props.stockNo}/detail` }}>
+              {props.name}
+            </Link>
+          );
+        },
+      },
       { title: "除息日", field: "date" },
       { title: "前一天股價", field: "lastValue" },
       { title: "前一月股價", field: "avgValue" },
       { title: "差異%", field: "diffRatio" },
     ],
-
     actions: [
       {
         icon: "info",

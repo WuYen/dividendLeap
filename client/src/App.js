@@ -19,7 +19,7 @@ function App() {
         </nav>
 
         <Switch>
-          <Route path="/page2">
+          <Route path="/:stockNo/detail">
             <div>page2</div>
           </Route>
           <Route path="/">

@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 const API = "https://www.twse.com.tw/exchangeReport/";
-const data = require("./Data");
+
 const MonthInfo = require("../models/monthInfo");
 const DayInfo = require("../models/dayInfo");
 const Schedule = require("../models/schedule");
