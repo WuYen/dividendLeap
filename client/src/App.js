@@ -1,5 +1,6 @@
 import React from "react";
 import MainContent from "./component/MainContent";
+import Detail from "./component/Detail";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
@@ -20,7 +21,7 @@ function App() {
 
         <Switch>
           <Route path="/:stockNo/detail">
-            <div>page2</div>
+            <Detail />
           </Route>
           <Route path="/">
             <MainContent />
