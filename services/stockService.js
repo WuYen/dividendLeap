@@ -7,6 +7,8 @@ const DayInfo = require("../models/dayInfo");
 const Schedule = require("../models/schedule");
 const DividendInfo = require("../models/dividendInfo");
 
+const getStockDetailService = require("./webRequest");
+
 /**
  * 取得除權息預告表
  */
@@ -119,28 +121,25 @@ const getStockDay = async (date, stockNo) => {
  */
 const getStockDetail = async (stockNo) => {
   try {
-    return await DividendInfo.find({ stockNo: "0050" }).then(async (data) => {
-      // if (!data.length) {
-      //   let newData = await axios.get(
-      //     `${API}STOCK_DAY?response=json&date=${date}&stockNo=${stockNo}`
-      //   );
+    return await DividendInfo.find({ stockNo: stockNo }).then(async (data) => {
+      if (!data.length) {
+        try {
+          let newData = await getStockDetailService(stockNo);
+          // let entity = {
+          //   stockNo: stockNo,
+          //   data: newData.data.data,
+          //   updateDate: date,
+          // };
+          // const dayInfo = new DayInfo(entity);
 
-      //   try {
-      //     let entity = {
-      //       stockNo: stockNo,
-      //       data: newData.data.data,
-      //       updateDate: date,
-      //     };
-      //     const dayInfo = new DayInfo(entity);
-
-      //     let result = await dayInfo.save();
-      //     console.log(`save ${stockNo} by day success`, result);
-      //     return entity.data;
-      //   } catch (err) {
-      //     console.log(`save ${stockNo} by day fali`, err);
-      //     return {};
-      //   }
-      // }
+          // let result = await dayInfo.save();
+          // console.log(`save ${stockNo} by day success`, result);
+          return newData;
+        } catch (err) {
+          console.log(`save ${stockNo} by day fali`, err);
+          return {};
+        }
+      }
 
       return data[0].data;
     });

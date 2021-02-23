@@ -1,10 +1,10 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 const parse5 = require("parse5");
-const DividendInfo = require("./models/dividendInfo");
+const DividendInfo = require("../models/dividendInfo");
 
-var url =
-  "https://goodinfo.tw/StockInfo/StockDividendPolicy.asp?STOCK_ID=0050&SHOW_ROTC=";
+var getUrl = (stockNo) =>
+  `https://goodinfo.tw/StockInfo/StockDividendPolicy.asp?STOCK_ID=${stockNo}&SHOW_ROTC=`;
 
 async function fetchHTML(url) {
   const { data } = await axios.get(url);
@@ -14,8 +14,12 @@ async function fetchHTML(url) {
     decodeEntities: false,
   });
 }
-async function getData() {
-  const $ = await fetchHTML(url);
+/**
+ * 從 good info 取歷年除權息資料
+ * @param {string}} stockNo
+ */
+async function getData(stockNo) {
+  const $ = await fetchHTML(getUrl(stockNo));
 
   var data = [];
   // 篩選有興趣的資料
@@ -35,7 +39,7 @@ async function getData() {
   let processedData = processData(data);
   let now = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   let entity = {
-    stockNo: "0050",
+    stockNo: stockNo,
     data: processedData,
     updateDate: now,
   };
