@@ -47,7 +47,7 @@ function MainContent(props) {
 
 function getTableProps(updateStockDetail) {
   return {
-    title: "Hello Stock",
+    title: <Link to="/">Hello Stock</Link>,
     columns: [
       {
         title: "股票",
@@ -55,7 +55,7 @@ function getTableProps(updateStockDetail) {
         render: (props) => {
           console.log("columns", props);
           return (
-            <Link to={{ pathname: `/${props.stockNo}/detail` }}>
+            <Link to={{ pathname: `/${props.stockNo}/${props.name}/detail` }}>
               {props.name}
             </Link>
           );

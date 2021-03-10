@@ -8,7 +8,7 @@ function App() {
   return (
     <div>
       <Router>
-        <nav>
+        {/* <nav>
           <ul>
             <li>
               <Link to="/">Home</Link>
@@ -17,10 +17,10 @@ function App() {
               <Link to="/page2">page2</Link>
             </li>
           </ul>
-        </nav>
+        </nav> */}
 
         <Switch>
-          <Route path="/:stockNo/detail">
+          <Route path="/:stockNo/:name/detail">
             <Detail />
           </Route>
           <Route path="/">

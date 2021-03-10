@@ -2,6 +2,9 @@
 
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const stockService = require("../services/stockService");
+//getInfo,getStockMonth,getStockDay
+
 dotenv.config();
 
 const TestModel = require("../models/test");
@@ -16,6 +19,15 @@ mongoose.connect(
 
 mongoose.connection.on("connected", async () => {
   console.log("Mongoose is connected!!!!");
+  //呼叫 mongo(stockService-getInfo) 拿到Schedule filter by date
+  let schedule = await stockService.getInfo();
+  schedule.find((x) => x[13] == "");
+  //從 schedule 找 min day value
+  //呼叫兩隻API取資料
+  // getStockMonth、getStockDay
+  //計算資料
+  //寫回mongo
+
   await sayHello();
   process.exit();
 });

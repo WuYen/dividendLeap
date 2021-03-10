@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { helper } from "../utility";
+import { Link } from "react-router-dom";
+import MaterialTable from "material-table";
 
 function Detail(props) {
-  let { stockNo } = useParams();
-  const [data, setData] = useState();
+  let { stockNo, name } = useParams();
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     fetch(`${helper.APIKey}/stock/detail/${stockNo}`)
@@ -20,25 +22,36 @@ function Detail(props) {
   console.log("data", data);
   return (
     <div>
-      <h1>Detail page {stockNo}</h1>
+      <Link to="/">Back To Home</Link>
       <div>
-        {data?.map((row, idx) => {
-          return (
-            <div key={idx}>
-              年度:{row.year0}
-              現金股利盈餘:{row.cash0}
-              現金股利公積:{row.cash1}
-              現金股利合計:{row.cash2}
-              股票股利盈餘:{row.stock0}
-              股票股利公積:{row.stock1}
-              股票股利合計:{row.stock2}
-              股利合計:{row.dividendTotal}
-            </div>
-          );
-        })}
+        {data ? (
+          <MaterialTable {...getTableProps(stockNo, name)} data={data} />
+        ) : (
+          <div>Loading...</div>
+        )}
       </div>
     </div>
   );
+}
+
+function getTableProps(stockNo, name) {
+  return {
+    title: `${name}`,
+    columns: [
+      { title: "年度", field: "year0" },
+      { title: "現金股利盈餘", field: "cash0" },
+      { title: "現金股利公積", field: "cash1" },
+      { title: "現金股利合計%", field: "cash2" },
+      { title: "股票股利盈餘", field: "stock0" },
+      { title: "股票股利公積", field: "stock1" },
+      { title: "股票股利合計", field: "stock2" },
+      { title: "股利合計%", field: "dividendTotal" },
+    ],
+    options: {
+      search: false,
+      paging: false,
+    },
+  };
 }
 
 export default Detail;
