@@ -18,7 +18,7 @@ function Detail(props) {
         setData(data);
       });
   }, [stockNo]);
-
+  const name = "123";
   console.log("data", data);
   return (
     <div>
@@ -29,9 +29,14 @@ function Detail(props) {
         ) : (
           <div>Loading...</div>
         )}
+        <HelloWrold to={name} parameter2={123} />
       </div>
     </div>
   );
+}
+
+function HelloWrold(props) {
+  return <div>HelloWrold {props.to}</div>;
 }
 
 function getTableProps(stockNo, name) {
