@@ -10,6 +10,10 @@ async function fetchHTML(url) {
     decodeEntities: false,
   });
 }
+async function fetch(url) {
+  const { data } = await axios.get(url);
+  return data;
+}
 
 // async function postHTML(url, payload) {
 //   //TODO: use axios post
@@ -31,4 +35,5 @@ async function fetchHTML(url) {
 
 module.exports = {
   fetchHTML,
+  fetch,
 };

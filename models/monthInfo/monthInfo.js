@@ -9,7 +9,7 @@ const model = mongoose.model(
   new Schema({
     stockNo: String,
     year: String,
-    monthInfo: [{ key: String, value: Number }], //1~12每個月平均
+    monthInfo: [{ key: String, value: Number }], //1~12每個月平均 key:month, value:avg price
     updateDate: String,
   })
 );
