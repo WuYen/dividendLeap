@@ -1,4 +1,4 @@
-const DividendInfo = require("../models/dividendInfo/serviceV2");
+const DividendInfo = require("../models/dividendInfo/repositoryV2");
 
 /**
  * 取得除權息預告表

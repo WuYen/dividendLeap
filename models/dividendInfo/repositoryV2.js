@@ -1,4 +1,4 @@
-const DividendInfo = require("./dividendInfoV2");
+const DividendInfo = require("./modelV2");
 const helper = require("../../utility/requestCore");
 const {
   tryParseFloat,
