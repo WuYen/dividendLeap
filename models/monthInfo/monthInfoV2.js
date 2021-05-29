@@ -5,11 +5,11 @@ const Schema = mongoose.Schema;
 
 // Model
 const model = mongoose.model(
-  "DividendInfo",
+  "MonthInfo",
   new Schema({
     stockNo: String,
-    stockName: String,
-    data: Array,
+    year: String,
+    monthInfo: [{ key: String, value: Number }], //1~12每個月平均 key:month, value:avg price
     updateDate: String,
   })
 );

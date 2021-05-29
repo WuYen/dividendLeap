@@ -2,10 +2,10 @@ const axios = require("axios");
 
 const API = "https://www.twse.com.tw/exchangeReport/";
 
-const MonthInfo = require("../models/monthInfo");
-const DayInfo = require("../models/dayInfo");
+const MonthInfo = require("../models/monthInfo/monthInfo");
+const DayInfo = require("../models/dayInfo/dayInfo");
 const Schedule = require("../models/schedule");
-const DividendInfo = require("../models/dividendInfo");
+const DividendInfo = require("../models/dividendInfo/dividendInfo");
 
 const getStockDetailService = require("./webRequest");
 

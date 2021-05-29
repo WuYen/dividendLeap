@@ -52,4 +52,6 @@ function processData(source) {
   return result;
 }
 
+//execute function after mongoose connected
+// node .\models\monthInfo\service.jsh
 mongooseQuickSetup(getData);

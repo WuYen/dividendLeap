@@ -1,7 +1,7 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 const parse5 = require("parse5");
-const DividendInfo = require("../models/dividendInfo");
+const DividendInfo = require("../models/dividendInfo/dividendInfo");
 
 var getUrl = (stockNo) =>
   `https://goodinfo.tw/StockInfo/StockDividendPolicy.asp?STOCK_ID=${stockNo}&SHOW_ROTC=`;

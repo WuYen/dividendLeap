@@ -2,16 +2,14 @@ const mongoose = require("mongoose");
 
 // Schema
 const Schema = mongoose.Schema;
+const MonthInfoSchema = new Schema({
+  stockNo: String,
+  stockName: String,
+  data: Array,
+  updateDate: String,
+});
 
 // Model
-const model = mongoose.model(
-  "MonthInfo",
-  new Schema({
-    stockNo: String,
-    year: String,
-    monthInfo: [{ key: String, value: Number }], //1~12每個月平均 key:month, value:avg price
-    updateDate: String,
-  })
-);
+const MonthInfo = mongoose.model("MonthInfo", MonthInfoSchema);
 
-module.exports = model;
+module.exports = MonthInfo;
