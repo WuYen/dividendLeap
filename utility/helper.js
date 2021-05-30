@@ -11,6 +11,10 @@ function updateDate() {
   return new Date().toISOString().slice(0, 10).replace(/-/g, "");
 }
 
+function today() {
+  return new Date().toISOString().slice(0, 10).replace(/-/g, "");
+}
+
 function mongooseQuickSetup(task) {
   mongoose.connect(
     process.env.MONGODB_URI || "mongodb://localhost/mern_youtube",
@@ -30,5 +34,6 @@ function mongooseQuickSetup(task) {
 module.exports = {
   tryParseFloat,
   updateDate,
+  today,
   mongooseQuickSetup,
 };

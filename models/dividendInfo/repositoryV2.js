@@ -9,13 +9,13 @@ const {
 var getUrl = (stockNo) => `https://stockinfo.tw/?stockSearch=${stockNo}`;
 
 /**
- * 從 good info 取歷年除權息資料
+ * 從 stockinfo 取歷年除權息資料
  * @param {string}} stockNo
  */
 async function getData(stockNo = "2412") {
   const $ = await helper.fetchHTML(getUrl(stockNo));
 
-  var rawData = parseRawData($);
+  let rawData = parseRawData($);
 
   let processedData = processData(rawData);
 
@@ -94,10 +94,24 @@ function processData(source) {
   return result;
 }
 
-//for testing
-//mongooseQuickSetup(getData);
+async function getDataProxy(stockNo, needLatest = false) {
+  //find data with date and sotock no, if not exist call getData to retrive from web
+  //if out of date, call getData to retrive from web
+  const query = {
+    stockNo: stockNo,
+    ...(needLatest && { updateDate: updateDate() }),
+  };
+  let data = await DividendInfo.findOne(query).exec();
+  if (!data) {
+    data = await getData(stockNo);
+  }
+  return data;
+}
 
 module.exports = {
-  getData,
+  getData: getDataProxy,
   entity: DividendInfo,
 };
+
+//Test single file
+//mongooseQuickSetup(getData);

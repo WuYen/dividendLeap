@@ -10,6 +10,14 @@
       "name": "啟動程式",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\server.js"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Node: Nodemon",
+      "processId": "${command:PickProcess}",
+      "restart": true,
+      "protocol": "inspector"
     }
   ]
 }

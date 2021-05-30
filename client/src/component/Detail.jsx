@@ -18,7 +18,7 @@ function Detail(props) {
         setData(data);
       });
   }, [stockNo]);
-  const name = "123";
+
   console.log("data", data);
   return (
     <div>
