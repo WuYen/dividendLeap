@@ -15,6 +15,31 @@ function today() {
   return new Date().toISOString().slice(0, 10).replace(/-/g, "");
 }
 
+function latestTradeDate() {
+  const today = new Date();
+  const day = today.getDay();
+  // Sunday - Saturday : 0 - 6
+  if (day == 1) {
+    //周一
+    if (today.getHours() < 16) {
+      today.setDate(today.getDate() - 3); // -3 => 週五
+    }
+  } else if (day == 0) {
+    //週日
+    today.setDate(today.getDate() - 2); // -2 => 週五
+  } else if (day == 6) {
+    //週六
+    today.setDate(today.getDate() - 1); // -2 => 週五
+  } else {
+    //周一 ~ 周五
+    if (today.getHours() < 16) {
+      today.setDate(today.getDate() - 1);
+    }
+  }
+
+  return today.toISOString().slice(0, 10).replace(/-/g, "");
+}
+
 function mongooseQuickSetup(task) {
   mongoose.connect(
     process.env.MONGODB_URI || "mongodb://localhost/mern_youtube",
@@ -36,4 +61,5 @@ module.exports = {
   updateDate,
   today,
   mongooseQuickSetup,
+  latestTradeDate,
 };

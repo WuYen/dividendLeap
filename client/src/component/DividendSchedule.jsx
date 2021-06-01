@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { helper } from "../utility";
+import { formatDate } from "../utility/formatHelper";
 import { dataAPI } from "../utility/config";
 import MaterialTable from "material-table";
 import { Link } from "react-router-dom";
@@ -25,7 +25,6 @@ function MainContent(props) {
   return <MaterialTable {...tableProps} data={schedule} />;
 }
 
-//"stockNo":"1702","stockName":"南僑","year":"2021","date":"20210601","cashDividen":2
 function getTableProps() {
   return {
     // title: <Link to="/">Hello Stock</Link>,
@@ -48,15 +47,7 @@ function getTableProps() {
       {
         title: "除息日",
         field: "date",
-        render: (props) => {
-          return (
-            props.date.substr(0, 4) +
-            "-" +
-            props.date.substr(4, 2) +
-            "-" +
-            props.date.substr(6, 2)
-          );
-        },
+        render: (props) => formatDate(props.date),
       },
       {
         title: "現金股利",
@@ -64,6 +55,21 @@ function getTableProps() {
         render: (props) => {
           return (+props.cashDividen).toFixed(2);
         },
+      },
+      {
+        title: "當前股價",
+        field: "price",
+        render: (props) => {
+          if (props.price) {
+            return props.price + ` (${props.priceDate})`;
+          } else {
+            return "";
+          }
+        },
+      },
+      {
+        title: "現金殖利率%",
+        field: "rate",
       },
     ],
 

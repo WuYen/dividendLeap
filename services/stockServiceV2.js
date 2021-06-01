@@ -1,14 +1,17 @@
 const DividendInfo = require("../models/dividendInfo/repositoryV2");
+const DayInfo = require("../models/dayInfo/repository");
 const DividendSchedule = require("../models/dividendSchedule/repository");
 const {
   tryParseFloat,
   today,
   mongooseQuickSetup,
+  latestTradeDate,
 } = require("../utility/helper");
 
 /* 取得除權息分析資料 */
 const getDetail = async (stockNo) => {
   try {
+    const latestTradDate = latestTradeDate();
     let dInfo = await DividendInfo.getData(stockNo); //沒有今年的
     let dInfoLY = dInfo.data.find((x) => x.year == "2020") || {};
     let last5 = dInfo.data.filter((x) => +x.year < 2021 && +x.year > 2015);
@@ -23,12 +26,20 @@ const getDetail = async (stockNo) => {
       total10 += d.yieldRateCash;
     });
 
+    let schedule = await DividendSchedule.getData();
+    let dInfoTY = schedule.data.find(
+      (x) => x.stockNo == stockNo && x.year == "2021"
+    );
+
+    let dayInfo = await DayInfo.getData({ stockNo, date: latestTradDate });
+
     let result = {
       stockNo: stockNo,
-      dDate: "除息日",
-      rate: "今年殖利率%",
-      price: "當前股價",
-      dCash: "現金股利",
+      dDate: dInfoTY.date, //"除息日",
+      rate: ((dInfoTY.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%",
+      price: dayInfo.price, // "當前股價",
+      priceDate: latestTradDate, // "當前股價 取樣日期",
+      dCash: dInfoTY.cashDividen, //"現金股利",
       rateLY: dInfoLY.yieldRateCash + "%", //"去年年殖利率%",
       rateAvg5: (total5 / last5.length).toFixed(2) + "%", //"前五年平均殖利率%",
       rateAvg10: (total10 / last10.length).toFixed(2) + "%", //"前十年平均殖利率%",
@@ -52,9 +63,27 @@ function parseDate(str) {
 }
 
 async function getSchedule() {
-  let schedule = await DividendSchedule.getData();
-  const filter = afterDate(today());
-  let result = [...schedule.data].filter(filter).sort(byTime);
+  const latestTradDate = latestTradeDate();
+  const schedule = await DividendSchedule.getData();
+  const afterToday = afterDate(today());
+  const filtedData = schedule.data.filter(afterToday).sort(byTime);
+  const dayInfoCollection = await DayInfo.getData({
+    date: latestTradDate,
+  });
+
+  const result = filtedData.map((x) => {
+    let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
+    if (dayInfo) {
+      return {
+        ...x.toObject(),
+        rate: ((x.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%"
+        price: dayInfo.price, // "當前股價"
+        priceDate: dayInfo.date, // "當前股價 取樣日期"
+      };
+    } else {
+      return x;
+    }
+  });
   return { success: true, data: result };
 }
 

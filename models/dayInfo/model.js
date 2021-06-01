@@ -8,10 +8,11 @@ const model = mongoose.model(
   "DayInfo",
   new Schema({
     stockNo: String,
-    fullData: String, //完整日期20200101
-    year: String, //年度2020
-    month: String, //月份01
+    date: String, //完整日期 20200101
+    year: String, //年度 2020
+    month: String, //月份 01
     price: Number, //股價
+    count: Number, //成交筆數
     updateDate: String,
   })
 );
