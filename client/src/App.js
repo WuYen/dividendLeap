@@ -35,7 +35,8 @@ function App() {
           </Route>
 
           <Route path="/">
-            <MainContent />
+            <DividendSchedule />
+            {/* <MainContent /> */}
           </Route>
         </Switch>
       </Router>
