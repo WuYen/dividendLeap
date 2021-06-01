@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./utility/connectDB");
 const dotenv = require("dotenv");
+const path = require("path");
 dotenv.config(); // get config vars
 
 const app = express();
