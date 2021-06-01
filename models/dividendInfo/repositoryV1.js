@@ -1,5 +1,10 @@
 const DividendInfo = require("./dividendInfo");
 const helper = require("../../utility/requestCore");
+const {
+  tryParseFloat,
+  updateDate,
+  mongooseQuickSetup,
+} = require("../../utility/helper");
 const mongoose = require("mongoose");
 
 var getUrl = (stockNo) =>
@@ -19,7 +24,7 @@ async function getData(stockNo = 2412) {
   let entity = {
     stockNo: stockNo,
     data: [...processedData],
-    updateDate: new Date().toISOString().slice(0, 10).replace(/-/g, ""),
+    updateDate: updateDate(),
   };
 
   const dividendInfo = new DividendInfo(entity);
@@ -89,11 +94,6 @@ function processData(source) {
   });
 
   return result;
-}
-
-function tryParseFloat(value) {
-  let result = parseFloat(value);
-  return isNaN(result) ? 0 : result;
 }
 
 mongoose.connect(

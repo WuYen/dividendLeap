@@ -61,7 +61,7 @@ function getTableProps() {
         field: "price",
         render: (props) => {
           if (props.price) {
-            return props.price + ` (${props.priceDate})`;
+            return props.price + ` (${formatDate(props.priceDate)})`;
           } else {
             return "";
           }

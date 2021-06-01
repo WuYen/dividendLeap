@@ -12,6 +12,12 @@ if (process.env.NODE_ENV === "production") {
 app.use(require("./middleware"));
 app.use(require("./routes"));
 
+if (process.env.NODE_ENV === "production") {
+  app.get("*", function (req, res) {
+    res.sendFile(path.join(__dirname, "client/build/index.html"));
+  });
+}
+
 connectDB.toMongo(
   process.env.MONGODB_URI || "mongodb://localhost/mern_youtube",
   () => {

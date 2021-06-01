@@ -40,14 +40,14 @@ const getDetail = async (stockNo) => {
       price: dayInfo.price, // "當前股價",
       priceDate: latestTradDate, // "當前股價 取樣日期",
       dCash: dInfoTY.cashDividen, //"現金股利",
-      rateLY: dInfoLY.yieldRateCash + "%", //"去年年殖利率%",
-      rateAvg5: (total5 / last5.length).toFixed(2) + "%", //"前五年平均殖利率%",
-      rateAvg10: (total10 / last10.length).toFixed(2) + "%", //"前十年平均殖利率%",
-      priceLY: dInfoLY.value || "N/A", // "去年除息股價",
-      dDateLY: dInfoLY.date || "N/A", // "去年除息日",
+      rateLY: dInfoLY.yieldRateCash ? dInfoLY.yieldRateCash : "--", //"去年年殖利率%",
+      rateAvg5: total5 ? (total5 / last5.length).toFixed(2) : "--", //"前五年平均殖利率%",
+      rateAvg10: total10 ? (total10 / last10.length).toFixed(2) : "--", //"前十年平均殖利率%",
+      priceLY: dInfoLY.value || "--", // "去年除息股價",
+      dDateLY: dInfoLY.date || "--", // "去年除息日",
       dFDayLY:
         `${parseDate(dInfoLY.fillDate)}` ||
-        "N/A" + (!isNaN(dInfoLY.fillDay) ? `(${dInfoLY.fillDay}天)` : ""), //"去年填滿息日",
+        "--" + (!isNaN(dInfoLY.fillDay) ? `(${dInfoLY.fillDay}天)` : ""), //"去年填滿息日",
       lowLY: [{ price: "TODO", date: "TODO" }],
       HighLY: [{ price: "TODO", date: "TODO" }],
     };
@@ -59,7 +59,7 @@ const getDetail = async (stockNo) => {
 };
 
 function parseDate(str) {
-  return !isNaN(Date.parse(str)) ? str : "N/A";
+  return !isNaN(Date.parse(str)) ? str : "--";
 }
 
 async function getSchedule() {

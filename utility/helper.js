@@ -7,16 +7,33 @@ function tryParseFloat(value) {
   return isNaN(result) ? 0 : result;
 }
 
+function getTodayWithTZ() {
+  // create Date object for current location
+  var d = new Date();
+
+  // convert to msec
+  // subtract local time zone offset
+  // get UTC time in msec
+  var utc = d.getTime() + d.getTimezoneOffset() * 60000;
+
+  // create new Date object for different city
+  // using supplied offset
+  var nd = new Date(utc + 3600000 * 8);
+
+  // return time as a string
+  return nd;
+}
+
 function updateDate() {
-  return new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  return getTodayWithTZ().toISOString().slice(0, 10).replace(/-/g, "");
 }
 
 function today() {
-  return new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  return getTodayWithTZ().toISOString().slice(0, 10).replace(/-/g, "");
 }
 
 function latestTradeDate() {
-  const today = new Date();
+  const today = getTodayWithTZ();
   const day = today.getDay();
   // Sunday - Saturday : 0 - 6
   if (day == 1) {

@@ -22,7 +22,7 @@ async function getData(stockNo = "2412") {
   let entity = {
     stockNo: stockNo,
     data: [...processedData],
-    updateDate: new Date().toISOString().slice(0, 10).replace(/-/g, ""),
+    updateDate: updateDate(),
   };
 
   const dividendInfo = new DividendInfo(entity);
