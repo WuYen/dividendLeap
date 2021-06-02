@@ -10,6 +10,7 @@ async function fetchHTML(url) {
     decodeEntities: false,
   });
 }
+
 async function fetch(url) {
   const { data } = await axios.get(url);
   return data;
@@ -23,14 +24,6 @@ async function fetch(url) {
 //   return cheerio.load(html, {
 //     decodeEntities: false,
 //   });
-// }
-
-// async function saveToDB({ fetch, processData, Schema }) {
-//   const $ = await fetch();
-//   const data = new Schema(processData($));
-//   const result = await data.save();
-//   //   console.log(`save schedule success`, result);
-//   return result;
 // }
 
 module.exports = {

@@ -4,6 +4,7 @@ const {
   tryParseFloat,
   updateDate,
   mongooseQuickSetup,
+  getPureDate,
 } = require("../../utility/helper");
 
 var getUrl = (stockNo) => `https://stockinfo.tw/?stockSearch=${stockNo}`;
@@ -28,11 +29,11 @@ async function getData(stockNo = "2412") {
   const dividendInfo = new DividendInfo(entity);
 
   let result = await dividendInfo.save();
-  console.log(`save schedule success`, result);
+  //console.log(`save schedule success`, result);
   return result;
 }
 
-//get raw data from html document
+//convert html document to data
 function parseRawData($) {
   let rawData = [];
   // 篩選有興趣的資料
@@ -77,7 +78,7 @@ function processData(source) {
   let result = source.map((data) => {
     return {
       year: data[field.date].substr(0, 4), //除息年度 2019
-      date: data[field.date].replace(/\//g, ""), //除息日期 20190701
+      date: getPureDate(data[field.date]), //除息日期 20190701
       value: tryParseFloat(data[field.value]), //除權息前股價
       cashDividen: tryParseFloat(data[field.dCash]), //配息 0.4
       stockDividen: tryParseFloat(data[field.dStock]), //配股 0.6

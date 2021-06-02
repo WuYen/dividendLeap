@@ -4,6 +4,7 @@ const {
   tryParseFloat,
   updateDate,
   mongooseQuickSetup,
+  parseChineseDate,
 } = require("../../utility/helper");
 const axios = require("axios");
 
@@ -28,7 +29,7 @@ async function getData() {
   const dividendSchedule = new DividendSchedule(entity);
 
   let result = await dividendSchedule.save();
-  console.log(`save Dividend Schedule success`, result);
+  //console.log(`save Dividend Schedule success`, result);
   return result;
 }
 
@@ -41,10 +42,10 @@ const field = {
   dCash: 7, //現金股利
 };
 
-//把raw data 轉換成 mongo 要的格式
+//把raw data 轉換成 mongo schema
 function processData(source) {
   let result = source.map((d) => {
-    let date = parseDate(d[field.date]);
+    let date = parseChineseDate(d[field.date]);
     return {
       stockNo: d[field.stockNo],
       stockName: d[field.stockNM],
@@ -55,10 +56,6 @@ function processData(source) {
   });
 
   return result;
-}
-
-function parseDate(str) {
-  return `${+str.replace(/\D/g, "") + 19110000}`;
 }
 
 async function getDataProxy(needLatest = false) {

@@ -73,10 +73,29 @@ function mongooseQuickSetup(task) {
   });
 }
 
+function parseChineseDate(str) {
+  return `${+str.replace(/\D/g, "") + 19110000}`;
+}
+
+function getDateFragment(str) {
+  return {
+    year: str.substr(0, 4),
+    month: str.substr(4, 2),
+    day: str.substr(6, 2),
+  };
+}
+
+function getPureDate(str) {
+  return str.replace(/\D/g, "");
+}
+
 module.exports = {
   tryParseFloat,
   updateDate,
   today,
   mongooseQuickSetup,
   latestTradeDate,
+  parseChineseDate,
+  getDateFragment,
+  getPureDate,
 };

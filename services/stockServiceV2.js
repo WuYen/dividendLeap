@@ -12,8 +12,11 @@ const {
 const getDetail = async (stockNo) => {
   try {
     const latestTradDate = latestTradeDate();
+
+    //歷史的dividend info
     let dInfo = await DividendInfo.getData(stockNo); //沒有今年的
     let dInfoLY = dInfo.data.find((x) => x.year == "2020") || {};
+
     let last5 = dInfo.data.filter((x) => +x.year < 2021 && +x.year > 2015);
     let total5 = 0;
     last5.forEach((d) => {
@@ -26,6 +29,7 @@ const getDetail = async (stockNo) => {
       total10 += d.yieldRateCash;
     });
 
+    //找今年的dividend info
     let schedule = await DividendSchedule.getData();
     let dInfoTY = schedule.data.find(
       (x) => x.stockNo == stockNo && x.year == "2021"
@@ -63,12 +67,11 @@ function parseDate(str) {
 }
 
 async function getSchedule() {
-  const latestTradDate = latestTradeDate();
   const schedule = await DividendSchedule.getData();
   const afterToday = afterDate(today());
   const filtedData = schedule.data.filter(afterToday).sort(byTime);
   const dayInfoCollection = await DayInfo.getData({
-    date: latestTradDate,
+    date: latestTradeDate(),
   });
 
   const result = filtedData.map((x) => {

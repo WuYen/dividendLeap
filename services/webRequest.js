@@ -95,6 +95,3 @@ function Model(model, source) {
     this[key] = source[value];
   }
 }
-
-//二為陣列 => array of object => 寫到DB
-//object 要跟 mongo 的schenma共用 還要能共享到前端

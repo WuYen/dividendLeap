@@ -5,15 +5,11 @@ const path = require("path");
 dotenv.config(); // get config vars
 
 const app = express();
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-}
-
 app.use(require("./middleware"));
 app.use(require("./routes"));
 
 if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
   app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "client/build/index.html"));
   });

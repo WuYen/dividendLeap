@@ -1,4 +1,4 @@
-const MonthInfo = require("./monthInfo");
+const MonthInfo = require("./model");
 const helper = require("../../utility/requestCore");
 const {
   tryParseFloat,

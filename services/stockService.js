@@ -4,7 +4,7 @@ const API = "https://www.twse.com.tw/exchangeReport/";
 
 const MonthInfo = require("../models/monthInfo/monthInfo");
 const DayInfo = require("../models/dayInfo/dayInfo");
-const Schedule = require("../models/schedule");
+const Schedule = require("../models/dividendSchedule/schedule");
 const DividendInfo = require("../models/dividendInfo/dividendInfo");
 
 const getStockDetailService = require("./webRequest");
