@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { helper } from "../utility";
+import { helper } from "../../utility/obsolete";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 

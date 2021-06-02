@@ -1,17 +1,13 @@
 import React from "react";
-import MainContent from "./component/MainContent";
-import Detail from "./component/Detail";
 import DividendSchedule from "./component/DividendSchedule";
 import DividendDetail from "./component/DividendDetail";
-
-import "./App.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import "./App.css";
 
 function App() {
   return (
-    <div>
-      <Router>
-        {/* <nav>
+    <Router>
+      {/* <nav>
           <ul>
             <li>
               <Link to="/">Home</Link>
@@ -22,25 +18,15 @@ function App() {
           </ul>
         </nav> */}
 
-        <Switch>
-          <Route path="/:stockNo/:name/detail">
-            <Detail />
-          </Route>
-
-          <Route path="/v2/schedule">
-            <DividendSchedule />
-          </Route>
-          <Route path="/v2/detail/:stockNo/:name?">
-            <DividendDetail />
-          </Route>
-
-          <Route path="/">
-            <DividendSchedule />
-            {/* <MainContent /> */}
-          </Route>
-        </Switch>
-      </Router>
-    </div>
+      <Switch>
+        <Route path="/detail/:stockNo/:name?">
+          <DividendDetail />
+        </Route>
+        <Route path="/">
+          <DividendSchedule />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 export default App;

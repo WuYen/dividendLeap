@@ -13,7 +13,13 @@ export function formatDate(str) {
   );
 }
 
+export function tryParseFloat(value) {
+  let result = parseFloat(value);
+  return isNaN(result) ? 0 : result;
+}
+
 export default {
   getPureDate,
   formatDate,
+  tryParseFloat,
 };

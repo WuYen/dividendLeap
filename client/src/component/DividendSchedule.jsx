@@ -1,11 +1,15 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { formatDate } from "../utility/formatHelper";
+import { formatDate, tryParseFloat } from "../utility/formatHelper";
 import { dataAPI } from "../utility/config";
-import MaterialTable from "material-table";
 import { Link } from "react-router-dom";
 
-function MainContent(props) {
+import MaterialTable from "material-table";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
+
+function DividendSchedule(props) {
   const [schedule, setSchedule] = useState([]);
+  const [filter, setFilter] = useState(true);
 
   useEffect(() => {
     fetch(`${dataAPI}/v2/stock/scheudle`)
@@ -21,13 +25,35 @@ function MainContent(props) {
   if (schedule.length == 0) {
     return <div>Loading...</div>;
   }
-
-  return <MaterialTable {...tableProps} data={schedule} />;
+  return (
+    <>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={filter}
+            onChange={() => {
+              setFilter((x) => !x);
+            }}
+            color="primary"
+          />
+        }
+        label="殖利率大於 5%"
+      />
+      <MaterialTable
+        {...tableProps}
+        data={schedule.filter((x) => {
+          if (filter) {
+            return tryParseFloat(x.rate) > 5;
+          }
+          return true;
+        })}
+      />
+    </>
+  );
 }
 
 function getTableProps() {
   return {
-    // title: <Link to="/">Hello Stock</Link>,
     columns: [
       {
         title: "股票",
@@ -36,7 +62,7 @@ function getTableProps() {
           return (
             <Link
               to={{
-                pathname: `/v2/detail/${props.stockNo}/${props.stockName}`,
+                pathname: `/detail/${props.stockNo}/${props.stockName}`,
               }}
             >
               {`${props.stockName}(${props.stockNo})`}
@@ -61,30 +87,33 @@ function getTableProps() {
         field: "price",
         render: (props) => {
           if (props.price) {
-            return props.price + ` (${formatDate(props.priceDate)})`;
+            return (
+              <div>
+                <div style={{ display: "inline-block", minWidth: "55px" }}>
+                  {props.price.toFixed(2)}
+                </div>
+                <div style={{ display: "inline-block" }}>{`(${formatDate(
+                  props.priceDate
+                )})`}</div>
+              </div>
+            );
           } else {
-            return "";
+            return "--";
           }
         },
       },
       {
-        title: "現金殖利率%",
+        title: "現金殖利率 %",
         field: "rate",
       },
     ],
-
     options: {
       search: false,
       paging: false,
       showTitle: false,
       toolbar: false,
     },
-    localization: {
-      header: {
-        actions: "詳細資訊",
-      },
-    },
   };
 }
 
-export default MainContent;
+export default DividendSchedule;

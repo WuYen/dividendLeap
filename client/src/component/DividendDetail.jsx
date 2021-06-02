@@ -3,9 +3,10 @@ import { formatDate } from "../utility/formatHelper";
 import { dataAPI } from "../utility/config";
 import { useParams } from "react-router-dom";
 
-function MainContent(props) {
+function DividendDetail(props) {
   const [data, setData] = useState(null);
-  let { stockNo, name } = useParams();
+  const { stockNo, name } = useParams();
+
   useEffect(() => {
     fetch(`${dataAPI}/v2/stock/detail/${stockNo}`)
       .then((res) => res.json())
@@ -40,4 +41,4 @@ function MainContent(props) {
   );
 }
 
-export default MainContent;
+export default DividendDetail;
