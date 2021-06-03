@@ -1,5 +1,6 @@
 const DividendInfo = require("../models/dividendInfo/repositoryV2");
 const DayInfo = require("../models/dayInfo/repository");
+const DayHistory = require("../models/dayHistory/repository");
 const DividendSchedule = require("../models/dividendSchedule/repository");
 const {
   tryParseFloat,
@@ -12,10 +13,10 @@ const {
 const getDetail = async (stockNo) => {
   try {
     const latestTradDate = latestTradeDate();
-
+    const lastYear = "2020";
     //歷史的dividend info
     let dInfo = await DividendInfo.getData(stockNo); //沒有今年的
-    let dInfoLY = dInfo.data.find((x) => x.year == "2020") || {};
+    let dInfoLY = dInfo.data.find((x) => x.year == lastYear) || {};
 
     let last5 = dInfo.data.filter((x) => +x.year < 2021 && +x.year > 2015);
     let total5 = 0;
@@ -37,6 +38,20 @@ const getDetail = async (stockNo) => {
 
     let dayInfo = await DayInfo.getData({ stockNo, date: latestTradDate });
 
+    //去年整年每天股價
+    let dayHistory = await DayHistory.getData({ stockNo, year: lastYear });
+    let sortedDayHistory = dayHistory.data
+      .map((x) => ({ price: x.price, date: x.date }))
+      .sort((a, b) => {
+        if (a.price < b.price) {
+          return -1;
+        }
+        if (a.price > b.price) {
+          return 1;
+        }
+        return 0;
+      });
+
     let result = {
       stockNo: stockNo,
       dDate: dInfoTY.date, //"除息日",
@@ -52,19 +67,26 @@ const getDetail = async (stockNo) => {
       dFDayLY:
         `${parseDate(dInfoLY.fillDate)}` ||
         "--" + (!isNaN(dInfoLY.fillDay) ? `(${dInfoLY.fillDay}天)` : ""), //"去年填滿息日",
-      lowLY: [{ price: "TODO", date: "TODO" }],
-      HighLY: [{ price: "TODO", date: "TODO" }],
+      lowLY: sortedDayHistory.slice(0, 3), //最低三天
+      HighLY: sortedDayHistory.slice(
+        sortedDayHistory.length - 3,
+        sortedDayHistory.length
+      ), //最高三天
     };
+
+    function parseDate(str) {
+      return !isNaN(Date.parse(str)) ? str : "--";
+    }
 
     return { success: true, data: result };
   } catch (error) {
-    return { success: false, data: {}, error };
+    return {
+      success: false,
+      data: {},
+      error: { message: error.message },
+    };
   }
 };
-
-function parseDate(str) {
-  return !isNaN(Date.parse(str)) ? str : "--";
-}
 
 async function getSchedule() {
   const schedule = await DividendSchedule.getData();
@@ -87,21 +109,22 @@ async function getSchedule() {
       return x;
     }
   });
+
+  function afterDate(date) {
+    return (item) => item.date > date;
+  }
+
+  function byTime(a, b) {
+    if (a.date < b.date) {
+      return -1;
+    }
+    if (a.date > b.date) {
+      return 1;
+    }
+    return 0;
+  }
+
   return { success: true, data: result };
-}
-
-function afterDate(date) {
-  return (item) => item.date > date;
-}
-
-function byTime(a, b) {
-  if (a.date < b.date) {
-    return -1;
-  }
-  if (a.date > b.date) {
-    return 1;
-  }
-  return 0;
 }
 
 module.exports = {

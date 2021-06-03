@@ -57,6 +57,10 @@ function latestTradeDate() {
   return today.toISOString().slice(0, 10).replace(/-/g, "");
 }
 
+function toDateString(date) {
+  return date.toISOString().slice(0, 10).replace(/-/g, "");
+}
+
 function mongooseQuickSetup(task) {
   mongoose.connect(
     process.env.MONGODB_URI || "mongodb://localhost/mern_youtube",
@@ -98,4 +102,5 @@ module.exports = {
   parseChineseDate,
   getDateFragment,
   getPureDate,
+  toDateString,
 };
