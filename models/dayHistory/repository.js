@@ -14,11 +14,11 @@ const axios = require("axios");
  * @returns trade info of that date
  */
 async function getData(stockNo, year) {
-  let begTime = +new Date(`${+year + 1}-01-01`) / 1000;
-  let endTime = +new Date(`${+year - 1}-12-31`) / 1000;
+  let to = +new Date(`${year}-01-01`) / 1000;
+  let from = +new Date(`${year}-12-31`) / 1000;
 
   let response = await axios.get(
-    `https://ws.api.cnyes.com/ws/api/v1/charting/history?resolution=D&symbol=TWS:${stockNo}:STOCK&from=${begTime}&to=${endTime}&quote=1`
+    `https://ws.api.cnyes.com/ws/api/v1/charting/history?resolution=D&symbol=TWS:${stockNo}:STOCK&from=${from}&to=${to}&quote=1`
   );
 
   let rawData = response.data.data;
