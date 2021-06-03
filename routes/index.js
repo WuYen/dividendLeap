@@ -3,5 +3,6 @@ const router = express.Router();
 
 router.use("/stock", require("./stockController"));
 router.use("/v2/stock", require("./stockControllerV2"));
+router.use("/data", require("./dataController"));
 
 module.exports = router;

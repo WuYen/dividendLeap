@@ -22,7 +22,7 @@ function DividendDetail(props) {
 
   return (
     <div>
-      <div>名稱: {name}</div>
+      <div>名稱: {`${name} (${stockNo})`}</div>
       <div>除息日: {formatDate(data.dDate)}</div>
       <div>今年殖利率: {data.rate}%</div>
       <div>
@@ -35,8 +35,20 @@ function DividendDetail(props) {
       <div>去年除息股價: {data.priceLY}</div>
       <div>去年除息日: {formatDate(data.dDateLY)}</div>
       <div>去年填滿息日: {formatDate(data.dFDayLY)}</div>
-      {/* <div>前年低點:{data.lowLY}</div>
-      <div>去年高點:{data.HighLY}</div> */}
+      <div>
+        前年低點:
+        {data.lowLY.map((data) => (
+          <div>
+            <div>{`${data.price} (${formatDate(data.date)})`}</div>
+          </div>
+        ))}
+      </div>
+      <div>
+        去年高點:
+        {data.HighLY.map((data) => (
+          <div>{`${data.price} (${formatDate(data.date)})`}</div>
+        ))}
+      </div>
     </div>
   );
 }

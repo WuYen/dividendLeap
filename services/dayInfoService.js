@@ -38,7 +38,7 @@ async function getAllDayInfo() {
     await delay(getRandomIntInclusive(8000, 12000));
   }
 
-  return { success: true, data: { count } };
+  return { success: true, data: { DayInfoCount: count } };
 }
 
 function afterDate(date) {
@@ -69,4 +69,8 @@ function delay(time) {
   });
 }
 
-mongooseQuickSetup(getAllDayInfo);
+module.exports = {
+  getAllDayInfo,
+};
+
+//mongooseQuickSetup(getAllDayInfo);

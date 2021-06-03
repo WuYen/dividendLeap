@@ -10,7 +10,7 @@ const {
 } = require("../utility/helper");
 
 /* 取得除權息分析資料 */
-const getDetail = async (stockNo) => {
+async function getDetail(stockNo) {
   try {
     const latestTradDate = latestTradeDate();
     const lastYear = "2020";
@@ -86,7 +86,7 @@ const getDetail = async (stockNo) => {
       error: { message: error.message },
     };
   }
-};
+}
 
 async function getSchedule() {
   const schedule = await DividendSchedule.getData();
