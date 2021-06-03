@@ -40,8 +40,20 @@ async function getDetail(stockNo) {
 
     //去年整年每天股價
     let dayHistory = await DayHistory.getData({ stockNo, year: lastYear });
-    let sortedDayHistory = dayHistory.data
-      .map((x) => ({ price: x.price, date: x.date }))
+    let dayHistoryByMonth = groupByMonth(dayHistory.data);
+    let rankByHigh = dayHistoryByMonth
+      .map((x) => x.high)
+      .sort((a, b) => {
+        if (a.price < b.price) {
+          return -1;
+        }
+        if (a.price > b.price) {
+          return 1;
+        }
+        return 0;
+      });
+    let rankByLow = dayHistoryByMonth
+      .map((x) => x.low)
       .sort((a, b) => {
         if (a.price < b.price) {
           return -1;
@@ -67,11 +79,8 @@ async function getDetail(stockNo) {
       dFDayLY:
         `${parseDate(dInfoLY.fillDate)}` ||
         "--" + (!isNaN(dInfoLY.fillDay) ? `(${dInfoLY.fillDay}天)` : ""), //"去年填滿息日",
-      lowLY: sortedDayHistory.slice(0, 3), //最低三天
-      HighLY: sortedDayHistory.slice(
-        sortedDayHistory.length - 3,
-        sortedDayHistory.length
-      ), //最高三天
+      lowLY: rankByLow.slice(0, 3), //最低的三個月份
+      HighLY: rankByHigh.slice(rankByHigh.length - 3, rankByHigh.length), //最高的三個月份
     };
 
     function parseDate(str) {
@@ -86,6 +95,36 @@ async function getDetail(stockNo) {
       error: { message: error.message },
     };
   }
+}
+
+function groupByMonth(data) {
+  let result = [];
+  for (let index = 0; index < 12; index++) {
+    let month = index + 1;
+    //抓出那個月的資料
+    let dayInfoByMonth = data.filter((x) => {
+      return parseInt(x.month) == month;
+    });
+
+    //低到高排序
+    let sortResult = dayInfoByMonth
+      .map((x) => ({ price: x.price, date: x.date }))
+      .sort((a, b) => {
+        if (a.price < b.price) {
+          return -1;
+        }
+        if (a.price > b.price) {
+          return 1;
+        }
+        return 0;
+      });
+
+    //取出每個月的最高與最低
+    let lowInMonth = sortResult[0];
+    let highInMonth = sortResult[sortResult.length - 1];
+    result.push({ high: highInMonth, low: lowInMonth });
+  }
+  return result; //[{high,low},...]
 }
 
 async function getSchedule() {
