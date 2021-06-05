@@ -8,7 +8,7 @@ function DividendDetail(props) {
   const { stockNo, name } = useParams();
 
   useEffect(() => {
-    fetch(`${dataAPI}/v2/stock/detail/${stockNo}`)
+    fetch(`${dataAPI}/stock/detail/${stockNo}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("data", data);

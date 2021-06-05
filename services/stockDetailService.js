@@ -1,4 +1,4 @@
-const DividendInfo = require("../models/dividendInfo/repositoryV2");
+const DividendInfo = require("../models/dividendInfo/repository");
 const DayInfo = require("../models/dayInfo/repository");
 const DayHistory = require("../models/dayHistory/repository");
 const DividendSchedule = require("../models/dividendSchedule/repository");
@@ -83,10 +83,6 @@ async function getDetail(stockNo) {
       HighLY: rankByHigh.slice(rankByHigh.length - 3, rankByHigh.length), //最高的三個月份
     };
 
-    function parseDate(str) {
-      return !isNaN(Date.parse(str)) ? str : "--";
-    }
-
     return { success: true, data: result };
   } catch (error) {
     return {
@@ -95,6 +91,10 @@ async function getDetail(stockNo) {
       error: { message: error.message },
     };
   }
+}
+
+function parseDate(str) {
+  return !isNaN(Date.parse(str)) ? str : "--";
 }
 
 function groupByMonth(data) {
@@ -127,46 +127,4 @@ function groupByMonth(data) {
   return result; //[{high,low},...]
 }
 
-async function getSchedule() {
-  const schedule = await DividendSchedule.getData();
-  const afterToday = afterDate(today());
-  const filtedData = schedule.data.filter(afterToday).sort(byTime);
-  const dayInfoCollection = await DayInfo.getData({
-    date: latestTradeDate(),
-  });
-
-  const result = filtedData.map((x) => {
-    let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
-    if (dayInfo) {
-      return {
-        ...x.toObject(),
-        rate: ((x.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%"
-        price: dayInfo.price, // "當前股價"
-        priceDate: dayInfo.date, // "當前股價 取樣日期"
-      };
-    } else {
-      return x;
-    }
-  });
-
-  function afterDate(date) {
-    return (item) => item.date > date;
-  }
-
-  function byTime(a, b) {
-    if (a.date < b.date) {
-      return -1;
-    }
-    if (a.date > b.date) {
-      return 1;
-    }
-    return 0;
-  }
-
-  return { success: true, data: result };
-}
-
-module.exports = {
-  getDetail,
-  getSchedule,
-};
+module.exports = { getDetail };

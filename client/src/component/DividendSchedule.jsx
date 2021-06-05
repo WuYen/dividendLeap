@@ -12,7 +12,7 @@ function DividendSchedule(props) {
   const [filter, setFilter] = useState(true);
 
   useEffect(() => {
-    fetch(`${dataAPI}/v2/stock/scheudle`)
+    fetch(`${dataAPI}/stock/scheudle`)
       .then((res) => res.json())
       .then((data) => {
         console.log("data", data);

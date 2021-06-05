@@ -1,5 +1,5 @@
 const DividendInfo = require("./dividendInfo");
-const helper = require("../../utility/requestCore");
+const request = require("../../utility/requestCore");
 const {
   tryParseFloat,
   updateDate,
@@ -15,7 +15,7 @@ var getUrl = (stockNo) =>
  * @param {string}} stockNo
  */
 async function getData(stockNo = 2412) {
-  const $ = await helper.fetchHTML(getUrl(stockNo));
+  const $ = await request.getHTML(getUrl(stockNo));
 
   var rawData = parseRawData($);
 

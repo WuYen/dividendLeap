@@ -1,4 +1,4 @@
-const DividendInfo = require("./modelV2");
+const DividendInfo = require("./model");
 const helper = require("../../utility/requestCore");
 const {
   tryParseFloat,
@@ -14,7 +14,7 @@ var getUrl = (stockNo) => `https://stockinfo.tw/?stockSearch=${stockNo}`;
  * @param {string}} stockNo
  */
 async function getData(stockNo = "2412") {
-  const $ = await helper.fetchHTML(getUrl(stockNo));
+  const $ = await helper.getHTML(getUrl(stockNo));
 
   let rawData = parseRawData($);
 
@@ -95,24 +95,6 @@ function processData(source) {
   return result;
 }
 
-async function getDataProxy(stockNo, needLatest = false) {
-  //find data with date and sotock no, if not exist call getData to retrive from web
-  //if out of date, call getData to retrive from web
-  const query = {
-    stockNo: stockNo,
-    ...(needLatest && { updateDate: updateDate() }),
-  };
-  let data = await DividendInfo.findOne(query).exec();
-  if (!data) {
-    data = await getData(stockNo);
-  }
-  return data;
-}
-
-module.exports = {
-  getData: getDataProxy,
-  entity: DividendInfo,
-};
-
+module.exports = { getData };
 //Test single file
 //mongooseQuickSetup(getData);
