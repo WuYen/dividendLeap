@@ -74,6 +74,7 @@ function mongooseQuickSetup(task) {
     console.log("Mongoose is connected!!!!");
     let result = await task();
     console.log("finish");
+    process.exit(1);
   });
 }
 

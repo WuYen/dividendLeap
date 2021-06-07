@@ -1,9 +1,12 @@
 src
-│   server.js       # App entry point
-│   middleware.js   # Common middleware
-└───models          # Mongoose schema, model and repository.
-└───routes          # Routing entry point and controller for diffent API channel
-└───services        # All the business logic is here, use repository to combine data
-└───utility         # Helpers and common functions
-└───client          # Client side react project
+└───server.js           # App entry point
+└───middleware.js       # Common middleware
+└───models              # Centralize all data related models and providers.
+    └───model.js            # Define mongoose model
+    └───repository.js       # Define CRUD interface that use in services
+    └───source.js           # Get data from web and save to db
+└───routes              # Routing entry point and controller for diffent API channel
+└───services            # All the business logic is here, use repository to combine the data that page need
+└───utility             # Helpers and common functions
+└───client              # Client side react project
 
