@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { formatDate, tryParseFloat } from "../utility/formatHelper";
 import { dataAPI } from "../utility/config";
 import { Link } from "react-router-dom";
@@ -6,25 +6,41 @@ import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import Context from "../store/context";
+import { GET_SCHEDULE_SUCCESS } from "../store/actions/actionType";
 
 function DividendSchedule(props) {
-  const [schedule, setSchedule] = useState([]);
+  const { schedule, dispatch } = useContext(Context);
   const [filter, setFilter] = useState(true);
 
   useEffect(() => {
-    fetch(`${dataAPI}/stock/scheudle`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data", data);
-        setSchedule(data.data);
-      });
+    if (schedule.length == 0) {
+      fetch(`${dataAPI}/stock/scheudle`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("data", data);
+          dispatch({ type: GET_SCHEDULE_SUCCESS, payload: data.data });
+        });
+    }
   }, []);
 
-  const tableProps = useMemo(() => getTableProps(), []);
+  const table = useMemo(
+    () => (
+      <MaterialTable
+        {...getTableProps()}
+        data={schedule.filter((x) =>
+          filter ? tryParseFloat(x.rate) > 5 : true
+        )}
+      />
+    ),
+    [filter, schedule]
+  );
 
   if (schedule.length == 0) {
     return <div>Loading...</div>;
   }
+
+  console.log("Schedule render");
   return (
     <>
       <FormControlLabel
@@ -39,15 +55,7 @@ function DividendSchedule(props) {
         }
         label="殖利率大於 5%"
       />
-      <MaterialTable
-        {...tableProps}
-        data={schedule.filter((x) => {
-          if (filter) {
-            return tryParseFloat(x.rate) > 5;
-          }
-          return true;
-        })}
-      />
+      {table}
     </>
   );
 }

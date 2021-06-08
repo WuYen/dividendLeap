@@ -2,6 +2,7 @@ const DividendInfo = require("../models/dividendInfo/repository");
 const DayInfo = require("../models/dayInfo/repository");
 const DayHistory = require("../models/dayHistory/repository");
 const DividendSchedule = require("../models/dividendSchedule/repository");
+const StockDetail = require("../models/stockDetail/repository");
 const {
   tryParseFloat,
   today,
@@ -14,76 +15,19 @@ async function getDetail(stockNo) {
   try {
     const latestTradDate = latestTradeDate();
     const lastYear = "2020";
-    //歷史的dividend info
-    let dInfo = await DividendInfo.getData(stockNo); //沒有今年的
-    let dInfoLY = dInfo.data.find((x) => x.year == lastYear) || {};
 
-    let last5 = dInfo.data.filter((x) => +x.year < 2021 && +x.year > 2015);
-    let total5 = 0;
-    last5.forEach((d) => {
-      total5 += d.yieldRateCash;
+    //從 stockDetail 抓資料 query:{stockNo, priceDate:latestTradDate}
+    let { data, isExpire } = await StockDetail.getData({
+      stockNo,
+      priceDate: latestTradDate,
     });
 
-    let last10 = dInfo.data.filter((x) => +x.year < 2021 && +x.year > 2010);
-    let total10 = 0;
-    last10.forEach((d) => {
-      total10 += d.yieldRateCash;
-    });
+    if (!data || isExpire) {
+      data = await buildData(stockNo, lastYear, latestTradDate);
+      StockDetail.saveData(data); // no need to wait
+    }
 
-    //找今年的dividend info
-    let schedule = await DividendSchedule.getData();
-    let dInfoTY = schedule.data.find(
-      (x) => x.stockNo == stockNo && x.year == "2021"
-    );
-
-    let dayInfo = await DayInfo.getData({ stockNo, date: latestTradDate });
-
-    //去年整年每天股價
-    let dayHistory = await DayHistory.getData({ stockNo, year: lastYear });
-    let dayHistoryByMonth = groupByMonth(dayHistory.data);
-    let rankByHigh = dayHistoryByMonth
-      .map((x) => x.high)
-      .sort((a, b) => {
-        if (a.price < b.price) {
-          return -1;
-        }
-        if (a.price > b.price) {
-          return 1;
-        }
-        return 0;
-      });
-    let rankByLow = dayHistoryByMonth
-      .map((x) => x.low)
-      .sort((a, b) => {
-        if (a.price < b.price) {
-          return -1;
-        }
-        if (a.price > b.price) {
-          return 1;
-        }
-        return 0;
-      });
-
-    let result = {
-      stockNo: stockNo,
-      dDate: dInfoTY.date, //"除息日",
-      rate: ((dInfoTY.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%",
-      price: dayInfo.price, // "當前股價",
-      priceDate: latestTradDate, // "當前股價 取樣日期",
-      dCash: dInfoTY.cashDividen, //"現金股利",
-      rateLY: dInfoLY.yieldRateCash ? dInfoLY.yieldRateCash : "--", //"去年年殖利率%",
-      rateAvg5: total5 ? (total5 / last5.length).toFixed(2) : "--", //"前五年平均殖利率%",
-      rateAvg10: total10 ? (total10 / last10.length).toFixed(2) : "--", //"前十年平均殖利率%",
-      priceLY: dInfoLY.value || "--", // "去年除息股價",
-      dDateLY: dInfoLY.date || "--", // "去年除息日",
-      dFDayLY:
-        `${parseDate(dInfoLY.fillDate)}` ||
-        "--" + (!isNaN(dInfoLY.fillDay) ? `(${dInfoLY.fillDay}天)` : ""), //"去年填滿息日",
-      lowLY: rankByLow.slice(0, 3), //最低的三個月份
-      HighLY: rankByHigh.slice(rankByHigh.length - 3, rankByHigh.length), //最高的三個月份
-    };
-
-    return { success: true, data: result };
+    return { success: true, data };
   } catch (error) {
     return {
       success: false,
@@ -91,6 +35,78 @@ async function getDetail(stockNo) {
       error: { message: error.message },
     };
   }
+}
+
+async function buildData(stockNo, lastYear, latestTradDate) {
+  //歷史的dividend info
+  let dInfo = await DividendInfo.getData(stockNo); //沒有今年的
+  let dInfoLY = dInfo.data.find((x) => x.year == lastYear) || {};
+
+  let last5 = dInfo.data.filter((x) => +x.year < 2021 && +x.year > 2015);
+  let total5 = 0;
+  last5.forEach((d) => {
+    total5 += d.yieldRateCash;
+  });
+
+  let last10 = dInfo.data.filter((x) => +x.year < 2021 && +x.year > 2010);
+  let total10 = 0;
+  last10.forEach((d) => {
+    total10 += d.yieldRateCash;
+  });
+
+  //找今年的dividend info
+  let schedule = await DividendSchedule.getData();
+  let dInfoTY = schedule.data.find(
+    (x) => x.stockNo == stockNo && x.year == "2021"
+  );
+
+  let dayInfo = await DayInfo.getData({ stockNo, date: latestTradDate });
+
+  //去年整年每天股價
+  let dayHistory = await DayHistory.getData({ stockNo, year: lastYear });
+  let dayHistoryByMonth = groupByMonth(dayHistory.data);
+  let rankByHigh = dayHistoryByMonth
+    .map((x) => x.high)
+    .sort((a, b) => {
+      if (a.price < b.price) {
+        return -1;
+      }
+      if (a.price > b.price) {
+        return 1;
+      }
+      return 0;
+    });
+  let rankByLow = dayHistoryByMonth
+    .map((x) => x.low)
+    .sort((a, b) => {
+      if (a.price < b.price) {
+        return -1;
+      }
+      if (a.price > b.price) {
+        return 1;
+      }
+      return 0;
+    });
+
+  let result = {
+    stockNo: stockNo,
+    dDate: dInfoTY.date,
+    rate: ((dInfoTY.cashDividen / dayInfo.price) * 100).toFixed(2),
+    price: dayInfo.price,
+    priceDate: latestTradDate,
+    dCash: dInfoTY.cashDividen,
+    rateLY: dInfoLY.yieldRateCash ? dInfoLY.yieldRateCash : "--",
+    rateAvg5: total5 ? (total5 / last5.length).toFixed(2) : "--",
+    rateAvg10: total10 ? (total10 / last10.length).toFixed(2) : "--",
+    priceLY: dInfoLY.value || "--",
+    dDateLY: dInfoLY.date || "--",
+    dFDayLY:
+      `${parseDate(dInfoLY.fillDate)}` ||
+      "--" + (!isNaN(dInfoLY.fillDay) ? `(${dInfoLY.fillDay}天)` : ""),
+    lowLY: rankByLow.slice(0, 3),
+    HighLY: rankByHigh.slice(rankByHigh.length - 3, rankByHigh.length), //最高的三個月份
+  };
+  return result;
 }
 
 function parseDate(str) {

@@ -7,7 +7,7 @@ const {
   getPureDate,
 } = require("../../utility/helper");
 
-var getUrl = (stockNo) => `https://stockinfo.tw/?stockSearch=${stockNo}`;
+var getUrl = (stockNo) => `https://www.stockinfo.tw/?stockSearch=${stockNo}`;
 
 /**
  * 從 stockinfo 取歷年除權息資料

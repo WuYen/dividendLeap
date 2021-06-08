@@ -38,15 +38,17 @@ function DividendDetail(props) {
       <div>
         前年低點:
         {data.lowLY.map((data) => (
-          <div>
-            <div>{`${data.price} (${formatDate(data.date)})`}</div>
-          </div>
+          <div key={data.date}>{`${data.price} (${formatDate(
+            data.date
+          )})`}</div>
         ))}
       </div>
       <div>
         去年高點:
         {data.HighLY.map((data) => (
-          <div>{`${data.price} (${formatDate(data.date)})`}</div>
+          <div key={data.date}>{`${data.price} (${formatDate(
+            data.date
+          )})`}</div>
         ))}
       </div>
     </div>
