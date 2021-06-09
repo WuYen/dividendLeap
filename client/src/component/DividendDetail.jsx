@@ -37,22 +37,24 @@ function DividendDetail(props) {
       <div>去年填滿息日: {formatDate(data.dFDayLY)}</div>
       <div>
         前年低點:
-        {data.lowLY.map((data) => (
-          <div key={data.date}>{`${data.price} (${formatDate(
-            data.date
-          )})`}</div>
-        ))}
+        <HistoryPrice data={data.lowLY} />
       </div>
       <div>
-        去年高點:
-        {data.HighLY.map((data) => (
-          <div key={data.date}>{`${data.price} (${formatDate(
-            data.date
-          )})`}</div>
-        ))}
+        前年高點:
+        <HistoryPrice data={data.HighLY} />
       </div>
     </div>
   );
+}
+
+function HistoryPrice(props) {
+  return props.data.map((item, index) => {
+    return item ? (
+      <div key={item.date}>{`${item.price} (${formatDate(item.date)})`}</div>
+    ) : (
+      <div key={index}>--</div>
+    );
+  });
 }
 
 export default DividendDetail;

@@ -2,6 +2,7 @@ import React, { useReducer } from "react";
 import DividendSchedule from "./component/DividendSchedule";
 import DividendDetail from "./component/DividendDetail";
 import Header from "./component/Header";
+import ErrorBoundary from "./component/ErrorBoundary";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
 
@@ -20,10 +21,14 @@ function App() {
         <Header />
         <Switch>
           <Route path="/detail/:stockNo/:name?">
-            <DividendDetail />
+            <ErrorBoundary>
+              <DividendDetail />
+            </ErrorBoundary>
           </Route>
           <Route path="/">
-            <DividendSchedule />
+            <ErrorBoundary>
+              <DividendSchedule />
+            </ErrorBoundary>
           </Route>
         </Switch>
       </Router>
