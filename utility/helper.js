@@ -38,7 +38,7 @@ function latestTradeDate() {
   // Sunday - Saturday : 0 - 6
   if (day == 1) {
     //周一
-    if (today.getHours() < 16) {
+    if (today.getHours() < 14) {
       today.setDate(today.getDate() - 3); // -3 => 週五
     }
   } else if (day == 0) {
@@ -49,7 +49,7 @@ function latestTradeDate() {
     today.setDate(today.getDate() - 1); // -2 => 週五
   } else {
     //周一 ~ 周五
-    if (today.getHours() < 16) {
+    if (today.getHours() < 14) {
       today.setDate(today.getDate() - 1);
     }
   }
