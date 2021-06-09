@@ -2,7 +2,9 @@ import * as ACTION_TYPES from "../actions/actionType";
 
 export const initialState = {
   schedule: [],
-  test: "init",
+  filter: localStorage.getItem("filter")
+    ? localStorage.getItem("filter") == "true"
+    : true,
 };
 
 export const ScheduleReducer = (state = initialState, action) => {
@@ -18,10 +20,11 @@ export const ScheduleReducer = (state = initialState, action) => {
         ...state,
         error: true,
       };
-    case "TEST":
+    case ACTION_TYPES.TOGGLE_FILTER:
+      localStorage.setItem("filter", `${!state.filter}`);
       return {
         ...state,
-        test: +new Date(),
+        filter: !state.filter,
       };
     default:
       return state;

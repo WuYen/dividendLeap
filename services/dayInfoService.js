@@ -73,4 +73,5 @@ module.exports = {
   getAllDayInfo,
 };
 
+// node .\services\dayInfoService
 //mongooseQuickSetup(getAllDayInfo);

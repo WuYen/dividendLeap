@@ -10,8 +10,7 @@ import Context from "../store/context";
 import { GET_SCHEDULE_SUCCESS } from "../store/actions/actionType";
 
 function DividendSchedule(props) {
-  const { schedule, dispatch } = useContext(Context);
-  const [filter, setFilter] = useState(true);
+  const { schedule, filter, dispatch } = useContext(Context);
 
   useEffect(() => {
     if (schedule.length == 0) {
@@ -48,7 +47,7 @@ function DividendSchedule(props) {
           <Switch
             checked={filter}
             onChange={() => {
-              setFilter((x) => !x);
+              dispatch({ type: "TOGGLE_FILTER" });
             }}
             color="primary"
           />
