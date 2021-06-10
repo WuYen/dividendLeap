@@ -1,7 +1,6 @@
 const DayInfo = require("../models/dayInfo/repository");
 const DividendSchedule = require("../models/dividendSchedule/repository");
 const {
-  tryParseFloat,
   today,
   mongooseQuickSetup,
   latestTradeDate,

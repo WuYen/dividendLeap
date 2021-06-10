@@ -45,12 +45,13 @@ const field = {
 function processData(source) {
   let result = source.map((d) => {
     let date = parseChineseDate(d[field.date]);
+    let cashDividen = tryParseFloat(d[field.dCash]);
     return {
       stockNo: d[field.stockNo],
       stockName: d[field.stockNM],
       year: date.substr(0, 4), //除息年度 2019
       date: date, //除息日期 20190701
-      cashDividen: d[field.dCash], //現金股利0.4
+      cashDividen, //現金股利0.4
     };
   });
 

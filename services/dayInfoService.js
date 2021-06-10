@@ -1,11 +1,6 @@
 const DayInfo = require("../models/dayInfo/repository");
 const DividendSchedule = require("../models/dividendSchedule/repository");
-const {
-  tryParseFloat,
-  today,
-  mongooseQuickSetup,
-  latestTradeDate,
-} = require("../utility/helper");
+const { mongooseQuickSetup, latestTradeDate } = require("../utility/helper");
 
 async function getAllDayInfo() {
   const latestTRDT = latestTradeDate();

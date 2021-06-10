@@ -3,12 +3,7 @@ const DayInfo = require("../models/dayInfo/repository");
 const DayHistory = require("../models/dayHistory/repository");
 const DividendSchedule = require("../models/dividendSchedule/repository");
 const StockDetail = require("../models/stockDetail/repository");
-const {
-  tryParseFloat,
-  today,
-  mongooseQuickSetup,
-  latestTradeDate,
-} = require("../utility/helper");
+const { mongooseQuickSetup, latestTradeDate } = require("../utility/helper");
 
 /* 取得除權息分析資料 */
 async function getDetail(stockNo) {
