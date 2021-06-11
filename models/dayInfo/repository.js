@@ -71,12 +71,13 @@ const field = {
 function processData(source, stockNo) {
   let result = source.map((d) => {
     let date = parseChineseDate(d[field.date]);
+
     return {
       stockNo: stockNo, // String,
       date: date, //String, //完整日期 20200101
       year: date.substr(0, 4), //String, //年度 2020
       month: date.substr(4, 2), //String, //月份 01
-      price: +d[field.close], //Number, //股價
+      price: tryParseFloat(d[field.close]), //Number, //股價
       count: parseInt(d[field.transCount].replace(/[^\d+]/g, "")), //Number, //成交筆數
       updateDate: updateDate(), //String,
     };
