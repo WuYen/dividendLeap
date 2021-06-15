@@ -54,7 +54,11 @@ function latestTradeDate() {
     }
   }
 
-  return today.toISOString().slice(0, 10).replace(/-/g, "");
+  let result = today.toISOString().slice(0, 10).replace(/-/g, "");
+  if (result == "20210614") {
+    result = "20210611";
+  }
+  return result; //today.toISOString().slice(0, 10).replace(/-/g, "");
 }
 
 function toDateString(date) {

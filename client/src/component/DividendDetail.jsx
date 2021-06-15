@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { formatDate } from "../utility/formatHelper";
 import { dataAPI } from "../utility/config";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function DividendDetail(props) {
   const [data, setData] = useState(null);
@@ -22,6 +23,9 @@ function DividendDetail(props) {
 
   return (
     <div>
+      <div>
+        <Link to="/">回列表</Link>
+      </div>
       <div>名稱: {`${name} (${stockNo})`}</div>
       <div>除息日: {formatDate(data.dDate)}</div>
       <div>今年殖利率: {data.rate}%</div>
