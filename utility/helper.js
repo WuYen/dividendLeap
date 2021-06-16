@@ -1,7 +1,6 @@
 const dateTime = require("./dateTime");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-dotenv.config();
+const config = require("./config");
 
 function tryParseFloat(value) {
   let result = parseFloat(value.replace(/[^0-9\.]/g, ""));
@@ -9,13 +8,10 @@ function tryParseFloat(value) {
 }
 
 function mongooseQuickSetup(task) {
-  mongoose.connect(
-    process.env.MONGODB_URI || "mongodb://localhost/mern_youtube",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  );
+  mongoose.connect(config.MONGODB_URI || "mongodb://localhost/mern_youtube", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
   mongoose.connection.on("connected", async () => {
     console.log("Mongoose is connected!!!!");

@@ -1,5 +1,6 @@
 const DividendInfo = require("./model");
 const helper = require("../../utility/requestCore");
+const config = require("../../utility/config");
 const {
   tryParseFloat,
   today,
@@ -8,7 +9,7 @@ const {
 } = require("../../utility/helper");
 
 var getUrl = (stockNo) => {
-  let url = process.env.DIVIDENDINFO_URL || "https://stockinfo.tw/";
+  let url = config.DIVIDENDINFO_URL || "https://stockinfo.tw/";
   return `${url}?stockSearch=${stockNo}`;
 };
 
