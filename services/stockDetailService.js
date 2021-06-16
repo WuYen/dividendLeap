@@ -50,10 +50,11 @@ async function buildData(stockNo, lastYear, latestTradDate) {
   });
 
   //找今年的dividend info
-  let schedule = await DividendSchedule.getData();
-  let dInfoTY = schedule.data.find(
-    (x) => x.stockNo == stockNo && x.year == "2021"
-  );
+  //let schedule = await DividendSchedule.getData();
+  // let _dInfoTY = schedule.data.find(
+  //   (x) => x.stockNo == stockNo && x.year == "2021"
+  // );
+  let dInfoTY = await DividendSchedule.getByStockNo(stockNo);
 
   let dayInfo = await DayInfo.getData({ stockNo, date: latestTradDate });
 
@@ -138,4 +139,9 @@ function groupByMonth(data) {
   return result; //[{high,low},...]
 }
 
+// mongooseQuickSetup(async () => {
+//   let result = await buildData("1215", "2020", latestTradeDate());
+//   console.log("getByStockNo result", result);
+//   return result;
+// });
 module.exports = { getDetail };
