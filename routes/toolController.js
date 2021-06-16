@@ -23,11 +23,13 @@ router.get("/lastTradeDate", async function (req, res) {
 
   return res.send({
     lastTradeDate: latestTradeDate(),
-    today: today(),
     formatToZHTW: formatTo("zh-TW")(new Date()),
     serverTime: new Date(),
     serverTimeIOS: new Date().toISOString(),
+    today: today(),
     todayWithTZ: getTodayWithTZ(8),
+    todayWithTZtoIOS: getTodayWithTZ(8).toISOString(),
+    todayWithTZtoJSON: getTodayWithTZ(8).toJSON(),
   });
 });
 
