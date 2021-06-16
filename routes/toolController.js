@@ -27,6 +27,7 @@ router.get("/lastTradeDate", async function (req, res) {
     serverTime: new Date(),
     serverTimeIOS: new Date().toISOString(),
     today: today(),
+    serverTimeZone: new Date().getTimezoneOffset(),
     todayWithTZ: getTodayWithTZ(8),
     todayWithTZtoIOS: getTodayWithTZ(8).toISOString(),
     todayWithTZtoJSON: getTodayWithTZ(8).toJSON(),

@@ -63,16 +63,24 @@ function latestTradeDate() {
   return result;
 }
 
-function formatTo(format) {
-  return (date) => date.toLocaleString(format, options);
-}
-
 function slice(length) {
   return (date) => date.slice(0, length);
 }
 
+// function formatTo(format) {
+//   return (date) => date.toLocaleString(format, options);
+// }
+
+// function toDateString(date) {
+//   return pipe(formatTo("zh-TW"), slice(10), getPureDate)(date);
+// }
+
+function formatToISO(date) {
+  return date.toISOString();
+}
+
 function toDateString(date) {
-  return pipe(formatTo("zh-TW"), slice(10), getPureDate)(date);
+  return pipe(formatToISO, slice(10), getPureDate)(date);
 }
 
 function parseChineseDate(str) {
