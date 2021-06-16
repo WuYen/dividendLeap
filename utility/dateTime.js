@@ -102,4 +102,5 @@ module.exports = {
   getDateFragment,
   getPureDate,
   toDateString,
+  getTodayWithTZ,
 };
