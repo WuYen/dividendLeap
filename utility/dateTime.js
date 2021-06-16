@@ -3,35 +3,17 @@ const { pipe } = require("./pipe");
 function getTodayWithTZ(tz = 8) {
   // create Date object for current location
   var d = new Date();
-
-  // convert to msec
-  // subtract local time zone offset
   // get UTC time in msec
   var utc = d.getTime() + d.getTimezoneOffset() * 60000;
-
-  // create new Date object for different city
-  // using supplied offset
+  // create new Date object for different city using supplied offset
   var nd = new Date(utc + 3600000 * tz);
 
-  // return time as a string
   return nd;
 }
 
 function today() {
-  const result = toDateString(getTodayWithTZ());
-  return result;
+  return pipe(getTodayWithTZ, toDateString)();
 }
-
-const options = {
-  day: "2-digit", //(e.g., 02)
-  month: "2-digit", //(e.g., 02)
-  year: "numeric", //(e.g., 2019)
-  timeZone: "Asia/Taipei",
-  hour: "2-digit", //(e.g., 02)
-  minute: "2-digit", //(e.g., 02)
-  second: "2-digit", //(e.g., 02)
-  hour12: true, // 24 小時制
-};
 
 function latestTradeDate() {
   const today = getTodayWithTZ();
@@ -63,24 +45,9 @@ function latestTradeDate() {
   return result;
 }
 
-function slice(length) {
-  return (date) => date.slice(0, length);
-}
-
-// function formatTo(format) {
-//   return (date) => date.toLocaleString(format, options);
-// }
-
-// function toDateString(date) {
-//   return pipe(formatTo("zh-TW"), slice(10), getPureDate)(date);
-// }
-
-function formatToISO(date) {
-  return date.toISOString();
-}
-
 function toDateString(date) {
-  return pipe(formatToISO, slice(10), getPureDate)(date);
+  const { year, month, day } = getDateFragment(date);
+  return `${year}${month}${day}`;
 }
 
 function parseChineseDate(str) {
@@ -95,7 +62,11 @@ function getDateFragment(date) {
       day: date.substr(6, 2),
     };
   } else {
-    return getDateFragment(toDateString(date));
+    return {
+      year: date.getFullYear().toString(),
+      month: `${("0" + (date.getMonth() + 1)).slice(-2)}`,
+      day: date.getDate().toString(),
+    };
   }
 }
 
@@ -112,3 +83,22 @@ module.exports = {
   toDateString,
   getTodayWithTZ,
 };
+
+//return pipe(formatTo("zh-TW"), slice(10), getPureDate)(date);
+//return pipe(formatToISO, slice(10), getPureDate)(date);
+// const options = {
+//   day: "2-digit", //(e.g., 02)
+//   month: "2-digit", //(e.g., 02)
+//   year: "numeric", //(e.g., 2019)
+//   timeZone: "Asia/Taipei",
+//   hour: "2-digit", //(e.g., 02)
+//   minute: "2-digit", //(e.g., 02)
+//   second: "2-digit", //(e.g., 02)
+//   hour12: true, // 24 小時制
+// };
+// function slice(length) {
+//   return (date) => date.slice(0, length);
+// }
+// function formatTo(format) {
+//   return (date) => date.toLocaleString(format, options);
+// }
