@@ -2,7 +2,7 @@ const Model = require("./model");
 const helper = require("../../utility/requestCore");
 const {
   tryParseFloat,
-  updateDate,
+  today,
   mongooseQuickSetup,
   parseChineseDate,
   getDateFragment,
@@ -79,7 +79,7 @@ function processData(source, stockNo) {
       month: date.substr(4, 2), //String, //月份 01
       price: tryParseFloat(d[field.close]), //Number, //股價
       count: parseInt(d[field.transCount].replace(/[^\d+]/g, "")), //Number, //成交筆數
-      updateDate: updateDate(), //String,
+      updateDate: today(), //String,
     };
   });
 

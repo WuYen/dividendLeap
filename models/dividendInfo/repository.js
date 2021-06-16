@@ -1,11 +1,11 @@
 const DividendInfo = require("./model");
-const { updateDate } = require("../../utility/helper");
+const { today } = require("../../utility/helper");
 const source = require("./source");
 
 async function getDataProxy(stockNo, needLatest = false) {
   const query = {
     stockNo: stockNo,
-    ...(needLatest && { updateDate: updateDate() }),
+    ...(needLatest && { updateDate: today() }),
   };
   let data = await DividendInfo.findOne(query).exec();
   if (!data) {

@@ -2,7 +2,7 @@ const DividendSchedule = require("./model");
 const request = require("../../utility/requestCore");
 const {
   tryParseFloat,
-  updateDate,
+  today,
   mongooseQuickSetup,
   parseChineseDate,
 } = require("../../utility/helper");
@@ -22,7 +22,7 @@ async function getData() {
 
   let entity = {
     data: [...processedData],
-    updateDate: updateDate(),
+    updateDate: today(),
   };
 
   const dividendSchedule = new DividendSchedule(entity);

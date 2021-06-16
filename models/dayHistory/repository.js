@@ -1,7 +1,7 @@
 const Model = require("./model");
 const helper = require("../../utility/requestCore");
 const {
-  updateDate,
+  today,
   mongooseQuickSetup,
   getDateFragment,
   toDateString,
@@ -31,7 +31,7 @@ async function getData(stockNo, year) {
     stockNo,
     year,
     data: [...processedData],
-    updateDate: updateDate(),
+    updateDate: today(),
   };
 
   let result = await new Model(entity).save();
@@ -73,4 +73,6 @@ module.exports = {
 };
 
 //Test single file: node .\models\dayInfo\repository.js
-//mongooseQuickSetup(() => getData("2548", "2020"));
+// mongooseQuickSetup(async () => {
+//   let result = await getData("2548", "2020");
+// });

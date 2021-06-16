@@ -2,7 +2,7 @@ const DividendInfo = require("./dividendInfo");
 const request = require("../../utility/requestCore");
 const {
   tryParseFloat,
-  updateDate,
+  today,
   mongooseQuickSetup,
 } = require("../../utility/helper");
 const mongoose = require("mongoose");
@@ -24,7 +24,7 @@ async function getData(stockNo = 2412) {
   let entity = {
     stockNo: stockNo,
     data: [...processedData],
-    updateDate: updateDate(),
+    updateDate: today(),
   };
 
   const dividendInfo = new DividendInfo(entity);

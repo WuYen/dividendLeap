@@ -1,5 +1,5 @@
 const Model = require("./model");
-const { updateDate } = require("../../utility/helper");
+const { today } = require("../../utility/helper");
 
 async function getData(query) {
   //query => { stockNo, date }
@@ -13,7 +13,7 @@ async function getData(query) {
 async function saveData(data) {
   await Model.deleteOne({ stockNo: data.stockNo });
 
-  let model = new Model({ ...data, updateDate: updateDate() });
+  let model = new Model({ ...data, updateDate: today() });
 
   await model.save();
 }

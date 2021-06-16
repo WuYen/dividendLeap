@@ -2,35 +2,43 @@ const DividendInfo = require("./model");
 const helper = require("../../utility/requestCore");
 const {
   tryParseFloat,
-  updateDate,
+  today,
   mongooseQuickSetup,
   getPureDate,
 } = require("../../utility/helper");
 
-var getUrl = (stockNo) => `https://www.stockinfo.tw/?stockSearch=${stockNo}`;
+var getUrl = (stockNo) => {
+  let url = process.env.DIVIDENDINFO_URL || "https://stockinfo.tw/";
+  return `${url}?stockSearch=${stockNo}`;
+};
 
 /**
  * 從 stockinfo 取歷年除權息資料
  * @param {string}} stockNo
  */
 async function getData(stockNo = "2412") {
-  const $ = await helper.getHTML(getUrl(stockNo));
+  try {
+    const $ = await helper.getHTML(getUrl(stockNo));
 
-  let rawData = parseRawData($);
+    let rawData = parseRawData($);
 
-  let processedData = processData(rawData);
+    let processedData = processData(rawData);
 
-  let entity = {
-    stockNo: stockNo,
-    data: [...processedData],
-    updateDate: updateDate(),
-  };
+    let entity = {
+      stockNo: stockNo,
+      data: [...processedData],
+      updateDate: today(),
+    };
 
-  const dividendInfo = new DividendInfo(entity);
+    const dividendInfo = new DividendInfo(entity);
 
-  let result = await dividendInfo.save();
-  //console.log(`save schedule success`, result);
-  return result;
+    let result = await dividendInfo.save();
+    //console.log(`save schedule success`, result);
+    return result;
+  } catch (error) {
+    console.error("DividendInfo source error", error);
+    return null;
+  }
 }
 
 //convert html document to data
@@ -97,4 +105,4 @@ function processData(source) {
 
 module.exports = { getData };
 //Test single file
-//mongooseQuickSetup(getData);
+mongooseQuickSetup(getData);
