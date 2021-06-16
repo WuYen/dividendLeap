@@ -105,4 +105,4 @@ function processData(source) {
 
 module.exports = { getData };
 //Test single file
-mongooseQuickSetup(getData);
+//mongooseQuickSetup(getData);
