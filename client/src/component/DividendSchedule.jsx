@@ -1,13 +1,18 @@
-import React, { useEffect, useState, useMemo, useContext } from "react";
+import React, { useEffect, useContext, useCallback } from "react";
 import { formatDate, tryParseFloat } from "../utility/formatHelper";
 import { dataAPI } from "../utility/config";
 import { Link } from "react-router-dom";
-
-import MaterialTable from "material-table";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import Context from "../store/context";
 import { GET_SCHEDULE_SUCCESS } from "../store/actions/actionType";
+import {
+  Switch,
+  FormControl,
+  FormLabel,
+  Box,
+  Spinner,
+  Container,
+} from "@chakra-ui/react";
+import ScheduleTable from "./ScheduleTable";
 
 function DividendSchedule(props) {
   const { schedule, filter, dispatch } = useContext(Context);
@@ -23,39 +28,40 @@ function DividendSchedule(props) {
     }
   }, []);
 
-  const table = useMemo(
-    () => (
-      <MaterialTable
-        {...getTableProps()}
-        data={schedule.filter((x) =>
-          filter ? tryParseFloat(x.rate) > 5 : true
-        )}
-      />
-    ),
-    [filter, schedule]
-  );
+  const toggleFilter = useCallback(() => {
+    dispatch({ type: "TOGGLE_FILTER" });
+  }, []);
 
   if (schedule.length == 0) {
-    return <div>Loading...</div>;
+    return (
+      <Container centerContent>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="teal.500"
+          size="xl"
+        />
+      </Container>
+    );
   }
 
   console.log("Schedule render");
   return (
-    <>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={filter}
-            onChange={() => {
-              dispatch({ type: "TOGGLE_FILTER" });
-            }}
-            color="primary"
-          />
-        }
-        label="殖利率大於 5%"
-      />
-      {table}
-    </>
+    <Box w="100%" p={4}>
+      <FormControl display="flex" alignItems="center" p={4}>
+        <Switch
+          id="filter"
+          colorScheme="teal"
+          isChecked={filter}
+          onChange={toggleFilter}
+        />
+        <FormLabel htmlFor="filter" mb="0">
+          殖利率大於 5%
+        </FormLabel>
+      </FormControl>
+      <ScheduleTable data={schedule} filter={filter} />
+    </Box>
   );
 }
 
