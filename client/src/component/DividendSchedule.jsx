@@ -1,18 +1,10 @@
 import React, { useEffect, useContext, useCallback } from "react";
-import { formatDate, tryParseFloat } from "../utility/formatHelper";
 import { dataAPI } from "../utility/config";
-import { Link } from "react-router-dom";
 import Context from "../store/context";
 import { GET_SCHEDULE_SUCCESS } from "../store/actions/actionType";
-import {
-  Switch,
-  FormControl,
-  FormLabel,
-  Box,
-  Spinner,
-  Container,
-} from "@chakra-ui/react";
+import { Switch, FormControl, FormLabel, Box } from "@chakra-ui/react";
 import ScheduleTable from "./ScheduleTable";
+import Loading from "./Loading";
 
 function DividendSchedule(props) {
   const { schedule, filter, dispatch } = useContext(Context);
@@ -31,21 +23,11 @@ function DividendSchedule(props) {
   }, []);
 
   if (schedule.length == 0) {
-    return (
-      <Container centerContent>
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal.500"
-          size="xl"
-        />
-      </Container>
-    );
+    return <Loading />;
   }
 
   return (
-    <Box w="100%" p={4}>
+    <Box w="100%">
       <FormControl display="flex" alignItems="center" p={4}>
         <Switch
           id="filter"

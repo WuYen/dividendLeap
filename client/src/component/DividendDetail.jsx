@@ -3,12 +3,18 @@ import { formatDate } from "../utility/formatHelper";
 import { dataAPI } from "../utility/config";
 import { useParams } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
-import { Box, Spinner, Container, Link, Divider } from "@chakra-ui/react";
+import { Box, Link, Divider, useBreakpointValue } from "@chakra-ui/react";
 import { LinkIcon } from "@chakra-ui/icons";
+import Loading from "./Loading";
 
 function DividendDetail(props) {
   const [data, setData] = useState(null);
   const { stockNo, name } = useParams();
+  const variant = useBreakpointValue({
+    base: "sm",
+    sm: "sm",
+    md: "md",
+  });
 
   useEffect(() => {
     fetch(`${dataAPI}/stock/detail/${stockNo}`)
@@ -20,31 +26,29 @@ function DividendDetail(props) {
   }, []);
 
   if (!data) {
-    return (
-      <Container centerContent>
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal.500"
-          size="xl"
-        />
-      </Container>
-    );
+    return <Loading />;
   }
 
   return (
-    <Box w="100%" p={4}>
-      <Link
-        color="teal.500"
-        as={RouterLink}
-        to={{
-          pathname: `/`,
-        }}
-      >
-        回列表
-        <LinkIcon mx="4px" viewBox="0 0 30 30" />
-      </Link>
+    <>
+      {variant == "sm" && (
+        <Box w="100%" p={4}>
+          <Link
+            color="teal.500"
+            as={RouterLink}
+            _hover={{
+              textDecoration: "none",
+              color: "teal.800",
+            }}
+            to={{
+              pathname: `/`,
+            }}
+          >
+            回列表
+            <LinkIcon mx="4px" viewBox="0 0 30 30" />
+          </Link>
+        </Box>
+      )}
 
       <Box d="flex" flexWrap="wrap" alignItems="baseline">
         <Box m="4" color="gray.600">
@@ -103,7 +107,7 @@ function DividendDetail(props) {
           <HistoryPrice data={data.HighLY} />
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 

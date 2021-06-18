@@ -73,6 +73,10 @@ function NormalTable(props) {
               <Td>
                 <Link
                   color="teal.500"
+                  _hover={{
+                    textDecoration: "none",
+                    color: "teal.800",
+                  }}
                   as={RouterLink}
                   to={{
                     pathname: `/detail/${item.stockNo}/${item.stockName}`,
@@ -241,13 +245,14 @@ function SortTitle(props) {
 }
 
 function ScheduleTable(props) {
+  const { data, filter } = props;
   const variant = useBreakpointValue({
     base: "base",
     sm: "sm",
     md: "md",
   });
+  console.log("variant", variant);
 
-  const { data, filter } = props;
   const [sortBy, setSortBy] = useState({});
   let filtedData = filter
     ? data.filter((x) => tryParseFloat(x.rate) > 5)
