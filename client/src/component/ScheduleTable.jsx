@@ -9,27 +9,13 @@ import {
   Td,
   Link,
   Divider,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { formatDate, tryParseFloat } from "../utility/formatHelper";
 import { LinkIcon, ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 
-function ScheduleTable(props) {
-  const { data, filter } = props;
-  const [sortBy, setSortBy] = useState({});
-  let filtedData = filter
-    ? data.filter((x) => tryParseFloat(x.rate) > 5)
-    : data;
-  if (sortBy.field) {
-    filtedData = filtedData.sort((a, b) => {
-      if (a[sortBy.field] < b[sortBy.field]) {
-        return sortBy.type == "asc" ? 1 : -1;
-      }
-      if (a[sortBy.field] > b[sortBy.field]) {
-        return sortBy.type == "asc" ? -1 : 1;
-      }
-      return 0;
-    });
-  }
+function NormalTable(props) {
+  const { sortBy, setSortBy, data } = props;
 
   return (
     <Table variant="simple">
@@ -81,7 +67,7 @@ function ScheduleTable(props) {
         </Tr>
       </Thead>
       <Tbody>
-        {filtedData.map((item) => {
+        {data.map((item) => {
           return (
             <Tr key={item.stockNo}>
               <Td>
@@ -125,28 +111,40 @@ function ScheduleTable(props) {
   );
 }
 
-function ScheduleTableSmall(props) {
-  const { data, filter } = props;
-  let filtedData = filter
-    ? data.filter((x) => tryParseFloat(x.rate) > 5)
-    : data;
+function SmallTable(props) {
+  const { sortBy, setSortBy, data } = props;
   return (
     <Table variant="simple">
       <Thead>
         <Tr>
           <Th fontSize={"md"}>
-            <SortTitle text="股票" />
+            <SortTitle
+              text="股票"
+              field="stockNo"
+              sortBy={sortBy}
+              setSort={setSortBy}
+            />
           </Th>
           <Th fontSize={"md"} isNumeric>
-            <SortTitle text="股利" isNumeric />
+            <SortTitle
+              text="股利"
+              field="cashDividen"
+              sortBy={sortBy}
+              setSort={setSortBy}
+            />
           </Th>
           <Th fontSize={"md"} isNumeric w="100px">
-            <SortTitle text="股價" isNumeric />
+            <SortTitle
+              text="股價"
+              field="price"
+              sortBy={sortBy}
+              setSort={setSortBy}
+            />
           </Th>
         </Tr>
       </Thead>
       <Tbody>
-        {filtedData.map((item) => {
+        {data.map((item) => {
           return (
             <Tr key={item.stockNo}>
               <Td>
@@ -193,7 +191,6 @@ function ScheduleTableSmall(props) {
   );
 }
 
-//asc、desc
 function SortTitle(props) {
   const { sortBy, setSort } = props;
   const [hover, setHover] = useState(false);
@@ -242,4 +239,34 @@ function SortTitle(props) {
   );
 }
 
+function ScheduleTable(props) {
+  const variant = useBreakpointValue({
+    base: "base",
+    sm: "sm",
+    md: "md",
+  });
+
+  const { data, filter } = props;
+  const [sortBy, setSortBy] = useState({});
+  let filtedData = filter
+    ? data.filter((x) => tryParseFloat(x.rate) > 5)
+    : data;
+  if (sortBy.field) {
+    filtedData = filtedData.sort((a, b) => {
+      if (a[sortBy.field] < b[sortBy.field]) {
+        return sortBy.type == "asc" ? 1 : -1;
+      }
+      if (a[sortBy.field] > b[sortBy.field]) {
+        return sortBy.type == "asc" ? -1 : 1;
+      }
+      return 0;
+    });
+  }
+
+  return variant == "md" ? (
+    <NormalTable sortBy={sortBy} setSortBy={setSortBy} data={filtedData} />
+  ) : (
+    <SmallTable sortBy={sortBy} setSortBy={setSortBy} data={filtedData} />
+  );
+}
 export default ScheduleTable;

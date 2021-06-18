@@ -18,14 +18,12 @@ function DividendSchedule(props) {
   const { schedule, filter, dispatch } = useContext(Context);
 
   useEffect(() => {
-    if (schedule.length == 0) {
-      fetch(`${dataAPI}/stock/scheudle`)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("data", data);
-          dispatch({ type: GET_SCHEDULE_SUCCESS, payload: data.data });
-        });
-    }
+    fetch(`${dataAPI}/stock/scheudle`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("GET_SCHEDULE_SUCCESS data", data);
+        dispatch({ type: GET_SCHEDULE_SUCCESS, payload: data.data });
+      });
   }, []);
 
   const toggleFilter = useCallback(() => {
@@ -46,7 +44,6 @@ function DividendSchedule(props) {
     );
   }
 
-  console.log("Schedule render");
   return (
     <Box w="100%" p={4}>
       <FormControl display="flex" alignItems="center" p={4}>
@@ -64,69 +61,5 @@ function DividendSchedule(props) {
     </Box>
   );
 }
-
-// function getTableProps() {
-//   return {
-//     columns: [
-//       {
-//         title: "股票",
-//         field: "stockNo",
-//         render: (props) => {
-//           return (
-//             <Link
-//               to={{
-//                 pathname: `/detail/${props.stockNo}/${props.stockName}`,
-//               }}
-//             >
-//               {`${props.stockName}(${props.stockNo})`}
-//             </Link>
-//           );
-//         },
-//       },
-//       {
-//         title: "除息日",
-//         field: "date",
-//         render: (props) => formatDate(props.date),
-//       },
-//       {
-//         title: "現金股利",
-//         field: "cashDividen",
-//         render: (props) => {
-//           return (+props.cashDividen).toFixed(2);
-//         },
-//       },
-//       {
-//         title: "當前股價",
-//         field: "price",
-//         render: (props) => {
-//           if (props.price) {
-//             return (
-//               <div>
-//                 <div style={{ display: "inline-block", minWidth: "55px" }}>
-//                   {props.price.toFixed(2)}
-//                 </div>
-//                 <div style={{ display: "inline-block" }}>{`(${formatDate(
-//                   props.priceDate
-//                 )})`}</div>
-//               </div>
-//             );
-//           } else {
-//             return "--";
-//           }
-//         },
-//       },
-//       {
-//         title: "現金殖利率 %",
-//         field: "rate",
-//       },
-//     ],
-//     options: {
-//       search: false,
-//       paging: false,
-//       showTitle: false,
-//       toolbar: false,
-//     },
-//   };
-// }
 
 export default DividendSchedule;
