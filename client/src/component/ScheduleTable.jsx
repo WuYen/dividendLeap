@@ -117,26 +117,28 @@ function SmallTable(props) {
     <Table variant="simple">
       <Thead>
         <Tr>
-          <Th fontSize={"md"}>
+          <Th p="12px" fontSize={"sm"}>
             <SortTitle
-              text="股票"
-              field="stockNo"
+              text="除息日"
+              field="date"
               sortBy={sortBy}
               setSort={setSortBy}
             />
           </Th>
-          <Th fontSize={"md"} isNumeric>
-            <SortTitle
-              text="股利"
-              field="cashDividen"
-              sortBy={sortBy}
-              setSort={setSortBy}
-            />
-          </Th>
-          <Th fontSize={"md"} isNumeric w="100px">
+          <Th p="12px" fontSize={"sm"} isNumeric w="110px">
             <SortTitle
               text="股價"
               field="price"
+              isNumeric
+              sortBy={sortBy}
+              setSort={setSortBy}
+            />
+          </Th>
+          <Th p="12px" fontSize={"sm"} isNumeric w="94px">
+            <SortTitle
+              text="殖利率"
+              field="rate"
+              isNumeric
               sortBy={sortBy}
               setSort={setSortBy}
             />
@@ -147,7 +149,7 @@ function SmallTable(props) {
         {data.map((item) => {
           return (
             <Tr key={item.stockNo}>
-              <Td>
+              <Td p="12px">
                 <Link
                   color="teal.500"
                   as={RouterLink}
@@ -159,16 +161,10 @@ function SmallTable(props) {
                   <LinkIcon mx="4px" viewBox="0 0 30 30" />
                 </Link>
                 <Divider />
-                除息日:
-                <br /> {formatDate(item.date)}
+                {formatDate(item.date)}
               </Td>
 
-              <Td isNumeric>
-                {(+item.cashDividen).toFixed(2)}
-                <Divider />
-                殖利率: {item.rate ? item.rate + " %" : "--"}
-              </Td>
-              <Td isNumeric>
+              <Td p="12px" isNumeric>
                 {item.price ? (
                   <div>
                     <div
@@ -182,6 +178,11 @@ function SmallTable(props) {
                 ) : (
                   "--"
                 )}
+                <Divider />
+                股利: {(+item.cashDividen).toFixed(2)}
+              </Td>
+              <Td p="12px" isNumeric>
+                {item.rate ? item.rate + " %" : "--"}
               </Td>
             </Tr>
           );
