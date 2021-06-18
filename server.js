@@ -14,10 +14,13 @@ if (config.NODE_ENV === "production") {
   });
 }
 
-connectDB.toMongo(
-  config.MONGODB_URI || "mongodb://localhost/mern_youtube",
-  () => {
-    const PORT = config.PORT || 8080;
-    app.listen(PORT, console.log(`Server is starting at ${PORT}`));
-  }
-);
+async function start() {
+  await connectDB.toMongo(
+    config.MONGODB_URI || "mongodb://localhost/mern_youtube"
+  );
+
+  const PORT = config.PORT || 8080;
+  app.listen(PORT, console.log(`Server is starting at ${PORT}`));
+}
+
+start();
