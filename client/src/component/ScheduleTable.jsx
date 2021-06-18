@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { Table, Thead, Tbody, Tr, Th, Td, Link } from "@chakra-ui/react";
 import { formatDate, tryParseFloat } from "../utility/formatHelper";
-import { LinkIcon } from "@chakra-ui/icons";
+import { LinkIcon, ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 
 function ScheduleTable(props) {
   const { data, filter } = props;
@@ -68,6 +68,25 @@ function ScheduleTable(props) {
         })}
       </Tbody>
     </Table>
+  );
+}
+
+function SortTitle(prop) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => {
+        console.log("show");
+        setVisible(true);
+      }}
+      onMouseLeave={() => {
+        console.log("hide");
+        setVisible(false);
+      }}
+    >
+      {prop.text}
+      {visible && (prop.type == "up" ? <ArrowUpIcon /> : <ArrowDownIcon />)}
+    </div>
   );
 }
 
