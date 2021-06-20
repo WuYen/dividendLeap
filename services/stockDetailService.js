@@ -1,7 +1,7 @@
 const DividendInfo = require("../models/dividendInfo/repository");
 const DayInfo = require("../models/dayInfo/repository");
 const DayHistory = require("../models/dayHistory/repository");
-const DividendSchedule = require("../models/dividendSchedule/repository");
+const DividendSchedule = require("../models/dividendSchedule/repository.v2");
 const StockDetail = require("../models/stockDetail/repository");
 const { mongooseQuickSetup, latestTradeDate } = require("../utility/helper");
 
@@ -50,10 +50,6 @@ async function buildData(stockNo, lastYear, latestTradDate) {
   });
 
   //找今年的dividend info
-  //let schedule = await DividendSchedule.getData();
-  // let _dInfoTY = schedule.data.find(
-  //   (x) => x.stockNo == stockNo && x.year == "2021"
-  // );
   let dInfoTY = await DividendSchedule.getByStockNo(stockNo);
 
   let dayInfo = await DayInfo.getData({ stockNo, date: latestTradDate });

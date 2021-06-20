@@ -1,7 +1,8 @@
 const DayInfo = require("../models/dayInfo/repository");
-const DividendSchedule = require("../models/dividendSchedule/repository");
+const DividendSchedule = require("../models/dividendSchedule/repository.v2");
 const { mongooseQuickSetup, latestTradeDate } = require("../utility/helper");
 
+//根據 dividendSchedule 取得 清單上的個股每天盤後
 async function getAllDayInfo() {
   const latestTRDT = latestTradeDate();
   const schedule = await DividendSchedule.getData();

@@ -1,5 +1,5 @@
 const DayInfo = require("../models/dayInfo/repository");
-const DividendSchedule = require("../models/dividendSchedule/repository");
+const DividendSchedule = require("../models/dividendSchedule/repository.v2");
 const {
   today,
   mongooseQuickSetup,

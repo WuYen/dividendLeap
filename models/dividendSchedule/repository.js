@@ -1,9 +1,5 @@
 const DividendSchedule = require("./model");
-const {
-  tryParseFloat,
-  mongooseQuickSetup,
-  parseChineseDate,
-} = require("../../utility/helper");
+const { mongooseQuickSetup } = require("../../utility/helper");
 const source = require("./source.twse");
 
 async function getData() {
