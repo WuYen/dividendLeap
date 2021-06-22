@@ -1,6 +1,7 @@
 const cors = require("cors");
-const bodyParser = require("body-parser");
+//const bodyParser = require("body-parser");
 const morgan = require("morgan");
+const express = require("express");
 
 // app.use(cors());
 // app.use(bodyParser.json()); // Data parsing
@@ -9,7 +10,9 @@ const morgan = require("morgan");
 
 module.exports = [
   cors(),
-  bodyParser.json(),
-  bodyParser.urlencoded({ extended: true }),
+  // bodyParser.json(),
+  // bodyParser.urlencoded({ extended: true }),
+  express.json(),
+  express.urlencoded({ extended: false }),
   morgan("tiny"),
 ];

@@ -7,11 +7,14 @@
     "@chakra-ui/react": "^1.6.3",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
+    "formik": "^2.2.9",
+    "formik-chakra-ui": "^1.4.7",
     "framer-motion": "^4.1.17",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.2.0",
+    "yup": "^0.32.9"
   },
   "scripts": {
     "start": "react-scripts start",
