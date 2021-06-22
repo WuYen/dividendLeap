@@ -23,7 +23,7 @@ function DividendDetail(props) {
         console.log("data", data);
         setData(data.data);
       });
-  }, []);
+  }, [stockNo]);
 
   if (!data) {
     return <Loading />;
@@ -31,7 +31,7 @@ function DividendDetail(props) {
 
   return (
     <>
-      {variant == "sm" && (
+      {variant === "sm" && (
         <Box w="100%" p={4}>
           <Link
             color="teal.500"

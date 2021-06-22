@@ -9,7 +9,6 @@ import {
   Td,
   Link,
   Divider,
-  useBreakpointValue,
 } from "@chakra-ui/react";
 import { formatDate, tryParseFloat } from "../utility/formatHelper";
 import { LinkIcon, ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
@@ -201,7 +200,7 @@ function SortTitle(props) {
   const [hover, setHover] = useState(false);
   const isActive = sortBy.field === props.field;
   const Arrow =
-    sortBy.type == "asc" ? (
+    sortBy.type === "asc" ? (
       <ArrowDownIcon
         viewBox="0 0 30 30"
         visibility={hover || isActive ? "visible" : "hidden"}
@@ -216,7 +215,7 @@ function SortTitle(props) {
     <div
       onClick={() => {
         setSort((old) => {
-          if (old.field == props.field) {
+          if (old.field === props.field) {
             return {
               field: props.field,
               type: old.type === "asc" ? "desc" : "asc",
@@ -246,12 +245,6 @@ function SortTitle(props) {
 
 function ScheduleTable(props) {
   const { data, filter } = props;
-  const variant = useBreakpointValue({
-    base: "base",
-    sm: "sm",
-    md: "md",
-  });
-  console.log("variant", variant);
 
   const [sortBy, setSortBy] = useState({});
   let filtedData = filter
@@ -260,19 +253,20 @@ function ScheduleTable(props) {
   if (sortBy.field) {
     filtedData = filtedData.sort((a, b) => {
       if (a[sortBy.field] < b[sortBy.field]) {
-        return sortBy.type == "asc" ? 1 : -1;
+        return sortBy.type === "asc" ? 1 : -1;
       }
       if (a[sortBy.field] > b[sortBy.field]) {
-        return sortBy.type == "asc" ? -1 : 1;
+        return sortBy.type === "asc" ? -1 : 1;
       }
       return 0;
     });
   }
 
-  return variant == "md" ? (
+  return props.variant === "md" ? (
     <NormalTable sortBy={sortBy} setSortBy={setSortBy} data={filtedData} />
   ) : (
     <SmallTable sortBy={sortBy} setSortBy={setSortBy} data={filtedData} />
   );
 }
-export default ScheduleTable;
+
+export default React.memo(ScheduleTable);

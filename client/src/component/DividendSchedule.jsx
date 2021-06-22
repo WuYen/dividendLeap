@@ -2,12 +2,19 @@ import React, { useEffect, useContext, useCallback } from "react";
 import { dataAPI } from "../utility/config";
 import Context from "../store/context";
 import { GET_SCHEDULE_SUCCESS } from "../store/actions/actionType";
-import { Switch, FormControl, FormLabel, Box } from "@chakra-ui/react";
+import {
+  Switch,
+  FormControl,
+  FormLabel,
+  Box,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import ScheduleTable from "./ScheduleTable";
 import Loading from "./Loading";
 
 function DividendSchedule(props) {
   const { schedule, filter, dispatch } = useContext(Context);
+  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
 
   useEffect(() => {
     fetch(`${dataAPI}/stock/scheudle`)
@@ -20,9 +27,9 @@ function DividendSchedule(props) {
 
   const toggleFilter = useCallback(() => {
     dispatch({ type: "TOGGLE_FILTER" });
-  }, []);
+  }, [dispatch]);
 
-  if (schedule.length == 0) {
+  if (schedule.length === 0) {
     return <Loading />;
   }
 
@@ -39,7 +46,11 @@ function DividendSchedule(props) {
           殖利率大於 5%
         </FormLabel>
       </FormControl>
-      <ScheduleTable data={schedule} filter={filter} />
+      <ScheduleTable
+        data={schedule}
+        filter={filter}
+        variant={isLargerThan768 ? "md" : "sm"}
+      />
     </Box>
   );
 }

@@ -16,7 +16,7 @@ async function getSchedule() {
 
   const result = filtedData.map((x) => {
     let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
-    if (dayInfo) {
+    if (dayInfo && dayInfo.price > 0) {
       return {
         ...x.toObject(),
         rate: ((x.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%"
@@ -45,4 +45,9 @@ function byTime(a, b) {
   return 0;
 }
 
-module.exports = { getSchedule };
+async function insert(data) {
+  let result = await DividendSchedule.insert(data);
+  return { success: true, data: result };
+}
+
+module.exports = { getSchedule, insert };

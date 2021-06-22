@@ -4,7 +4,6 @@ import {
   Flex,
   Text,
   IconButton,
-  Button,
   Stack,
   Collapse,
   Icon,
@@ -15,7 +14,6 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
-  Image,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,

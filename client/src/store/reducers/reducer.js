@@ -3,7 +3,7 @@ import * as ACTION_TYPES from "../actions/actionType";
 export const initialState = {
   schedule: [],
   filter: localStorage.getItem("filter")
-    ? localStorage.getItem("filter") == "true"
+    ? localStorage.getItem("filter") === "true"
     : true,
 };
 
