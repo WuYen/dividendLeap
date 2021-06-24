@@ -9,7 +9,7 @@ import DividendSchedule from "./component/DividendSchedule";
 import DividendDetail from "./component/DividendDetail";
 import Header from "./component/Header";
 import ErrorBoundary from "./component/ErrorBoundary";
-import InsertForm from "./component/InsertForm";
+import MaintainSchedule from "./component/MaintainSchedule";
 
 function App() {
   const [reducer, dispatch] = useReducer(
@@ -28,9 +28,9 @@ function App() {
                 <DividendDetail />
               </ErrorBoundary>
             </Route>
-            <Route path="/schdeule/insert">
+            <Route path="/schedule/maintain">
               <ErrorBoundary>
-                <InsertForm />
+                <MaintainSchedule />
               </ErrorBoundary>
             </Route>
             <Route path="/">

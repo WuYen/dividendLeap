@@ -68,7 +68,7 @@ function NormalTable(props) {
       <Tbody>
         {data.map((item) => {
           return (
-            <Tr key={item.stockNo}>
+            <Tr key={item.stockNo} _hover={{ bg: "gray.50" }}>
               <Td>
                 <Link
                   color="teal.500"
@@ -166,7 +166,6 @@ function SmallTable(props) {
                 <Divider />
                 {formatDate(item.date)}
               </Td>
-
               <Td p="12px" isNumeric>
                 {item.price ? (
                   <div>

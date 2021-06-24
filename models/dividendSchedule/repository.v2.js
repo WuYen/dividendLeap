@@ -6,8 +6,8 @@ const {
 } = require("../../utility/helper");
 const source = require("./source.twse.v2");
 
-async function getData() {
-  let data = await DividendSchedule.find().exec();
+async function getData(query = {}) {
+  let data = await DividendSchedule.find(query).exec();
   if (data.length == 0) {
     data = await source.getData();
   }
@@ -25,12 +25,8 @@ async function update() {
 }
 
 async function insert(data) {
+  console.log("insert data", data);
   try {
-    const isVaild = validation(data);
-    if (!isVaild) {
-      throw new Error("Data is not vaild");
-    }
-
     const { year, month } = getDateFragment(data.date);
     const entity = {
       stockNo: data.no,
@@ -54,8 +50,27 @@ async function insert(data) {
   }
 }
 
-function validation(data) {
-  return true;
+async function remove(id) {
+  let data = await DividendSchedule.deleteOne({ id }).exec();
+  return data;
+}
+
+async function updateSingle(data) {
+  const { year, month } = getDateFragment(data.date);
+  let result = await DividendSchedule.updateOne(
+    { sourceType: "manual", id: data.id },
+    {
+      stockNo: data.no,
+      stockName: data.name,
+      year: year, //除息年度 2019
+      month: month,
+      date: data.date, //除息日期 20190701
+      cashDividen: data.value, //現金股利0.4
+      updateDate: today(),
+    }
+  );
+
+  return result;
 }
 
 // mongooseQuickSetup(async () => {
@@ -73,5 +88,7 @@ module.exports = {
   getByStockNo,
   update,
   insert,
-  entity: DividendSchedule,
+  remove,
+  updateSingle,
+  entity: DividendSchedule, //避免使用
 };
