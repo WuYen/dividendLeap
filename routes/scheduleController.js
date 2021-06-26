@@ -27,7 +27,7 @@ router.post("/update", async function (req, res) {
 
 //手動新增個股除權息資料
 router.post("/remove", async function (req, res) {
-  let result = await remove(req.body);
+  let result = await remove(req.body.id);
   return res.send(result);
 });
 

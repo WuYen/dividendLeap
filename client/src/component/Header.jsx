@@ -145,6 +145,7 @@ const DesktopNav = () => {
                     textDecoration: "none",
                     color: linkHoverColor,
                   }}
+                  _focus={{ outline: "none" }}
                   as={RouterLink}
                   to={{
                     pathname: navItem.href,
@@ -330,5 +331,9 @@ const NAV_ITEMS = [
   {
     label: "除權息列表",
     href: "/",
+  },
+  {
+    label: "管理列表",
+    href: "/schedule/maintain",
   },
 ];

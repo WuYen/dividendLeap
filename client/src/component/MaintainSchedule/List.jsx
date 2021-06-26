@@ -9,17 +9,20 @@ import {
   Td,
   Link,
   Divider,
+  IconButton,
+  ButtonGroup,
   Box,
 } from "@chakra-ui/react";
 import { formatDate, tryParseFloat } from "../../utility/formatHelper";
 import { LinkIcon, ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import Loading from "../Loading";
+import { EditIcon, DeleteIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 
 function List(props) {
+  const { editItem, onSetEditItem, render } = props;
   const [schedule, setSchedule] = useState([]);
   const [sortBy, setSortBy] = useState({});
-
-  useEffect(() => {
+  const getList = useCallback(() => {
     fetch(`${dataAPI}/schedule/list`)
       .then((res) => res.json())
       .then((data) => {
@@ -27,6 +30,25 @@ function List(props) {
         setSchedule(data.data);
       });
   }, []);
+
+  useEffect(() => {
+    getList();
+  }, [editItem, render]);
+
+  const handleRemove = (id) => {
+    fetch(`${dataAPI}/schedule/remove`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ id }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("remove result", data);
+        if (data.success) {
+          getList();
+        }
+      });
+  };
 
   // if (schedule.length === 0) {
   //   return <Loading />;
@@ -62,15 +84,26 @@ function List(props) {
                 setSort={setSortBy}
               />
             </Th>
+            <Th fontSize={"md"}></Th>
           </Tr>
         </Thead>
         <Tbody>
-          {schedule.map((item) => {
+          {schedule.map((item, index) => {
             return (
-              <Tr key={item.stockNo}>
+              <Tr key={`${item.stockNo}${index}`}>
                 <Td>{`${item.stockName}(${item.stockNo})`}</Td>
                 <Td>{formatDate(item.date)}</Td>
                 <Td isNumeric>{(+item.cashDividen).toFixed(2)}</Td>
+                <Td isNumeric>
+                  <EditButtonGroup
+                    onDeleteItem={() => {
+                      handleRemove(item._id);
+                    }}
+                    onSetEditItem={() => {
+                      onSetEditItem(item);
+                    }}
+                  />
+                </Td>
               </Tr>
             );
           })}
@@ -81,6 +114,49 @@ function List(props) {
 }
 
 export default List;
+
+function EditButtonGroup(props) {
+  const [confirm, setConfirm] = useState(false);
+  return confirm ? (
+    <ButtonGroup variant="outline" spacing="2">
+      <IconButton
+        aria-label="Confirm"
+        _focus={{ outline: "none" }}
+        icon={<CheckIcon color="teal.500" />}
+        onClick={() => {
+          console.log("Confirm delete");
+          props.onDeleteItem();
+        }}
+      />
+      <IconButton
+        aria-label="Cancel"
+        _focus={{ outline: "none" }}
+        icon={<CloseIcon color="pink.400" />}
+        onClick={() => {
+          setConfirm(false);
+        }}
+      />
+    </ButtonGroup>
+  ) : (
+    <ButtonGroup variant="outline" spacing="2">
+      <IconButton
+        aria-label="Edit"
+        _focus={{ outline: "none" }}
+        icon={<EditIcon color="teal.500" />}
+        onClick={props.onSetEditItem}
+      />
+      <IconButton
+        aria-label="Delete"
+        _focus={{ outline: "none" }}
+        icon={<DeleteIcon color="pink.400" />}
+        onClick={() => {
+          setConfirm(true);
+        }}
+      />
+    </ButtonGroup>
+  );
+}
+
 function SortTitle(props) {
   const { sortBy, setSort } = props;
   const [hover, setHover] = useState(false);

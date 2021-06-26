@@ -51,14 +51,14 @@ async function insert(data) {
 }
 
 async function remove(id) {
-  let data = await DividendSchedule.deleteOne({ id }).exec();
+  let data = await DividendSchedule.findOneAndDelete({ _id: id }).exec();
   return data;
 }
 
 async function updateSingle(data) {
   const { year, month } = getDateFragment(data.date);
   let result = await DividendSchedule.updateOne(
-    { sourceType: "manual", id: data.id },
+    { sourceType: "manual", _id: data.id },
     {
       stockNo: data.no,
       stockName: data.name,

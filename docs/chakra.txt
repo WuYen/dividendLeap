@@ -1,0 +1,2 @@
+You can also consider using the focus-visible approach here: https://medium.com/@keeganfamouss/accessibility-on-demand-with-chakra-ui-and-focus-visible-19413b1bc6f9
+Blue outline borders around all clickable components ugly #708: https://github.com/chakra-ui/chakra-ui/issues/708
