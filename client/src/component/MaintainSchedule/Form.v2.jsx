@@ -1,5 +1,4 @@
 import React from "react";
-import { dataAPI } from "../../utility/config";
 import { Formik } from "formik";
 import {
   InputControl,
@@ -31,29 +30,6 @@ const validationSchema = Yup.object({
   value: Yup.number().required("必填欄位"),
 });
 
-const saveData =
-  (onSetEditItem, refreshList, id = "") =>
-  (values, actions) => {
-    const isAdd = id === "";
-    const payload = JSON.stringify(values);
-    console.log(`saveData isAdd:${isAdd}`, payload);
-
-    const url = `${dataAPI}/schedule/${isAdd ? "insert" : "update"}`;
-    fetch(url, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: payload,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("saveData result", data);
-        actions.setSubmitting(false);
-        actions.resetForm({ values: initialValues });
-        onSetEditItem(null);
-        refreshList({});
-      });
-  };
-
 const getInitialValue = (data) => {
   if (data) {
     return {
@@ -67,18 +43,26 @@ const getInitialValue = (data) => {
 };
 
 function Form(props) {
-  const { editItem, onSetEditItem, refreshList } = props;
+  const { editItem, service } = props;
+
+  const handleSubmit = (values, actions) => {
+    service.onSaveData({ id: editItem?._id, ...values }).then(() => {
+      actions.setSubmitting(false);
+      actions.resetForm({ values: initialValues });
+    });
+  };
+
   const formProps = {
     initialValues: getInitialValue(editItem),
     validationSchema,
-    onSubmit: saveData(onSetEditItem, refreshList, editItem?._id),
+    onSubmit: handleSubmit,
     enableReinitialize: true,
   };
 
   console.log("formProps", editItem, formProps);
   return (
     <Formik {...formProps}>
-      {({ handleSubmit, values, errors, ...rest }) => (
+      {({ handleSubmit, ...rest }) => (
         <Box
           borderWidth="1px"
           rounded="lg"
@@ -103,6 +87,7 @@ function Form(props) {
               _focus={{ outline: "none" }}
               onClick={() => {
                 rest.resetForm({ values: initialValues });
+                service.onSetEditItem(null);
               }}
             >
               Clear

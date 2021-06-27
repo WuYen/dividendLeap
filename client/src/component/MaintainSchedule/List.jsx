@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useRef } from "react";
 import { dataAPI } from "../../utility/config";
 import {
   Table,
@@ -7,110 +7,109 @@ import {
   Tr,
   Th,
   Td,
-  Link,
-  Divider,
   IconButton,
   ButtonGroup,
   Box,
 } from "@chakra-ui/react";
 import { formatDate, tryParseFloat } from "../../utility/formatHelper";
 import { LinkIcon, ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
-import Loading from "../Loading";
+import Loading from "../common/Loading";
 import { EditIcon, DeleteIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 
 function List(props) {
   const { editItem, onSetEditItem, render } = props;
   const [schedule, setSchedule] = useState([]);
-  const [sortBy, setSortBy] = useState({});
-  const getList = useCallback(() => {
-    fetch(`${dataAPI}/schedule/list`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("schedule list data", data);
-        setSchedule(data.data);
-      });
+  const notFetch = useRef(true);
+
+  const callFetchData = useCallback(() => {
+    fetchData((data) => {
+      notFetch.current = false;
+      setSchedule(data.data);
+    });
   }, []);
 
   useEffect(() => {
-    getList();
+    callFetchData();
   }, [editItem, render]);
 
   const handleRemove = (id) => {
-    fetch(`${dataAPI}/schedule/remove`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ id }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("remove result", data);
-        if (data.success) {
-          getList();
-        }
-      });
+    removeData({ id, callback: callFetchData });
   };
 
-  // if (schedule.length === 0) {
-  //   return <Loading />;
-  // }
+  if (schedule.length == 0 && notFetch.current) {
+    return <Loading h="100%" />;
+  }
 
   return (
     <Box>
       <Table variant="simple">
         <Thead>
           <Tr>
-            <Th fontSize={"md"}>
-              <SortTitle
-                text="股票"
-                field="stockNo"
-                sortBy={sortBy}
-                setSort={setSortBy}
-              />
-            </Th>
-            <Th fontSize={"md"}>
-              <SortTitle
-                text="除息日"
-                field="date"
-                sortBy={sortBy}
-                setSort={setSortBy}
-              />
-            </Th>
+            <Th fontSize={"md"}>股票</Th>
+            <Th fontSize={"md"}>除息日</Th>
             <Th fontSize={"md"} isNumeric>
-              <SortTitle
-                text="現金股利"
-                field="cashDividen"
-                isNumeric
-                sortBy={sortBy}
-                setSort={setSortBy}
-              />
+              現金股利
             </Th>
             <Th fontSize={"md"}></Th>
           </Tr>
         </Thead>
         <Tbody>
-          {schedule.map((item, index) => {
-            return (
-              <Tr key={`${item.stockNo}${index}`}>
-                <Td>{`${item.stockName}(${item.stockNo})`}</Td>
-                <Td>{formatDate(item.date)}</Td>
-                <Td isNumeric>{(+item.cashDividen).toFixed(2)}</Td>
-                <Td isNumeric>
-                  <EditButtonGroup
-                    onDeleteItem={() => {
-                      handleRemove(item._id);
-                    }}
-                    onSetEditItem={() => {
-                      onSetEditItem(item);
-                    }}
-                  />
-                </Td>
-              </Tr>
-            );
-          })}
+          {schedule.length === 0 ? (
+            <Tr>
+              <Td colSpan="4" textAlign="center" color="gray.400">
+                目前沒有資料
+              </Td>
+            </Tr>
+          ) : (
+            schedule.map((item, index) => {
+              return (
+                <Tr key={`${item.stockNo}${index}`}>
+                  <Td>{`${item.stockName}(${item.stockNo})`}</Td>
+                  <Td>{formatDate(item.date)}</Td>
+                  <Td isNumeric>{(+item.cashDividen).toFixed(2)}</Td>
+                  <Td isNumeric>
+                    <EditButtonGroup
+                      onDeleteItem={() => {
+                        handleRemove(item._id);
+                      }}
+                      onSetEditItem={() => {
+                        onSetEditItem(item);
+                      }}
+                    />
+                  </Td>
+                </Tr>
+              );
+            })
+          )}
         </Tbody>
       </Table>
     </Box>
   );
+}
+
+function fetchData(callback) {
+  fetch(`${dataAPI}/schedule/list`)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("schedule list data", data);
+      callback(data);
+    });
+}
+
+function removeData(props) {
+  fetch(`${dataAPI}/schedule/remove`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ id: props.id }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("remove result", data);
+      if (data.success) {
+        props.callback(data);
+        //getList();
+      }
+    });
 }
 
 export default List;

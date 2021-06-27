@@ -10,7 +10,7 @@ import {
   Link,
   Divider,
 } from "@chakra-ui/react";
-import { formatDate, tryParseFloat } from "../utility/formatHelper";
+import { formatDate, tryParseFloat } from "../../utility/formatHelper";
 import { LinkIcon, ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 
 function NormalTable(props) {

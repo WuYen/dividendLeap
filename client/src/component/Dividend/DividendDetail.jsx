@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { formatDate } from "../utility/formatHelper";
-import { dataAPI } from "../utility/config";
+import { formatDate } from "../../utility/formatHelper";
+import { dataAPI } from "../../utility/config";
 import { useParams } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import { Box, Link, Divider, useBreakpointValue } from "@chakra-ui/react";
 import { LinkIcon } from "@chakra-ui/icons";
-import Loading from "./Loading";
+import Loading from "../common/Loading";
 
 function DividendDetail(props) {
   const [data, setData] = useState(null);

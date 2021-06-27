@@ -5,11 +5,10 @@ import { ChakraProvider } from "@chakra-ui/react";
 import Context from "./store/context";
 import * as Reducer from "./store/reducers/reducer";
 
-import DividendSchedule from "./component/DividendSchedule";
-import DividendDetail from "./component/DividendDetail";
 import Header from "./component/Header";
-import ErrorBoundary from "./component/ErrorBoundary";
-import MaintainSchedule from "./component/MaintainSchedule";
+import ErrorBoundary from "./component/common/ErrorBoundary";
+import { DividendSchedule, DividendDetail } from "./component/Dividend";
+import MaintainSchedule from "./component/MaintainSchedule/Container";
 
 function App() {
   const [reducer, dispatch] = useReducer(
@@ -22,26 +21,32 @@ function App() {
       <ChakraProvider>
         <Router>
           <Header />
-          <Switch>
-            <Route path="/detail/:stockNo/:name?">
-              <ErrorBoundary>
-                <DividendDetail />
-              </ErrorBoundary>
-            </Route>
-            <Route path="/schedule/maintain">
-              <ErrorBoundary>
-                <MaintainSchedule />
-              </ErrorBoundary>
-            </Route>
-            <Route path="/">
-              <ErrorBoundary>
-                <DividendSchedule />
-              </ErrorBoundary>
-            </Route>
-          </Switch>
+          <Content />
         </Router>
       </ChakraProvider>
     </Context.Provider>
+  );
+}
+
+function Content(props) {
+  return (
+    <Switch>
+      <Route path="/detail/:stockNo/:name?">
+        <ErrorBoundary>
+          <DividendDetail />
+        </ErrorBoundary>
+      </Route>
+      <Route path="/schedule/maintain">
+        <ErrorBoundary>
+          <MaintainSchedule />
+        </ErrorBoundary>
+      </Route>
+      <Route path="/">
+        <ErrorBoundary>
+          <DividendSchedule />
+        </ErrorBoundary>
+      </Route>
+    </Switch>
   );
 }
 

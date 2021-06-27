@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useCallback } from "react";
-import { dataAPI } from "../utility/config";
-import Context from "../store/context";
-import { GET_SCHEDULE_SUCCESS } from "../store/actions/actionType";
+import { dataAPI } from "../../utility/config";
+import Context from "../../store/context";
+import { GET_SCHEDULE_SUCCESS } from "../../store/actions/actionType";
 import {
   Switch,
   FormControl,
@@ -10,7 +10,7 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import ScheduleTable from "./ScheduleTable";
-import Loading from "./Loading";
+import Loading from "../common/Loading";
 
 function DividendSchedule(props) {
   const { schedule, filter, dispatch } = useContext(Context);
