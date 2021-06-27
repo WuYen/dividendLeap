@@ -26,7 +26,7 @@ async function getAllDayInfo() {
     for (const data of group) {
       if (!dayInfoCollection.find((x) => x.stockNo == data.stockNo)) {
         await delay(getRandomIntInclusive(1000, 3500));
-        if (data?.sourceType == "manual") {
+        if (data.sourceType == "manual") {
           await DayInfo.getData2({ stockNo: data.stockNo, date: latestTRDT });
         } else {
           await DayInfo.getData({ stockNo: data.stockNo, date: latestTRDT });

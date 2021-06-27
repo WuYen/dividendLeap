@@ -52,11 +52,11 @@ function fetchList(props) {
     });
 }
 
-function removeData(props) {
+function removeData(id) {
   return fetch(`${dataAPI}/schedule/remove`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ id: props.id }),
+    body: JSON.stringify({ id: id }),
   })
     .then((res) => res.json())
     .then((data) => data);
