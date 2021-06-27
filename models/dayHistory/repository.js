@@ -9,7 +9,7 @@ const {
 const axios = require("axios");
 
 /**
- * 從 twse 整年 每日資料
+ * 從 ws.api.cnyes.com 取整年每日資料
  * @param {object} {date, stockNo}
  * @returns trade info of that date
  */
@@ -72,7 +72,7 @@ module.exports = {
   entity: Model,
 };
 
-//Test single file: node .\models\dayInfo\repository.js
+//Test single file: node .\models\history\repository.js
 // mongooseQuickSetup(async () => {
 //   let result = await getData("2548", "2020");
 // });

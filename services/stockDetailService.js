@@ -51,8 +51,11 @@ async function buildData(stockNo, lastYear, latestTradDate) {
 
   //找今年的dividend info
   let dInfoTY = await DividendSchedule.getByStockNo(stockNo);
-
   let dayInfo = await DayInfo.getData({ stockNo, date: latestTradDate });
+
+  if (dInfoTY.sourceType == "manual") {
+    dayInfo = await DayInfo.getData2({ stockNo, date: latestTradDate });
+  }
 
   //去年整年每天股價
   let dayHistory = await DayHistory.getData({ stockNo, year: lastYear });

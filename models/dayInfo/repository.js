@@ -6,8 +6,10 @@ const {
   mongooseQuickSetup,
   parseChineseDate,
   getDateFragment,
+  getPureDate,
 } = require("../../utility/helper");
 const axios = require("axios");
+const source = require("./source.cnyes");
 
 /**
  * 從 twse 抓每日盤後個股股價
@@ -29,29 +31,6 @@ async function getData({ date, stockNo = "5522" }) {
   let result = await Model.insertMany(processedData);
   // console.log(`save dayInfo success`, result);
   return result.find((x) => x.date == date);
-}
-
-async function getData2() {
-  let response = await axios.get(
-    `https://ws.api.cnyes.com/ws/api/v1/charting/history?resolution=D&symbol=TWS:5434:STOCK&from=1609459200&to=1577750400&quote=1`
-  );
-
-  let rawData = response.data.data;
-  //rawData.t => [1609372800,...] 時間 convert   var nd = new Date((1609372800*1000) + 3600000 * 8);
-  //rawData.o => [119.5,...] 開盤價
-  //rawData.h => [119.5,...] 最高
-  //rawData.l => [119.0,...] 最低
-  //rawData.c => [119.5,...] 收盤價
-  //rawData.v => [301.339,...] 張數
-  return null;
-  // let processedData = processData(rawData, stockNo);
-
-  // const { year, month } = getDateFragment(date);
-  // await Model.deleteMany({ stockNo, year, month });
-
-  // let result = await Model.insertMany(processedData);
-  // // console.log(`save dayInfo success`, result);
-  // return result.find((x) => x.date == date);
 }
 
 //field index for RawData
@@ -101,6 +80,7 @@ async function getDataProxy(query) {
 
 module.exports = {
   getData: getDataProxy,
+  getData2: source.getData,
   entity: Model,
 };
 

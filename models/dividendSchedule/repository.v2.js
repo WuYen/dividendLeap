@@ -8,7 +8,7 @@ const source = require("./source.twse.v2");
 
 async function getData(query = {}) {
   let data = await DividendSchedule.find(query).exec();
-  if (data.length == 0) {
+  if (data.length == 0 && query.sourceType !== "manual") {
     data = await source.getData();
   }
   return { data, result: "ok" };
