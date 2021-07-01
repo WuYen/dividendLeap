@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import { Box, Link, Divider, useBreakpointValue } from "@chakra-ui/react";
 import { LinkIcon } from "@chakra-ui/icons";
-import Loading from "../common/Loading";
+import Loading from "../Common/Loading";
 
 function DividendDetail(props) {
   const [data, setData] = useState(null);

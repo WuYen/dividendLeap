@@ -1,17 +1,9 @@
 import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Link,
-  Divider,
-} from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Td, Link, Divider } from "@chakra-ui/react";
 import { formatDate, tryParseFloat } from "../../utility/formatHelper";
-import { LinkIcon, ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
+import { LinkIcon } from "@chakra-ui/icons";
+import { SortTh, SortTr } from "../Common/Table";
 
 function NormalTable(props) {
   const { sortBy, setSortBy, data } = props;
@@ -19,51 +11,23 @@ function NormalTable(props) {
   return (
     <Table variant="simple">
       <Thead>
-        <Tr>
-          <Th fontSize={"md"}>
-            <SortTitle
-              text="股票"
-              field="stockNo"
-              sortBy={sortBy}
-              setSort={setSortBy}
-            />
-          </Th>
-          <Th fontSize={"md"}>
-            <SortTitle
-              text="除息日"
-              field="date"
-              sortBy={sortBy}
-              setSort={setSortBy}
-            />
-          </Th>
-          <Th fontSize={"md"} isNumeric>
-            <SortTitle
-              text="現金股利"
-              field="cashDividen"
-              isNumeric
-              sortBy={sortBy}
-              setSort={setSortBy}
-            />
-          </Th>
-          <Th fontSize={"md"} isNumeric>
-            <SortTitle
-              text="當前股價"
-              field="price"
-              isNumeric
-              sortBy={sortBy}
-              setSort={setSortBy}
-            />
-          </Th>
-          <Th fontSize={"md"} isNumeric>
-            <SortTitle
-              text="殖利率"
-              field="rate"
-              isNumeric
-              sortBy={sortBy}
-              setSort={setSortBy}
-            />
-          </Th>
-        </Tr>
+        <SortTr sortBy={sortBy} setSortBy={setSortBy}>
+          <SortTh field="stockNo" fontSize={"md"}>
+            股票
+          </SortTh>
+          <SortTh field="date" fontSize={"md"}>
+            除息日
+          </SortTh>
+          <SortTh field="cashDividen" fontSize={"md"} isNumeric>
+            現金股利
+          </SortTh>
+          <SortTh field="price" fontSize={"md"} isNumeric>
+            當前股價
+          </SortTh>
+          <SortTh field="rate" fontSize={"md"} isNumeric>
+            殖利率
+          </SortTh>
+        </SortTr>
       </Thead>
       <Tbody>
         {data.map((item) => {
@@ -97,9 +61,9 @@ function NormalTable(props) {
                     >
                       {item.price.toFixed(2)}
                     </div>
-                    <div style={{ display: "inline-block" }}>{`(${formatDate(
-                      item.priceDate
-                    )})`}</div>
+                    <div style={{ display: "inline-block" }}>
+                      {`(${formatDate(item.priceDate)})`}
+                    </div>
                   </div>
                 ) : (
                   "--"
@@ -119,39 +83,22 @@ function SmallTable(props) {
   return (
     <Table variant="simple">
       <Thead>
-        <Tr>
-          <Th p="12px" fontSize={"sm"}>
-            <SortTitle
-              text="除息日"
-              field="date"
-              sortBy={sortBy}
-              setSort={setSortBy}
-            />
-          </Th>
-          <Th p="12px" fontSize={"sm"} isNumeric w="110px">
-            <SortTitle
-              text="股價"
-              field="price"
-              isNumeric
-              sortBy={sortBy}
-              setSort={setSortBy}
-            />
-          </Th>
-          <Th p="12px" fontSize={"sm"} isNumeric w="94px">
-            <SortTitle
-              text="殖利率"
-              field="rate"
-              isNumeric
-              sortBy={sortBy}
-              setSort={setSortBy}
-            />
-          </Th>
-        </Tr>
+        <SortTr sortBy={sortBy} setSortBy={setSortBy}>
+          <SortTh field="date" fontSize={"sm"} p="12px">
+            除息日
+          </SortTh>
+          <SortTh field="price" isNumeric fontSize={"sm"} p="12px" w="110px">
+            股價
+          </SortTh>
+          <SortTh field="rate" isNumeric fontSize={"sm"} p="12px" w="94px">
+            殖利率
+          </SortTh>
+        </SortTr>
       </Thead>
       <Tbody>
         {data.map((item) => {
           return (
-            <Tr key={item.stockNo}>
+            <SortTr key={item.stockNo}>
               <Td p="12px">
                 <Link
                   color="teal.500"
@@ -186,7 +133,7 @@ function SmallTable(props) {
               <Td p="12px" isNumeric>
                 {item.rate ? item.rate + " %" : "--"}
               </Td>
-            </Tr>
+            </SortTr>
           );
         })}
       </Tbody>
@@ -194,58 +141,10 @@ function SmallTable(props) {
   );
 }
 
-function SortTitle(props) {
-  const { sortBy, setSort } = props;
-  const [hover, setHover] = useState(false);
-  const isActive = sortBy.field === props.field;
-  const Arrow =
-    sortBy.type === "asc" ? (
-      <ArrowDownIcon
-        viewBox="0 0 30 30"
-        visibility={hover || isActive ? "visible" : "hidden"}
-      />
-    ) : (
-      <ArrowUpIcon
-        viewBox="0 0 30 30"
-        visibility={hover || isActive ? "visible" : "hidden"}
-      />
-    );
-  return (
-    <div
-      onClick={() => {
-        setSort((old) => {
-          if (old.field === props.field) {
-            return {
-              field: props.field,
-              type: old.type === "asc" ? "desc" : "asc",
-            };
-          } else {
-            return {
-              field: props.field,
-              type: old.type || "desc",
-            };
-          }
-        });
-      }}
-      style={{ cursor: "pointer" }}
-      onMouseEnter={() => {
-        setHover(true);
-      }}
-      onMouseLeave={() => {
-        setHover(false);
-      }}
-    >
-      {props.isNumeric && Arrow}
-      {props.text}
-      {!props.isNumeric && Arrow}
-    </div>
-  );
-}
-
 function ScheduleTable(props) {
   const { data, filter } = props;
-
   const [sortBy, setSortBy] = useState({});
+
   let filtedData = filter
     ? data.filter((x) => tryParseFloat(x.rate) > 5)
     : data;

@@ -10,7 +10,7 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import ScheduleTable from "./ScheduleTable";
-import Loading from "../common/Loading";
+import Loading from "../Common/Loading";
 
 function DividendSchedule(props) {
   const { schedule, filter, dispatch } = useContext(Context);
