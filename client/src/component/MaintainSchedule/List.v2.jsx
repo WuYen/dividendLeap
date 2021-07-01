@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Thead, Tbody, Tr, Th, Td, Box } from "@chakra-ui/react";
 import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
-import Loading from "../common/Loading";
+import Loading from "../Common/Loading";
 import DataRow from "./DataRow";
 
 function List(props) {

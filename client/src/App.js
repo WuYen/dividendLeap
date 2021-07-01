@@ -6,9 +6,10 @@ import Context from "./store/context";
 import * as Reducer from "./store/reducers/reducer";
 
 import Header from "./component/Header";
-import ErrorBoundary from "./component/common/ErrorBoundary";
+import ErrorBoundary from "./component/Common/ErrorBoundary";
 import { DividendSchedule, DividendDetail } from "./component/Dividend";
 import MaintainSchedule from "./component/MaintainSchedule/Container";
+import Login from "./component/Login";
 
 function App() {
   const [reducer, dispatch] = useReducer(
@@ -39,6 +40,11 @@ function Content(props) {
       <Route path="/schedule/maintain">
         <ErrorBoundary>
           <MaintainSchedule />
+        </ErrorBoundary>
+      </Route>
+      <Route path="/login">
+        <ErrorBoundary>
+          <Login />
         </ErrorBoundary>
       </Route>
       <Route path="/">
