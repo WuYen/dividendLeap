@@ -3,7 +3,7 @@ const DayInfo = require("../models/dayInfo/repository");
 const DayHistory = require("../models/dayHistory/repository");
 const DividendSchedule = require("../models/dividendSchedule/repository.v2");
 const StockDetail = require("../models/stockDetail/repository");
-const { mongooseQuickSetup, latestTradeDate } = require("../utility/helper");
+const { latestTradeDate } = require("../utility/helper");
 
 /* 取得除權息分析資料 */
 async function getDetail(stockNo) {
@@ -138,9 +138,4 @@ function groupByMonth(data) {
   return result; //[{high,low},...]
 }
 
-// mongooseQuickSetup(async () => {
-//   let result = await buildData("1215", "2020", latestTradeDate());
-//   console.log("getByStockNo result", result);
-//   return result;
-// });
 module.exports = { getDetail };

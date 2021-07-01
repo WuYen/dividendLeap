@@ -1,6 +1,6 @@
 const DayInfo = require("../models/dayInfo/repository");
 const DividendSchedule = require("../models/dividendSchedule/repository.v2");
-const { mongooseQuickSetup, latestTradeDate } = require("../utility/helper");
+const { latestTradeDate } = require("../utility/helper");
 
 //根據 dividendSchedule 取得 清單上的個股每天盤後
 async function getAllDayInfo() {
@@ -72,6 +72,3 @@ function delay(time) {
 module.exports = {
   getAllDayInfo,
 };
-
-// node .\services\dayInfoService
-//mongooseQuickSetup(getAllDayInfo);

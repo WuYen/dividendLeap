@@ -1,10 +1,6 @@
 const DividendSchedule = require("./model.v2");
-const {
-  mongooseQuickSetup,
-  today,
-  getDateFragment,
-} = require("../../utility/helper");
 const source = require("./source.twse.v2");
+const { today, getDateFragment } = require("../../utility/helper");
 
 async function getData(query = {}) {
   let data = await DividendSchedule.find(query).exec();
@@ -72,16 +68,6 @@ async function updateSingle(data) {
 
   return result;
 }
-
-// mongooseQuickSetup(async () => {
-//   // let data = await getData();
-//   // console.log("getData result", data);
-
-//   // let result = await getByStockNo("1215");
-//   // console.log("getByStockNo result", result);
-//   let result = await insert();
-//   return result;
-// });
 
 module.exports = {
   getData,

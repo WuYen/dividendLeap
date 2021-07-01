@@ -1,11 +1,6 @@
 const DividendSchedule = require("./model");
 const request = require("../../utility/requestCore");
-const {
-  tryParseFloat,
-  today,
-  mongooseQuickSetup,
-  getPureDate,
-} = require("../../utility/helper");
+const { tryParseFloat, today, getPureDate } = require("../../utility/helper");
 
 /**
  * 取歷年除權息資料 from 聚財網
@@ -84,5 +79,3 @@ function processData(source) {
 }
 
 module.exports = { getData };
-//Test single file
-//mongooseQuickSetup(getData);

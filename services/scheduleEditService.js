@@ -1,5 +1,4 @@
 const DividendSchedule = require("../models/dividendSchedule/repository.v2");
-const { mongooseQuickSetup } = require("../utility/helper");
 
 async function getList() {
   const schedule = await DividendSchedule.getData({ sourceType: "manual" });

@@ -1,12 +1,7 @@
 const DividendInfo = require("./model");
 const helper = require("../../utility/requestCore");
 const config = require("../../utility/config");
-const {
-  tryParseFloat,
-  today,
-  mongooseQuickSetup,
-  getPureDate,
-} = require("../../utility/helper");
+const { tryParseFloat, today, getPureDate } = require("../../utility/helper");
 
 var getUrl = (stockNo) => {
   let url = config.DIVIDENDINFO_URL || "https://stockinfo.tw/";
@@ -105,5 +100,3 @@ function processData(source) {
 }
 
 module.exports = { getData };
-//Test single file
-//mongooseQuickSetup(getData);

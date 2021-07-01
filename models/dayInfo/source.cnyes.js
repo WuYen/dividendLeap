@@ -1,14 +1,10 @@
+const axios = require("axios");
 const Model = require("./model");
 const {
-  tryParseFloat,
   today,
-  mongooseQuickSetup,
-  parseChineseDate,
   getDateFragment,
-  getPureDate,
   latestTradeDate,
 } = require("../../utility/helper");
-const axios = require("axios");
 
 /**
  * 取歷指定日期的盤後資料
@@ -21,6 +17,12 @@ async function getData({ date = latestTradeDate(), stockNo = "2884" }) {
     `https://ws.api.cnyes.com/ws/api/v1/charting/history?resolution=D&symbol=TWS:${stockNo}:STOCK&from=${d}&to=${d}&quote=1`
   );
 
+  //rawData.t => [1609372800,...] 時間 convert   var nd = new Date((1609372800*1000) + 3600000 * 8);
+  //rawData.o => [119.5,...] 開盤價
+  //rawData.h => [119.5,...] 最高
+  //rawData.l => [119.0,...] 最低
+  //rawData.c => [119.5,...] 收盤價
+  //rawData.v => [301.339,...] 張數
   let rawData = response.data.data;
   if (rawData.t[0] === d) {
     let c = rawData.c[0];
@@ -41,12 +43,6 @@ async function getData({ date = latestTradeDate(), stockNo = "2884" }) {
     return result;
   }
   return null;
-  //rawData.t => [1609372800,...] 時間 convert   var nd = new Date((1609372800*1000) + 3600000 * 8);
-  //rawData.o => [119.5,...] 開盤價
-  //rawData.h => [119.5,...] 最高
-  //rawData.l => [119.0,...] 最低
-  //rawData.c => [119.5,...] 收盤價
-  //rawData.v => [301.339,...] 張數
 }
 
 // //field index for RawData
@@ -76,8 +72,3 @@ async function getData({ date = latestTradeDate(), stockNo = "2884" }) {
 // }
 
 module.exports = { getData };
-
-// //Test single file
-// mongooseQuickSetup(async () => {
-//   const result = await getData({});
-// });

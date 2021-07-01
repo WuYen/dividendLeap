@@ -3,7 +3,6 @@ const request = require("../../utility/requestCore");
 const {
   tryParseFloat,
   today,
-  mongooseQuickSetup,
   parseChineseDate,
   getDateFragment,
 } = require("../../utility/helper");
@@ -59,6 +58,3 @@ function processData(source, today) {
 }
 
 module.exports = { getData };
-
-//Test single file
-//mongooseQuickSetup(getData);

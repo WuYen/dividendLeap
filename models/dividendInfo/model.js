@@ -7,7 +7,6 @@ const Schema = mongoose.Schema;
 const model = mongoose.model(
   "DividendInfoV2",
   new Schema({
-    // stockId: Schema.Types.ObjectId,
     stockNo: String,
     data: [
       {

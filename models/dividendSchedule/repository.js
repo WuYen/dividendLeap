@@ -1,5 +1,4 @@
 const DividendSchedule = require("./model");
-const { mongooseQuickSetup } = require("../../utility/helper");
 const source = require("./source.twse");
 
 async function getData() {
@@ -64,12 +63,6 @@ async function getByStockNo(stockNo) {
     return error;
   }
 }
-
-// mongooseQuickSetup(async () => {
-//   let result = await getByStockNo("1215");
-//   console.log("getByStockNo result", result);
-//   return result;
-// });
 
 module.exports = {
   getData,

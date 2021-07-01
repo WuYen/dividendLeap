@@ -3,7 +3,6 @@
 // const {
 //   tryParseFloat,
 //   today,
-//   mongooseQuickSetup,
 // } = require("../../utility/helper");
 
 // const url = (stockNo, date) =>
@@ -53,5 +52,3 @@
 // }
 
 // //execute function after mongoose connected
-// // node .\models\monthInfo\service.js
-// //mongooseQuickSetup(getData);

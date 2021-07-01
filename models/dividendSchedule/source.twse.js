@@ -1,9 +1,8 @@
 const DividendSchedule = require("./model");
 const request = require("../../utility/requestCore");
 const {
-  tryParseFloat,
   today,
-  mongooseQuickSetup,
+  tryParseFloat,
   parseChineseDate,
 } = require("../../utility/helper");
 
@@ -59,6 +58,3 @@ function processData(source) {
 }
 
 module.exports = { getData };
-
-//Test single file
-//mongooseQuickSetup(getData);

@@ -18,6 +18,7 @@ async function saveData(data) {
   await model.save();
 }
 
+//cache stock detail value
 module.exports = {
   getData: getData,
   saveData: saveData,
