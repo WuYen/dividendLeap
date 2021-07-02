@@ -65,7 +65,7 @@ function getDateFragment(date) {
     return {
       year: date.getFullYear().toString(),
       month: `${("0" + (date.getMonth() + 1)).slice(-2)}`,
-      day: date.getDate().toString(),
+      day: `${("0" + date.getDate()).slice(-2)}`,
     };
   }
 }
