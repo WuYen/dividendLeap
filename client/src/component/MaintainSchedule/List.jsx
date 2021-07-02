@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { formatDate, tryParseFloat } from "../../utility/formatHelper";
 import { LinkIcon, ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
-import Loading from "../common/Loading";
+import Loading from "../Common/Loading";
 import { EditIcon, DeleteIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 
 function List(props) {
