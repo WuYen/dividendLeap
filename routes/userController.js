@@ -8,7 +8,7 @@ router.post("/login", async (req, res) => {
   const { isValid, user } = await getData(req.body); //{account, password}
   if (isValid) {
     const accessToken = jwt.sign(user, config.TOKEN_SECRET);
-    res.send({ success: true, data: accessToken });
+    res.send({ success: true, token: accessToken });
   } else {
     res.send({ success: false, data: null });
   }

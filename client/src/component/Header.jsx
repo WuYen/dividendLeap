@@ -336,4 +336,8 @@ const NAV_ITEMS = [
     label: "管理列表",
     href: "/schedule/maintain",
   },
+  {
+    label: "MyStock",
+    href: "/my/stock",
+  },
 ];
