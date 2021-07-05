@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 
-function Login(props) {
-  return <div>My Stock</div>;
+function MyStock(props) {
+  return (
+    <div>
+      My Stock
+      <br />
+      under construction
+    </div>
+  );
 }
 
-export default Login;
+//TODO: call private my stock api
+
+export default MyStock;

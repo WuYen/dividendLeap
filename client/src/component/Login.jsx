@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
 import { Box, ButtonGroup } from "@chakra-ui/react";
 import * as Yup from "yup";
-import jwt_decode from "jwt-decode";
+import auth from "../utility/auth";
 
 const initialValues = {
   account: "",
@@ -30,9 +30,8 @@ const saveData = (values, actions) => {
       console.log("login result", res);
       actions.setSubmitting(false);
       if (res.success) {
-        localStorage.setItem("AUTH_TOKEN", res.token);
-        var decoded = jwt_decode(res.token);
-        window.JWT = { context: decoded, token: res.token };
+        // auth.setToken(res.token);
+        auth.token = res.token;
       }
       return res.token;
     });
@@ -60,12 +59,17 @@ function Form(props) {
           p={4}
           onSubmit={handleSubmit}
         >
-          <InputControl name="account" label="帳號" mb="2" />
+          <InputControl
+            name="account"
+            label="帳號"
+            mb="2"
+            inputProps={{ type: "text", autoComplete: "username" }}
+          />
           <InputControl
             name="password"
             label="密碼"
             mb="2"
-            inputProps={{ type: "password" }}
+            inputProps={{ type: "password", autoComplete: "current-password" }}
           />
 
           <ButtonGroup mt="2">
@@ -88,15 +92,16 @@ function Form(props) {
 
 function Login(props) {
   const [, render] = useState();
-  const jwt = localStorage.getItem("AUTH_TOKEN");
 
-  if (jwt) {
+  if (auth.isLogin) {
     return (
       <div>
-        is login, {jwt}
+        is login, {auth.context.account}
+        <TestAPI />
         <div
           onClick={() => {
-            localStorage.removeItem("AUTH_TOKEN");
+            auth.token = null;
+            render({});
           }}
         >
           log out
@@ -104,8 +109,53 @@ function Login(props) {
       </div>
     );
   } else {
-    return <Form render={render} />;
+    return (
+      <>
+        <TestAPI />
+        <Form render={render} />
+      </>
+    );
   }
+}
+
+function TestAPI(props) {
+  const [state, setState] = useState();
+  //client-side code
+  const url = `${dataAPI}/user/validate`;
+
+  return (
+    <div>
+      state: {state}
+      <br />
+      <button
+        onClick={() => {
+          console.log("auth token:", auth.token);
+          fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${auth.token}`,
+            },
+          })
+            .then(function (response) {
+              console.log(response);
+              return response.json();
+            })
+            .then(function (data) {
+              console.log("response", data);
+              setState(data.message);
+            })
+            .catch((error) => {
+              console.log("error", error);
+              setState("invalid");
+            });
+        }}
+      >
+        Call API
+      </button>
+    </div>
+  );
 }
 
 export default Login;
