@@ -1,5 +1,6 @@
 import auth from "./auth";
 import { dataAPI } from "./config";
+
 function headers() {
   return {
     "Content-Type": "application/json",
@@ -30,6 +31,11 @@ export function post(url, payload) {
       console.log("error", error);
     });
 }
+
+export default {
+  get,
+  post,
+};
 
 // import JWT from '@utility/jwt';
 // import lang from '@utility/lang';

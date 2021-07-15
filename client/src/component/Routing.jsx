@@ -7,6 +7,7 @@ import { DividendSchedule, DividendDetail } from "./Dividend";
 import MaintainSchedule from "./MaintainSchedule/Container";
 import Login from "./Login";
 import MyStock from "./MyStock";
+import ToolPage from "./ToolPage/Page";
 
 export default function Routing(props) {
   return (
@@ -23,6 +24,9 @@ export default function Routing(props) {
         </Route>
         <PrivateRoute path="/my/stock">
           <MyStock />
+        </PrivateRoute>
+        <PrivateRoute path="/tool">
+          <ToolPage />
         </PrivateRoute>
         <Route path="/">
           <DividendSchedule />
