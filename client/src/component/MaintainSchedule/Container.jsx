@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Box } from "@chakra-ui/react";
-import { dataAPI } from "../../utility/config";
+import api from "../../utility/api";
 
 import List from "./List.v2";
 import Form from "./Form.v2";
@@ -8,25 +8,24 @@ import Form from "./Form.v2";
 function MaintainSchedule(props) {
   const [editItem, setEditItem] = useState();
   const [schedule, setSchedule] = useState(null);
-  const service = useMemo(() => {
-    const handleFetchList = () =>
+  const handleFetchList = useCallback(
+    () =>
       fetchList().then((res) => {
         setSchedule(res.data);
-        return "Finish";
-      });
+        return;
+      }),
+    []
+  );
+  const service = useMemo(() => {
     return {
       onFetchList: handleFetchList,
-      onRemoveData: (id) => {
-        removeData(id).then((res) => {
-          return handleFetchList();
-        });
-      },
-      onSaveData: (data) => {
-        return saveData(data).then(() => {
-          handleFetchList();
-          setEditItem(null);
-        });
-      },
+      onRemoveData: (id) => removeData(id).then(handleFetchList),
+      onSaveData: (data) =>
+        saveData(data)
+          .then(handleFetchList)
+          .then(() => {
+            setEditItem(null);
+          }),
       onSetEditItem: setEditItem,
     };
   }, []);
@@ -44,41 +43,25 @@ function MaintainSchedule(props) {
 }
 
 function fetchList(props) {
-  return fetch(`${dataAPI}/schedule/list`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("fetchList result", data);
-      return data;
-    });
+  return api.get(`/schedule/list`).then((data) => {
+    console.log("fetchList result", data);
+    return data;
+  });
 }
 
 function removeData(id) {
-  return fetch(`${dataAPI}/schedule/remove`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ id: id }),
-  })
-    .then((res) => res.json())
-    .then((data) => data);
+  const payload = JSON.stringify({ id: id });
+  return api.post(`/schedule/remove`, payload).then((data) => data);
 }
 
 function saveData(data) {
   const isAdd = !data.id;
   const payload = JSON.stringify(data);
-  console.log(`saveData isAdd:${isAdd}`, payload);
-
-  const url = `${dataAPI}/schedule/${isAdd ? "insert" : "update"}`;
-  return fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: payload,
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("saveData result", data);
-
-      return data;
-    });
+  const url = `/schedule/${isAdd ? "insert" : "update"}`;
+  return api.post(url, payload).then((data) => {
+    console.log("saveData result", data);
+    return data;
+  });
 }
 
 export default MaintainSchedule;

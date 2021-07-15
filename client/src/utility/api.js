@@ -1,5 +1,5 @@
 import auth from "./auth";
-
+import { dataAPI } from "./config";
 function headers() {
   return {
     "Content-Type": "application/json",
@@ -9,25 +9,23 @@ function headers() {
 }
 
 export function get(url) {
-  return fetch(url, {
+  return fetch(dataAPI + url, {
     method: "GET",
     headers: headers(),
   })
     .then((res) => res.json())
-    .then((data) => data)
     .catch((error) => {
       console.log("error", error);
     });
 }
 
 export function post(url, payload) {
-  fetch(url, {
+  fetch(dataAPI + url, {
     method: "POST",
     headers: headers(),
     body: payload,
   })
     .then((res) => res.json())
-    .then((data) => data)
     .catch((error) => {
       console.log("error", error);
     });
