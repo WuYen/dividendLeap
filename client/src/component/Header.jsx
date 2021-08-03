@@ -22,6 +22,7 @@ import {
   ChevronRightIcon,
 } from "@chakra-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
+import auth from "../utility/auth";
 // import logo from "../logo.png";
 
 export default function Header() {
@@ -131,49 +132,51 @@ const DesktopNav = () => {
     <Stack direction={"row"} spacing={4}>
       {NAV_ITEMS.map((navItem) => {
         const isActive = false;
-        //unable to update active status
-        return (
-          <Box key={navItem.label}>
-            <Popover trigger={"hover"} placement={"bottom-start"}>
-              <PopoverTrigger>
-                <Link
-                  p={2}
-                  fontSize={"sm"}
-                  fontWeight={500}
-                  color={isActive ? activeLinkColor : linkColor}
-                  _hover={{
-                    textDecoration: "none",
-                    color: linkHoverColor,
-                  }}
-                  _focus={{ outline: "none" }}
-                  as={RouterLink}
-                  to={{
-                    pathname: navItem.href,
-                  }}
-                >
-                  {navItem.label}
-                </Link>
-              </PopoverTrigger>
+        if ((navItem.auth == true && auth.isLogin) || !navItem.auth) {
+          return (
+            <Box key={navItem.label}>
+              <Popover trigger={"hover"} placement={"bottom-start"}>
+                <PopoverTrigger>
+                  <Link
+                    p={2}
+                    fontSize={"sm"}
+                    fontWeight={500}
+                    color={isActive ? activeLinkColor : linkColor}
+                    _hover={{
+                      textDecoration: "none",
+                      color: linkHoverColor,
+                    }}
+                    _focus={{ outline: "none" }}
+                    as={RouterLink}
+                    to={{
+                      pathname: navItem.href,
+                    }}
+                  >
+                    {navItem.label}
+                  </Link>
+                </PopoverTrigger>
 
-              {navItem.children && (
-                <PopoverContent
-                  border={0}
-                  boxShadow={"xl"}
-                  bg={popoverContentBgColor}
-                  p={4}
-                  rounded={"xl"}
-                  minW={"sm"}
-                >
-                  <Stack>
-                    {navItem.children.map((child) => (
-                      <DesktopSubNav key={child.label} {...child} />
-                    ))}
-                  </Stack>
-                </PopoverContent>
-              )}
-            </Popover>
-          </Box>
-        );
+                {navItem.children && (
+                  <PopoverContent
+                    border={0}
+                    boxShadow={"xl"}
+                    bg={popoverContentBgColor}
+                    p={4}
+                    rounded={"xl"}
+                    minW={"sm"}
+                  >
+                    <Stack>
+                      {navItem.children.map((child) => (
+                        <DesktopSubNav key={child.label} {...child} />
+                      ))}
+                    </Stack>
+                  </PopoverContent>
+                )}
+              </Popover>
+            </Box>
+          );
+        }
+        return null;
       })}
     </Stack>
   );
@@ -294,40 +297,6 @@ const MobileNavItem = ({ label, children, href }) => {
 };
 
 const NAV_ITEMS = [
-  //{
-  //   label: "Inspiration",
-  //   children: [
-  //     {
-  //       label: "Explore Design Work",
-  //       subLabel: "Trending Design to inspire you",
-  //       href: "#",
-  //     },
-  //     {
-  //       label: "New & Noteworthy",
-  //       subLabel: "Up-and-coming Designers",
-  //       href: "#",
-  //     },
-  //   ],
-  // },
-  // {
-  //   label: "Find Work",
-  //   children: [
-  //     {
-  //       label: "Job Board",
-  //       subLabel: "Find your dream design job",
-  //       href: "#",
-  //     },
-  //     {
-  //       label: "Freelance Projects",
-  //       subLabel: "An exclusive list for contract work",
-  //       href: "#",
-  //     },
-  //   ],
-  // },
-  // {
-  //   label: "Learn Design",
-  //   href: "#",
-  // },
   {
     label: "除權息列表",
     href: "/",
@@ -335,5 +304,51 @@ const NAV_ITEMS = [
   {
     label: "管理列表",
     href: "/schedule/maintain",
+    auth: true,
+  },
+  {
+    label: "我的清單",
+    href: "/my/stock",
+    auth: true,
+  },
+  {
+    label: "新聞",
+    href: "/news",
+    auth: false,
   },
 ];
+
+//{
+//   label: "Inspiration",
+//   children: [
+//     {
+//       label: "Explore Design Work",
+//       subLabel: "Trending Design to inspire you",
+//       href: "#",
+//     },
+//     {
+//       label: "New & Noteworthy",
+//       subLabel: "Up-and-coming Designers",
+//       href: "#",
+//     },
+//   ],
+// },
+// {
+//   label: "Find Work",
+//   children: [
+//     {
+//       label: "Job Board",
+//       subLabel: "Find your dream design job",
+//       href: "#",
+//     },
+//     {
+//       label: "Freelance Projects",
+//       subLabel: "An exclusive list for contract work",
+//       href: "#",
+//     },
+//   ],
+// },
+// {
+//   label: "Learn Design",
+//   href: "#",
+// },

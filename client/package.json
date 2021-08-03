@@ -10,6 +10,7 @@
     "formik": "^2.2.9",
     "formik-chakra-ui": "^1.4.7",
     "framer-motion": "^4.1.17",
+    "jwt-decode": "^3.1.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.2.0",

@@ -14,8 +14,9 @@ const big5Option = {
 
 async function getHTML(url, option = {}) {
   //const { data } = await axios.get(url);
-  const { data } = await axios.get(url, option);
-
+  const { data, ...rest } = await axios.get(url, option);
+  console.log("data", data);
+  let a = rest;
   const document = parse5.parse(data);
   const html = parse5.serialize(document);
   return cheerio.load(html, {
@@ -28,18 +29,19 @@ async function get(url) {
   return data;
 }
 
-// async function postHTML(url, payload) {
-//   //TODO: use axios post
-//   const { data } = await axios.post(url);
-//   const document = parse5.parse(data);
-//   const html = parse5.serialize(document);
-//   return cheerio.load(html, {
-//     decodeEntities: false,
-//   });
-// }
+async function postHTML(url, payload) {
+  //TODO: use axios post
+  const { data } = await axios.post(url, { is_check: "1" });
+  const document = parse5.parse(data);
+  const html = parse5.serialize(document);
+  return cheerio.load(html, {
+    decodeEntities: false,
+  });
+}
 
 module.exports = {
   getHTML,
+  postHTML,
   get,
   big5Option,
 };

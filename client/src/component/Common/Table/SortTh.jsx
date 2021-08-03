@@ -3,7 +3,6 @@ import { Th } from "@chakra-ui/react";
 import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 
 function SortTh({ sortBy, setSortBy, ...props }) {
-  console.log("SortTh", sortBy);
   const [hover, setHover] = useState(false);
   const isActive = sortBy.field === props.field;
   const Arrow =
