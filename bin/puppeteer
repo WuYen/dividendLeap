@@ -19,9 +19,12 @@ const puppeteer = require("puppeteer");
 
   const browser = await puppeteer.launch(chromeOptions);
   const page = await browser.newPage();
+  await page.setDefaultNavigationTimeout(60000);
+  console.log("go to page");
   await page.goto(link);
   await page.waitForSelector(".menu-toggler.search");
   await page.click(".menu-toggler.search");
+  console.log("start search");
   await page.type('.overlay-menu input[type="search"]', "現金股利", {
     delay: 150,
   });
@@ -29,6 +32,7 @@ const puppeteer = require("puppeteer");
   await page.waitForSelector(".menu-toggler.search");
   await page.waitForSelector(".search-total");
   //document.getElementById("indicator").scrollIntoView();
+  console.log("start get data");
   const data = await page.evaluate(() => {
     const temp = [];
     document
