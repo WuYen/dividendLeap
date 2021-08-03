@@ -8,6 +8,7 @@ import MaintainSchedule from "./MaintainSchedule/Container";
 import Login from "./Login";
 import MyStock from "./MyStock";
 import ToolPage from "./ToolPage/Page";
+import News from "./News/Container";
 
 export default function Routing(props) {
   return (
@@ -21,6 +22,9 @@ export default function Routing(props) {
         </Route>
         <Route path="/login">
           <Login />
+        </Route>
+        <Route path="/news">
+          <News />
         </Route>
         <PrivateRoute path="/my/stock">
           <MyStock />

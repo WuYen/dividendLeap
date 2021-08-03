@@ -6,5 +6,6 @@ router.use("/data", require("./dataController"));
 router.use("/tool", require("./toolController"));
 router.use("/schedule", require("./scheduleController"));
 router.use("/user", require("./userController"));
+router.use("/news", require("./newsController"));
 
 module.exports = router;

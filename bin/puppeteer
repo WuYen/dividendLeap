@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+const newsInfoRepository = require("../models/newsInfo/repository");
+const connectDB = require("../utility/connectDB");
+const config = require("../utility/config");
+const puppeteer = require("puppeteer");
+
+(async () => {
+  const link = "https://udn.com/news/index";
+
+  const chromeOptions = {
+    headless: true,
+    defaultViewport: null,
+    args: ["--incognito", "--no-sandbox", "--single-process", "--no-zygote"],
+    headless: true, // run in a non-headless mode
+    slowMo: 100, // slows down Puppeteer operation
+    //devtools: true, // open dev tools
+  };
+
+  const browser = await puppeteer.launch(chromeOptions);
+  const page = await browser.newPage();
+  await page.goto(link);
+  await page.waitForSelector(".menu-toggler.search");
+  await page.click(".menu-toggler.search");
+  await page.type('.overlay-menu input[type="search"]', "現金股利", {
+    delay: 150,
+  });
+  await page.click('.overlay-menu [aria-label="submit-search"]');
+  await page.waitForSelector(".menu-toggler.search");
+  await page.waitForSelector(".search-total");
+  //document.getElementById("indicator").scrollIntoView();
+  const data = await page.evaluate(() => {
+    const temp = [];
+    document
+      .querySelectorAll(".story-list__news:not(.feature-guess__list)") //
+      .forEach((node) => {
+        const link = node.querySelector("a").getAttribute("href");
+        const title = node.querySelector("a").getAttribute("aria-label");
+        const time = node
+          .querySelector("time") //2021-07-29 16:36:10
+          .textContent.replace(/\D/g, "")
+          .substr(0, 8); //20210729
+
+        temp.push({ title, link, updateDate: time });
+      });
+
+    return temp;
+  });
+
+  await connectDB.toMongo(config.MONGODB_URI);
+
+  let result = await newsInfoRepository.saveData(data);
+  console.log("save data done");
+  process.exit(1);
+})();

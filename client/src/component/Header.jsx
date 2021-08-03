@@ -304,11 +304,17 @@ const NAV_ITEMS = [
   {
     label: "管理列表",
     href: "/schedule/maintain",
+    auth: true,
   },
   {
     label: "我的清單",
     href: "/my/stock",
     auth: true,
+  },
+  {
+    label: "新聞",
+    href: "/news",
+    auth: false,
   },
 ];
 

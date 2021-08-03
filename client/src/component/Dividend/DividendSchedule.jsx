@@ -8,8 +8,10 @@ import {
   FormLabel,
   Box,
   useMediaQuery,
+  Button,
 } from "@chakra-ui/react";
 import ScheduleTable from "./ScheduleTable";
+import { RepeatIcon } from "@chakra-ui/icons";
 import Loading from "../Common/Loading";
 
 function DividendSchedule(props) {
@@ -45,6 +47,18 @@ function DividendSchedule(props) {
         <FormLabel htmlFor="filter" mb="0">
           殖利率大於 5%
         </FormLabel>
+
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          size="sm"
+          rightIcon={<RepeatIcon />}
+          onClick={() => {
+            //call data api
+          }}
+        >
+          刷新列表
+        </Button>
       </FormControl>
       <ScheduleTable
         data={schedule}
