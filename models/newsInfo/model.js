@@ -9,6 +9,7 @@ const model = mongoose.model(
   new Schema({
     title: String, //new title
     link: String, //href
+    time: String,
     updateDate: String,
   })
 );
