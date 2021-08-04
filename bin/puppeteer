@@ -2,6 +2,7 @@
 
 const newsInfoRepository = require("../models/newsInfo/repository");
 const connectDB = require("../utility/connectDB");
+const { today } = require("../utility/dateTime");
 const config = require("../utility/config");
 const puppeteer = require("puppeteer");
 
@@ -9,17 +10,22 @@ const puppeteer = require("puppeteer");
   const link = "https://udn.com/news/index";
 
   const chromeOptions = {
-    headless: true,
-    defaultViewport: null,
-    args: ["--incognito", "--no-sandbox", "--single-process", "--no-zygote"],
     headless: true, // run in a non-headless mode
+    args: ["--incognito", "--no-sandbox", "--single-process", "--no-zygote"],
+    defaultViewport: null,
     slowMo: 100, // slows down Puppeteer operation
-    //devtools: true, // open dev tools
   };
 
   const browser = await puppeteer.launch(chromeOptions);
   const page = await browser.newPage();
-  await page.setDefaultNavigationTimeout(60000);
+  await page.exposeFunction("getToday", () => {
+    return today();
+  });
+  await page.exposeFunction("writeLog", (text) => {
+    console.log(text);
+  });
+
+  await page.setDefaultNavigationTimeout(70000);
   console.log("go to page");
   await page.goto(link);
   await page.waitForSelector(".menu-toggler.search");
@@ -33,27 +39,28 @@ const puppeteer = require("puppeteer");
   await page.waitForSelector(".search-total");
   //document.getElementById("indicator").scrollIntoView();
   console.log("start get data");
-  const data = await page.evaluate(() => {
+
+  const data = await page.evaluate(async () => {
+    const todayStr = await window.getToday();
+    window.writeLog("inside evaluate today" + todayStr);
+
     const temp = [];
     document
       .querySelectorAll(".story-list__news:not(.feature-guess__list)") //
       .forEach((node) => {
         const link = node.querySelector("a").getAttribute("href");
         const title = node.querySelector("a").getAttribute("aria-label");
-        const time = node
-          .querySelector("time") //2021-07-29 16:36:10
-          .textContent.replace(/\D/g, "")
-          .substr(0, 8); //20210729
-
-        temp.push({ title, link, updateDate: time });
+        const time = node.querySelector("time").textContent; //2021-07-29 16:36:10
+        if (todayStr == time.replace(/\D/g, "").substr(0, 8)) {
+          temp.push({ title, link, time, updateDate: todayStr });
+        }
       });
 
     return temp;
   });
 
   await connectDB.toMongo(config.MONGODB_URI);
-
-  let result = await newsInfoRepository.saveData(data);
-  console.log("save data done");
+  await newsInfoRepository.saveData(data);
+  console.log("save data done", data.length);
   process.exit(1);
 })();

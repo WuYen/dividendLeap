@@ -15,7 +15,7 @@ const big5Option = {
 async function getHTML(url, option = {}) {
   //const { data } = await axios.get(url);
   const { data, ...rest } = await axios.get(url, option);
-  console.log("data", data);
+  //console.log("data", data);
   let a = rest;
   const document = parse5.parse(data);
   const html = parse5.serialize(document);
