@@ -7,6 +7,7 @@ const Schema = mongoose.Schema;
 const model = mongoose.model(
   "NewsInfo",
   new Schema({
+    key: String,
     title: String, //new title
     link: String, //href
     time: String,

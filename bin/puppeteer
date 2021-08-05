@@ -49,18 +49,25 @@ const puppeteer = require("puppeteer");
       .querySelectorAll(".story-list__news:not(.feature-guess__list)") //
       .forEach((node) => {
         const link = node.querySelector("a").getAttribute("href");
+        const key = link.split("/").pop();
         const title = node.querySelector("a").getAttribute("aria-label");
         const time = node.querySelector("time").textContent; //2021-07-29 16:36:10
         if (todayStr == time.replace(/\D/g, "").substr(0, 8)) {
-          temp.push({ title, link, time, updateDate: todayStr });
+          temp.push({ key, title, link, time, updateDate: todayStr });
         }
       });
 
     return temp;
   });
 
-  await connectDB.toMongo(config.MONGODB_URI);
-  await newsInfoRepository.saveData(data);
-  console.log("save data done", data.length);
+  await connectDB.toMongo(config.MONGODB_URI); //"mongodb+srv://user:P@ssw0rd@cluster0.qeuns.gcp.mongodb.net/<dbname>?retryWrites=true&w=majority"
+
+  const existData = await newsInfoRepository.getData({ updateDate: today() });
+
+  const newData = data.filter((x) => !existData.find((y) => y.key == x.key));
+
+  await newsInfoRepository.saveData(newData);
+
+  console.log("save data done", existData.length, data.length, newData.length);
   process.exit(1);
 })();
