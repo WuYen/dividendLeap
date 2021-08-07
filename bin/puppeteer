@@ -53,7 +53,14 @@ const puppeteer = require("puppeteer");
         const title = node.querySelector("a").getAttribute("aria-label");
         const time = node.querySelector("time").textContent; //2021-07-29 16:36:10
         if (todayStr == time.replace(/\D/g, "").substr(0, 8)) {
-          temp.push({ key, title, link, time, updateDate: todayStr });
+          temp.push({
+            category: "現金股利",
+            key,
+            title,
+            link,
+            time,
+            updateDate: todayStr,
+          });
         }
       });
 

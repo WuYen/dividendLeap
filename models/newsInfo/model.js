@@ -7,8 +7,9 @@ const Schema = mongoose.Schema;
 const model = mongoose.model(
   "NewsInfo",
   new Schema({
+    category: String, //search key word
     key: String,
-    title: String, //new title
+    title: String, //news title
     link: String, //href
     time: String,
     updateDate: String,
