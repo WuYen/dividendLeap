@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../../utility/formatHelper";
-import { dataAPI } from "../../utility/config";
+import api from "../../utility/api";
 import { useParams } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import { Box, Link, Divider, useBreakpointValue } from "@chakra-ui/react";
@@ -17,12 +17,10 @@ function DividendDetail(props) {
   });
 
   useEffect(() => {
-    fetch(`${dataAPI}/stock/detail/${stockNo}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data", data);
-        setData(data.data);
-      });
+    api.get(`/stock/detail/${stockNo}`).then((data) => {
+      console.log("data", data);
+      setData(data.data);
+    });
   }, [stockNo]);
 
   if (!data) {
