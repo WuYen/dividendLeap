@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
 const { getAllDayInfo } = require("../services/dayInfoService");
-const { update } = require("../models/dividendSchedule/repository.v2");
+const { update } = require("../services/scheduleService");
 
 //個股除權息資料
 router.get("/getAllDayInfo", async function (req, res) {
@@ -9,6 +9,7 @@ router.get("/getAllDayInfo", async function (req, res) {
   return res.send(result);
 });
 
+//從twse拉新的schedule下來
 router.get("/getNewSchedule", async function (req, res) {
   let result = await update();
   return res.send(result);

@@ -7,7 +7,7 @@ async function getData(query = {}) {
   if (data.length == 0 && query.sourceType !== "manual") {
     data = await source.getData();
   }
-  return { data, result: "ok" };
+  return data;
 }
 
 async function getByStockNo(stockNo) {
@@ -21,7 +21,6 @@ async function update() {
 }
 
 async function insert(data) {
-  console.log("insert data", data);
   try {
     const { year, month } = getDateFragment(data.date);
     const entity = {
@@ -41,8 +40,10 @@ async function insert(data) {
     console.log(`insert Dividend Schedule success`, result);
     return result;
   } catch (error) {
-    console.error(`insert Dividend Schedule fail`, error.message);
-    return { data, error: error.message };
+    throw {
+      name: "Process Fail",
+      message: "Insert dividend Schedule fail " + error.message,
+    };
   }
 }
 

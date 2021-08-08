@@ -18,8 +18,7 @@ router.get("/detail/:stockNo", async function (req, res) {
 //手動新增個股除權息資料
 router.post("/insert", async function (req, res) {
   let result = await insert(req.body);
-  return res.send(result);
-  //res.sendStatus(200);
+  return res.status(200).send(result);
 });
 
 module.exports = router;
