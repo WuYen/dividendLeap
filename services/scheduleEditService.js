@@ -3,11 +3,7 @@ const DividendSchedule = require("../models/dividendSchedule/repository.v2");
 async function getList() {
   const schedule = await DividendSchedule.getData({ sourceType: "manual" });
 
-  return { success: true, data: schedule.data };
-}
-
-function validation(data) {
-  return true;
+  return { success: true, data: schedule };
 }
 
 async function insert(data) {
@@ -28,6 +24,10 @@ async function update(data) {
 async function remove(id) {
   let result = await DividendSchedule.remove(id);
   return { success: true, data: result };
+}
+
+function validation(data) {
+  return true;
 }
 
 module.exports = { getList, insert, update, remove };

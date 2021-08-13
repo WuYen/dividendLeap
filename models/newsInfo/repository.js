@@ -6,6 +6,11 @@ async function getData(query) {
   return data;
 }
 
+// async function update() {
+//   let data = await Model.updateMany({}, { category: "現金股利" });
+//   return data;
+// }
+
 async function saveData(data) {
   let result = await Model.insertMany(data);
   return result;

@@ -18,6 +18,20 @@ export function tryParseFloat(value) {
   return isNaN(result) ? 0 : result;
 }
 
+export function toDateString(date) {
+  console.log(date, typeof date);
+  const { year, month, day } = getDateFragment(date);
+  return `${year}${month}${day}`;
+}
+
+export function getDateFragment(date) {
+  return {
+    year: date.getFullYear().toString(),
+    month: `${("0" + (date.getMonth() + 1)).slice(-2)}`,
+    day: `${("0" + date.getDate()).slice(-2)}`,
+  };
+}
+
 export default {
   getPureDate,
   formatDate,

@@ -3,28 +3,36 @@ const DividendSchedule = require("../models/dividendSchedule/repository.v2");
 const { today, latestTradeDate } = require("../utility/helper");
 
 async function getSchedule() {
-  const schedule = await DividendSchedule.getData();
-  const afterToday = afterDate(today());
-  const filtedData = schedule.data.filter(afterToday).sort(byTime);
-  const dayInfoCollection = await DayInfo.getData({
-    date: latestTradeDate(),
-  });
+  try {
+    const schedule = await DividendSchedule.getData();
+    const afterToday = afterDate(today());
+    const filtedData = schedule.filter(afterToday).sort(byTime);
+    const dayInfoCollection = await DayInfo.getData({
+      date: latestTradeDate(),
+    });
 
-  const result = filtedData.map((x) => {
-    let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
-    if (dayInfo && dayInfo.price > 0) {
-      return {
-        ...x.toObject(),
-        rate: ((x.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%"
-        price: dayInfo.price, // "當前股價"
-        priceDate: dayInfo.date, // "當前股價 取樣日期"
-      };
-    } else {
-      return x;
-    }
-  });
+    const result = filtedData.map((x) => {
+      let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
+      if (dayInfo && dayInfo.price > 0) {
+        return {
+          ...x.toObject(),
+          rate: ((x.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%"
+          price: dayInfo.price, // "當前股價"
+          priceDate: dayInfo.date, // "當前股價 取樣日期"
+        };
+      } else {
+        return x;
+      }
+    });
 
-  return { success: true, data: result };
+    return { success: true, data: result };
+  } catch (e) {
+    return {
+      success: false,
+      data: [],
+      error: { name: e.name, message: e.message },
+    };
+  }
 }
 
 function afterDate(date) {
@@ -46,4 +54,17 @@ async function insert(data) {
   return { success: true, data: result };
 }
 
-module.exports = { getSchedule, insert };
+async function update() {
+  try {
+    let result = await DividendSchedule.update();
+    return { success: true, data: result };
+  } catch (error) {
+    return {
+      success: false,
+      data: [],
+      error: { name: error.name, message: error.message },
+    };
+  }
+}
+
+module.exports = { getSchedule, insert, update };
