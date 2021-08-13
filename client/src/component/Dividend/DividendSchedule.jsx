@@ -5,6 +5,7 @@ import Loading from "../Common/Loading";
 import api from "../../utility/api";
 import Context from "../../store/context";
 import { GET_SCHEDULE_SUCCESS } from "../../store/actions/actionType";
+import { tryParseFloat } from "../../utility/formatHelper";
 
 import ScheduleTable from "./ScheduleTable";
 import ControlPanel from "./ControlPanel";
@@ -28,11 +29,19 @@ export default function DividendSchedule(props) {
     return <Loading />;
   }
 
+  const filtedData = filter
+    ? schedule.filter((x) => tryParseFloat(x.rate) > 5)
+    : schedule;
+
   return (
     <Box w="100%">
-      <ControlPanel filter={filter} toggleFilter={toggleFilter} />
+      <ControlPanel
+        filter={filter}
+        count={filtedData.length}
+        toggleFilter={toggleFilter}
+      />
       <ScheduleTable
-        data={schedule}
+        filtedData={filtedData}
         filter={filter}
         variant={over768px ? "md" : "sm"}
       />

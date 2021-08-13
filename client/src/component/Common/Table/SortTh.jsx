@@ -18,7 +18,7 @@ function SortTh({ sortBy, setSortBy, ...props }) {
       />
     );
   return (
-    <Th {...props}>
+    <Th {...props} p={4}>
       <div
         onClick={() => {
           setSortBy((old) => {

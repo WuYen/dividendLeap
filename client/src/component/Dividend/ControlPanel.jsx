@@ -1,13 +1,20 @@
 import React from "react";
-import { Switch, FormControl, FormLabel, Button } from "@chakra-ui/react";
+import {
+  Switch,
+  FormLabel,
+  Button,
+  Text,
+  Flex,
+  Spacer,
+} from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
 
 import auth from "../../utility/auth";
 
 export default function ControlPanel(props) {
-  const { filter, toggleFilter } = props;
+  const { filter, toggleFilter, count } = props;
   return (
-    <FormControl display="flex" alignItems="center" p={4}>
+    <Flex alignItems="center" p={4}>
       <Switch
         id="filter"
         colorScheme="teal"
@@ -17,7 +24,6 @@ export default function ControlPanel(props) {
       <FormLabel htmlFor="filter" mb="0">
         殖利率大於 5%
       </FormLabel>
-
       {auth.isLogin && (
         <Button
           colorScheme="teal"
@@ -32,6 +38,8 @@ export default function ControlPanel(props) {
           刷新列表
         </Button>
       )}
-    </FormControl>
+      <Spacer />
+      <Text>筆數: {count}</Text>
+    </Flex>
   );
 }
