@@ -30,9 +30,9 @@ function NormalTable(props) {
         </SortTr>
       </Thead>
       <Tbody>
-        {data.map((item) => {
+        {data.map((item, idx) => {
           return (
-            <Tr key={item.stockNo} _hover={{ bg: "gray.50" }}>
+            <Tr key={item.stockNo + idx} _hover={{ bg: "gray.50" }}>
               <Td>
                 <Link
                   color="teal.500"
@@ -96,9 +96,9 @@ function SmallTable(props) {
         </SortTr>
       </Thead>
       <Tbody>
-        {data.map((item) => {
+        {data.map((item, idx) => {
           return (
-            <SortTr key={item.stockNo}>
+            <SortTr key={item.stockNo + idx}>
               <Td p="12px">
                 <Link
                   color="teal.500"
@@ -150,11 +150,18 @@ function ScheduleTable(props) {
     : data;
   if (sortBy.field) {
     filtedData = filtedData.sort((a, b) => {
-      if (a[sortBy.field] < b[sortBy.field]) {
-        return sortBy.type === "asc" ? 1 : -1;
-      }
-      if (a[sortBy.field] > b[sortBy.field]) {
-        return sortBy.type === "asc" ? -1 : 1;
+      const isAscending = sortBy.type === "asc";
+      try {
+        let value1 = +a[sortBy.field];
+        let value2 = +b[sortBy.field];
+        if (value1 < value2) {
+          return isAscending ? 1 : -1;
+        }
+        if (value1 > value2) {
+          return isAscending ? -1 : 1;
+        }
+      } catch (error) {
+        console.log("ScheduleTable sort fail", error);
       }
       return 0;
     });
