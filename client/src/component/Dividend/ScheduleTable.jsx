@@ -148,9 +148,9 @@ function SmallTable(props) {
 function ScheduleTable(props) {
   const { filtedData } = props;
   const [sortBy, setSortBy] = useState({});
-
+  let sortedData = filtedData;
   if (sortBy.field) {
-    filtedData = filtedData.sort((a, b) => {
+    sortedData = filtedData.sort((a, b) => {
       const isAscending = sortBy.type === "asc";
       try {
         let value1 = +a[sortBy.field];
@@ -169,9 +169,9 @@ function ScheduleTable(props) {
   }
 
   return props.variant === "md" ? (
-    <NormalTable sortBy={sortBy} setSortBy={setSortBy} data={filtedData} />
+    <NormalTable sortBy={sortBy} setSortBy={setSortBy} data={sortedData} />
   ) : (
-    <SmallTable sortBy={sortBy} setSortBy={setSortBy} data={filtedData} />
+    <SmallTable sortBy={sortBy} setSortBy={setSortBy} data={sortedData} />
   );
 }
 
