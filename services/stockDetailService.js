@@ -7,29 +7,21 @@ const { latestTradeDate } = require("../utility/helper");
 
 /* 取得除權息分析資料 */
 async function getDetail(stockNo) {
-  try {
-    const latestTradDate = latestTradeDate();
-    const lastYear = "2020";
+  const latestTradDate = latestTradeDate();
+  const lastYear = "2020";
 
-    //從 stockDetail 抓資料 query:{stockNo, priceDate:latestTradDate}
-    let { data, isExpire } = await StockDetail.getData({
-      stockNo,
-      priceDate: latestTradDate,
-    });
+  //從 stockDetail 抓資料 query:{stockNo, priceDate:latestTradDate}
+  let { data, isExpire } = await StockDetail.getData({
+    stockNo,
+    priceDate: latestTradDate,
+  });
 
-    if (!data || isExpire) {
-      data = await buildData(stockNo, lastYear, latestTradDate);
-      StockDetail.saveData(data); // no need to wait
-    }
-
-    return { success: true, data };
-  } catch (error) {
-    return {
-      success: false,
-      data: {},
-      error: { message: error.message },
-    };
+  if (!data || isExpire) {
+    data = await buildData(stockNo, lastYear, latestTradDate);
+    StockDetail.saveData(data); // no need to wait
   }
+
+  return data;
 }
 
 async function buildData(stockNo, lastYear, latestTradDate) {
