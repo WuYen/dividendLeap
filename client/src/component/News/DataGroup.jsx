@@ -7,6 +7,8 @@ import {
   Link,
   Text,
   Fade,
+  Stack,
+  Skeleton,
 } from "@chakra-ui/react";
 import { formatDate } from "../../utility/formatHelper";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
@@ -25,7 +27,16 @@ function DataGroup(props) {
   }, []);
 
   if (!isLoaded.current) {
-    return null;
+    return (
+      <Stack spacing={3}>
+        <Skeleton height="24px" width="100px" />
+        <Skeleton height="24px" />
+        <Skeleton height="24px" />
+        <Skeleton height="24px" />
+        <Skeleton height="24px" />
+        <Skeleton height="24px" />
+      </Stack>
+    );
   }
 
   return (

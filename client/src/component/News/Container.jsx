@@ -28,7 +28,7 @@ export default function News(props) {
       <Box>
         <KeyWord text="現金股利" />
       </Box>
-      <SimpleGrid columns={over768px ? 4 : 1} spacing={10}>
+      <SimpleGrid columns={over768px ? 4 : 1} spacing={10} marginTop="20px">
         {queryDate.map((d, i) => {
           return <DataGroup key={i} date={d} fetchData={fetchData} />;
         })}
