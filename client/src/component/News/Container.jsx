@@ -1,67 +1,56 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Box } from "@chakra-ui/react";
+import React, { useCallback, useState } from "react";
+import {
+  SimpleGrid,
+  Box,
+  Center,
+  useMediaQuery,
+  Divider,
+} from "@chakra-ui/react";
 import api from "../../utility/api";
+import { toDateString } from "../../utility/formatHelper";
 
-function News(props) {
-  const today = new Date();
-  const d1 = new Date();
-  d1.setDate(today.getDate() - 1); //
-  const d2 = new Date();
-  d2.setDate(today.getDate() - 2); //
+import MoreButton from "./MoreButton";
+import DataList from "./DataList";
+import KeyWord from "./KeyWord";
 
-  return (
-    <Box w="100%" d="flex">
-      <DataGroup date={toDateString(today)} />
-      <DataGroup date={toDateString(d1)} />
-      <DataGroup date={toDateString(d2)} />
-    </Box>
-  );
-}
-
-function DataGroup(props) {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetchData(props.date).then(({ success, data }) => {
-      success ? setData(data) : console.error("fetchData fail");
+export default function News(props) {
+  const [queryDate, setQueryDate] = useState(getLastNDay(4));
+  const [over768px] = useMediaQuery("(min-width: 768px)");
+  const loadMore = useCallback(() => {
+    console.log("load more click");
+    setQueryDate((x) => {
+      return getLastNDay(x.length + 4);
     });
   }, []);
 
   return (
-    <div style={{ padding: "5px" }}>
-      <h5>{props.date}</h5>
-      {data.length == 0 ? (
-        <div>Empty</div>
-      ) : (
-        data.map(({ link, title }, index) => {
-          return (
-            <div key={index} style={{ display: "block" }}>
-              <a href={link} target="_blank">
-                {title}
-              </a>
-            </div>
-          );
-        })
-      )}
-    </div>
+    <Box p="4" width="100%">
+      <Box>
+        <KeyWord text="現金股利" />
+      </Box>
+      <SimpleGrid columns={over768px ? 4 : 1} spacing={10} marginTop="20px">
+        {queryDate.map((d, i) => {
+          return <DataList key={i} date={d} fetchData={fetchData} />;
+        })}
+      </SimpleGrid>
+      <Divider paddingTop="4" />
+      <Center paddingTop="4">
+        <MoreButton showMore={true} onClick={loadMore} />
+      </Center>
+    </Box>
   );
 }
 
-function DateInput(props) {
-  const [text, setText] = useState("20210729");
-  useEffect(() => {
-    props.inputRef.current = text;
-  }, [text]);
+function getLastNDay(n) {
+  const today = new Date();
 
-  return (
-    <input
-      type="text"
-      value={text}
-      onChange={(e) => {
-        setText(e.target.value);
-      }}
-    />
-  );
+  let result = [toDateString(today)];
+  for (let i = 1; i < n; i++) {
+    const d = new Date();
+    d.setDate(today.getDate() - i);
+    result.push(toDateString(d));
+  }
+  return result;
 }
 
 function fetchData(date) {
@@ -69,47 +58,4 @@ function fetchData(date) {
     console.log("fetchData result", data);
     return data;
   });
-}
-
-function toDateString(date) {
-  const { year, month, day } = getDateFragment(date);
-  return `${year}${month}${day}`;
-}
-
-function getDateFragment(date) {
-  return {
-    year: date.getFullYear().toString(),
-    month: `${("0" + (date.getMonth() + 1)).slice(-2)}`,
-    day: `${("0" + date.getDate()).slice(-2)}`,
-  };
-}
-
-export default News;
-{
-  /* 
-  const inputRef = useRef();
-
-  const [data, setData] = useState([]);
-  const fetch = useCallback(() => {
-    const date = inputRef.current;
-    fetchData(date).then(({ success, data }) => {
-      success ? setData(data) : console.error("fetchData fail");
-    });
-  }, []);
-
-  useEffect(() => {
-    fetch();
-  }, []);
-  <DateInput inputRef={inputRef} />
-      <button onClick={fetch}>Search</button>
-
-      {data.map(({ link, title }, index) => {
-        return (
-          <div key={index} style={{ display: "block" }}>
-            <a href={link} target="_blank">
-              {title}
-            </a>
-          </div>
-        );
-      })} */
 }

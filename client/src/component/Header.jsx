@@ -14,6 +14,7 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
+  Button,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -89,30 +90,42 @@ export default function Header() {
           flex={{ base: 1, md: 0 }}
           justify={"flex-end"}
           direction={"row"}
-          spacing={6}
+          spacing={0}
         >
-          {/* <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            href={"#"}
-          >
-            Sign In
-          </Button>
-          <Button
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            href={"#"}
-            _hover={{
-              bg: "pink.300",
-            }}
-          >
-            Sign Up
-          </Button> */}
+          {!auth.isLogin && (
+            <Button
+              as={"a"}
+              p={2}
+              fontSize={"sm"}
+              fontWeight={500}
+              variant={"link"}
+              href={"/login"}
+              cursor="pointer"
+            >
+              登入
+            </Button>
+          )}
+          {auth.isLogin && (
+            <>
+              <Text fontSize={"sm"} fontWeight={500} p={2}>
+                {auth.context.account}
+              </Text>
+              <Button
+                as={"a"}
+                p={2}
+                fontSize={"sm"}
+                fontWeight={500}
+                variant={"link"}
+                onClick={() => {
+                  auth.logout();
+                  window.location.reload();
+                }}
+                cursor="pointer"
+              >
+                登出
+              </Button>
+            </>
+          )}
         </Stack>
       </Flex>
 
@@ -143,7 +156,7 @@ const DesktopNav = () => {
                     fontWeight={500}
                     color={isActive ? activeLinkColor : linkColor}
                     _hover={{
-                      textDecoration: "none",
+                      textDecoration: "underline",
                       color: linkHoverColor,
                     }}
                     _focus={{ outline: "none" }}
@@ -301,20 +314,25 @@ const NAV_ITEMS = [
     label: "除權息列表",
     href: "/",
   },
-  {
-    label: "管理列表",
-    href: "/schedule/maintain",
-    auth: true,
-  },
-  {
-    label: "我的清單",
-    href: "/my/stock",
-    auth: true,
-  },
+  // {
+  //   label: "管理列表",
+  //   href: "/schedule/maintain",
+  //   auth: true,
+  // },
+  // {
+  //   label: "我的清單",
+  //   href: "/my/stock",
+  //   auth: true,
+  // },
   {
     label: "新聞",
     href: "/news",
     auth: false,
+  },
+  {
+    label: "Tools",
+    href: "/tool",
+    auth: true,
   },
 ];
 
@@ -332,23 +350,4 @@ const NAV_ITEMS = [
 //       href: "#",
 //     },
 //   ],
-// },
-// {
-//   label: "Find Work",
-//   children: [
-//     {
-//       label: "Job Board",
-//       subLabel: "Find your dream design job",
-//       href: "#",
-//     },
-//     {
-//       label: "Freelance Projects",
-//       subLabel: "An exclusive list for contract work",
-//       href: "#",
-//     },
-//   ],
-// },
-// {
-//   label: "Learn Design",
-//   href: "#",
 // },

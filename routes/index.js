@@ -8,4 +8,15 @@ router.use("/schedule", require("./scheduleController"));
 router.use("/user", require("./userController"));
 router.use("/news", require("./newsController"));
 
+//error handling middleware
+router.use(function (err, req, res, next) {
+  console.error(err);
+  return res.status(500).send({
+    success: false,
+    data: null,
+    error: err.name,
+    message: err.message,
+  });
+});
+
 module.exports = router;

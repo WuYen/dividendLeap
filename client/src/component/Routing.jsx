@@ -5,8 +5,8 @@ import auth from "../utility/auth";
 import ErrorBoundary from "./Common/ErrorBoundary";
 import { DividendSchedule, DividendDetail } from "./Dividend";
 import MaintainSchedule from "./MaintainSchedule/Container";
-import Login from "./Login";
-import MyStock from "./MyStock";
+import Login from "./User/Login";
+import MyStock from "./User/MyStock";
 import ToolPage from "./ToolPage/Page";
 import News from "./News/Container";
 
