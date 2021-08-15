@@ -10,7 +10,7 @@ import api from "../../utility/api";
 import { toDateString } from "../../utility/formatHelper";
 
 import MoreButton from "./MoreButton";
-import DataGroup from "./DataGroup";
+import DataList from "./DataList";
 import KeyWord from "./KeyWord";
 
 export default function News(props) {
@@ -30,7 +30,7 @@ export default function News(props) {
       </Box>
       <SimpleGrid columns={over768px ? 4 : 1} spacing={10} marginTop="20px">
         {queryDate.map((d, i) => {
-          return <DataGroup key={i} date={d} fetchData={fetchData} />;
+          return <DataList key={i} date={d} fetchData={fetchData} />;
         })}
       </SimpleGrid>
       <Divider paddingTop="4" />

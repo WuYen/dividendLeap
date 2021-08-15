@@ -2,7 +2,7 @@ import React from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { Button, Text } from "@chakra-ui/react";
 
-export default function MoreButton({ showMore, ...rest }) {
+export default function MoreButton({ showMore, showText = true, ...rest }) {
   const text = showMore ? "MORE" : "LESS";
 
   const Icon = showMore ? ChevronDownIcon : ChevronUpIcon;
@@ -15,7 +15,7 @@ export default function MoreButton({ showMore, ...rest }) {
       _focus={{ outline: "none" }}
       {...rest}
     >
-      <Text>{text}</Text>
+      {showText && <Text>{text}</Text>}
       <Icon />
     </Button>
   );

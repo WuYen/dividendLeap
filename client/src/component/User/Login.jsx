@@ -1,10 +1,21 @@
 import React, { useState } from "react";
-import { dataAPI } from "../utility/config";
+import { dataAPI } from "../../utility/config";
 import { Formik } from "formik";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
 import { Box, ButtonGroup } from "@chakra-ui/react";
 import * as Yup from "yup";
-import auth from "../utility/auth";
+import auth from "../../utility/auth";
+import { useHistory } from "react-router-dom";
+
+export default function Login(props) {
+  return auth.isLogin ? (
+    <div style={{ textAlign: "center" }}>
+      Already login as {auth.context.account}
+    </div>
+  ) : (
+    <Form />
+  );
+}
 
 const initialValues = {
   account: "",
@@ -16,35 +27,35 @@ const validationSchema = Yup.object({
   password: Yup.string().required("必填欄位"),
 });
 
-const saveData = (values, actions) => {
+const callLogin = async (values, actions) => {
   const payload = JSON.stringify(values);
 
   const url = `${dataAPI}/user/login`;
-  return fetch(url, {
+  const res = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: payload,
-  })
-    .then((res) => res.json())
-    .then((res) => {
-      console.log("login result", res);
-      actions.setSubmitting(false);
-      if (res.success) {
-        // auth.setToken(res.token);
-        auth.token = res.token;
-      }
-      return res.token;
-    });
+  });
+  const result = await res.json();
+  console.log("login result", result);
+  actions.setSubmitting(false);
+  if (result.success) {
+    // auth.setToken(res.token);
+    auth.token = result.token;
+  }
+  return result.token;
 };
 
 function Form(props) {
+  let history = useHistory();
+
   const formProps = {
     initialValues: initialValues,
     validationSchema,
     onSubmit: (values, actions) =>
-      saveData(values, actions).then((res) => {
+      callLogin(values, actions).then((res) => {
         console.log("ouSubmit result", res);
-        props.render({});
+        history.push("/");
       }),
     enableReinitialize: true,
   };
@@ -73,7 +84,7 @@ function Form(props) {
           />
 
           <ButtonGroup mt="2">
-            <SubmitButton _focus={{ outline: "none" }}>Submit</SubmitButton>
+            <SubmitButton _focus={{ outline: "none" }}>登入</SubmitButton>
             <ResetButton
               isDisabled={false}
               _focus={{ outline: "none" }}
@@ -81,41 +92,13 @@ function Form(props) {
                 rest.resetForm({ values: initialValues });
               }}
             >
-              Clear
+              清除
             </ResetButton>
           </ButtonGroup>
         </Box>
       )}
     </Formik>
   );
-}
-
-function Login(props) {
-  const [, render] = useState();
-
-  if (auth.isLogin) {
-    return (
-      <div>
-        is login, {auth.context.account}
-        <TestAPI />
-        <div
-          onClick={() => {
-            auth.token = null;
-            render({});
-          }}
-        >
-          log out
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <>
-        <TestAPI />
-        <Form render={render} />
-      </>
-    );
-  }
 }
 
 function TestAPI(props) {
@@ -157,5 +140,3 @@ function TestAPI(props) {
     </div>
   );
 }
-
-export default Login;
