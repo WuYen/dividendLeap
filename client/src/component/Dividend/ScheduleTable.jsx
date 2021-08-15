@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { Table, Thead, Tbody, Tr, Td, Link, Divider } from "@chakra-ui/react";
-import { formatDate, tryParseFloat } from "../../utility/formatHelper";
+import { formatDate } from "../../utility/formatHelper";
 import { LinkIcon } from "@chakra-ui/icons";
 import { SortTh, SortTr } from "../Common/Table";
 
@@ -30,10 +30,10 @@ function NormalTable(props) {
         </SortTr>
       </Thead>
       <Tbody>
-        {data.map((item) => {
+        {data.map((item, idx) => {
           return (
-            <Tr key={item.stockNo} _hover={{ bg: "gray.50" }}>
-              <Td>
+            <Tr key={item.stockNo + idx} _hover={{ bg: "gray.50" }}>
+              <Td p={4}>
                 <Link
                   color="teal.500"
                   _hover={{
@@ -49,9 +49,11 @@ function NormalTable(props) {
                   <LinkIcon mx="4px" viewBox="0 0 30 30" />
                 </Link>
               </Td>
-              <Td>{formatDate(item.date)}</Td>
-              <Td isNumeric>{(+item.cashDividen).toFixed(2)}</Td>
-              <Td isNumeric>
+              <Td p={4}>{formatDate(item.date)}</Td>
+              <Td p={4} isNumeric>
+                {(+item.cashDividen).toFixed(2)}
+              </Td>
+              <Td p={4} isNumeric>
                 {item.price ? (
                   <div>
                     <div
@@ -69,7 +71,9 @@ function NormalTable(props) {
                   "--"
                 )}
               </Td>
-              <Td isNumeric>{item.rate ? item.rate + " %" : "--"}</Td>
+              <Td p={4} isNumeric>
+                {item.rate ? item.rate + " %" : "--"}
+              </Td>
             </Tr>
           );
         })}
@@ -96,9 +100,9 @@ function SmallTable(props) {
         </SortTr>
       </Thead>
       <Tbody>
-        {data.map((item) => {
+        {data.map((item, idx) => {
           return (
-            <SortTr key={item.stockNo}>
+            <SortTr key={item.stockNo + idx}>
               <Td p="12px">
                 <Link
                   color="teal.500"
@@ -142,28 +146,32 @@ function SmallTable(props) {
 }
 
 function ScheduleTable(props) {
-  const { data, filter } = props;
+  const { filtedData } = props;
   const [sortBy, setSortBy] = useState({});
-
-  let filtedData = filter
-    ? data.filter((x) => tryParseFloat(x.rate) > 5)
-    : data;
+  let sortedData = filtedData;
   if (sortBy.field) {
-    filtedData = filtedData.sort((a, b) => {
-      if (a[sortBy.field] < b[sortBy.field]) {
-        return sortBy.type === "asc" ? 1 : -1;
-      }
-      if (a[sortBy.field] > b[sortBy.field]) {
-        return sortBy.type === "asc" ? -1 : 1;
+    sortedData = filtedData.sort((a, b) => {
+      const isAscending = sortBy.type === "asc";
+      try {
+        let value1 = +a[sortBy.field];
+        let value2 = +b[sortBy.field];
+        if (value1 < value2) {
+          return isAscending ? 1 : -1;
+        }
+        if (value1 > value2) {
+          return isAscending ? -1 : 1;
+        }
+      } catch (error) {
+        console.log("ScheduleTable sort fail", error);
       }
       return 0;
     });
   }
 
   return props.variant === "md" ? (
-    <NormalTable sortBy={sortBy} setSortBy={setSortBy} data={filtedData} />
+    <NormalTable sortBy={sortBy} setSortBy={setSortBy} data={sortedData} />
   ) : (
-    <SmallTable sortBy={sortBy} setSortBy={setSortBy} data={filtedData} />
+    <SmallTable sortBy={sortBy} setSortBy={setSortBy} data={sortedData} />
   );
 }
 

@@ -3,9 +3,23 @@ const DividendSchedule = require("../models/dividendSchedule/repository.v2");
 const { today, latestTradeDate } = require("../utility/helper");
 
 async function getSchedule() {
+  function afterDate(date) {
+    return (item) => item.date > date;
+  }
+
+  function byTime(a, b) {
+    if (a.date < b.date) {
+      return -1;
+    }
+    if (a.date > b.date) {
+      return 1;
+    }
+    return 0;
+  }
+
   const schedule = await DividendSchedule.getData();
   const afterToday = afterDate(today());
-  const filtedData = schedule.data.filter(afterToday).sort(byTime);
+  const filtedData = schedule.filter(afterToday).sort(byTime);
   const dayInfoCollection = await DayInfo.getData({
     date: latestTradeDate(),
   });
@@ -24,26 +38,17 @@ async function getSchedule() {
     }
   });
 
-  return { success: true, data: result };
-}
-
-function afterDate(date) {
-  return (item) => item.date > date;
-}
-
-function byTime(a, b) {
-  if (a.date < b.date) {
-    return -1;
-  }
-  if (a.date > b.date) {
-    return 1;
-  }
-  return 0;
+  return result;
 }
 
 async function insert(data) {
   let result = await DividendSchedule.insert(data);
-  return { success: true, data: result };
+  return result;
 }
 
-module.exports = { getSchedule, insert };
+async function update() {
+  let result = await DividendSchedule.update();
+  return result;
+}
+
+module.exports = { getSchedule, insert, update };

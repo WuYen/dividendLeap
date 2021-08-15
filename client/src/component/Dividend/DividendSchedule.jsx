@@ -1,30 +1,24 @@
 import React, { useEffect, useContext, useCallback } from "react";
-import { dataAPI } from "../../utility/config";
+import { Box, useMediaQuery } from "@chakra-ui/react";
+
+import Loading from "../Common/Loading";
+import api from "../../utility/api";
 import Context from "../../store/context";
 import { GET_SCHEDULE_SUCCESS } from "../../store/actions/actionType";
-import {
-  Switch,
-  FormControl,
-  FormLabel,
-  Box,
-  useMediaQuery,
-  Button,
-} from "@chakra-ui/react";
-import ScheduleTable from "./ScheduleTable";
-import { RepeatIcon } from "@chakra-ui/icons";
-import Loading from "../Common/Loading";
+import { tryParseFloat } from "../../utility/formatHelper";
 
-function DividendSchedule(props) {
+import ScheduleTable from "./ScheduleTable";
+import ControlPanel from "./ControlPanel";
+
+export default function DividendSchedule(props) {
   const { schedule, filter, dispatch } = useContext(Context);
-  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+  const [over768px] = useMediaQuery("(min-width: 768px)");
 
   useEffect(() => {
-    fetch(`${dataAPI}/stock/scheudle`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("GET_SCHEDULE_SUCCESS data", data);
-        dispatch({ type: GET_SCHEDULE_SUCCESS, payload: data.data });
-      });
+    api.get(`/stock/scheudle`).then((data) => {
+      console.log("GET_SCHEDULE_SUCCESS data", data);
+      dispatch({ type: GET_SCHEDULE_SUCCESS, payload: data.data });
+    });
   }, []);
 
   const toggleFilter = useCallback(() => {
@@ -35,38 +29,22 @@ function DividendSchedule(props) {
     return <Loading />;
   }
 
+  const filtedData = filter
+    ? schedule.filter((x) => tryParseFloat(x.rate) > 5)
+    : schedule;
+
   return (
     <Box w="100%">
-      <FormControl display="flex" alignItems="center" p={4}>
-        <Switch
-          id="filter"
-          colorScheme="teal"
-          isChecked={filter}
-          onChange={toggleFilter}
-        />
-        <FormLabel htmlFor="filter" mb="0">
-          殖利率大於 5%
-        </FormLabel>
-
-        <Button
-          colorScheme="teal"
-          variant="outline"
-          size="sm"
-          rightIcon={<RepeatIcon />}
-          onClick={() => {
-            //call data api
-          }}
-        >
-          刷新列表
-        </Button>
-      </FormControl>
-      <ScheduleTable
-        data={schedule}
+      <ControlPanel
         filter={filter}
-        variant={isLargerThan768 ? "md" : "sm"}
+        count={filtedData.length}
+        toggleFilter={toggleFilter}
+      />
+      <ScheduleTable
+        filtedData={filtedData}
+        filter={filter}
+        variant={over768px ? "md" : "sm"}
       />
     </Box>
   );
 }
-
-export default DividendSchedule;
