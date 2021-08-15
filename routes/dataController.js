@@ -18,7 +18,7 @@ router.get("/getAllDayInfo", async function (req, res) {
 router.get("/getNewSchedule", async function (req, res) {
   try {
     let result = await update();
-    return res.send(result);
+    return res.send(success(result));
   } catch (error) {
     next(error);
   }

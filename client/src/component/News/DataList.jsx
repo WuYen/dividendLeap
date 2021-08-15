@@ -9,15 +9,21 @@ import {
   Fade,
   Stack,
   Skeleton,
+  Center,
 } from "@chakra-ui/react";
 import { formatDate } from "../../utility/formatHelper";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import MoreButton from "./MoreButton";
 
-export default React.memo(DataGroup);
-function DataGroup(props) {
+const showLine = 8;
+
+export default React.memo(DataList);
+function DataList(props) {
   const { fetchData, date } = props;
   const [list, setList] = useState([]);
+  const [more, setMore] = useState(false);
   const isLoaded = useRef(false);
+  const needShowMore = list.length > showLine;
 
   useEffect(() => {
     fetchData(date).then(({ success, data }) => {
@@ -48,6 +54,9 @@ function DataGroup(props) {
         ) : (
           <List spacing={3}>
             {list.map(({ link, title }, index) => {
+              if (index >= showLine && !more) {
+                return null;
+              }
               return (
                 <ListItem key={index}>
                   <Link href={link} isExternal>
@@ -62,6 +71,18 @@ function DataGroup(props) {
               );
             })}
           </List>
+        )}
+        {needShowMore && (
+          <Center paddingTop="0">
+            <MoreButton
+              showMore={!more}
+              showText={false}
+              width="100%"
+              onClick={() => {
+                setMore((x) => !x);
+              }}
+            />
+          </Center>
         )}
       </Box>
     </Fade>

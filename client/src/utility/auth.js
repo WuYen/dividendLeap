@@ -1,45 +1,31 @@
 import jwt_decode from "jwt-decode";
 
-// const auth = () => {
-//   function setToken(jwt) {
-//     if (jwt) {
-//       localStorage.setItem("AUTH_TOKEN", jwt);
-//       window.JWT = { context: jwt_decode(jwt), token: jwt };
-//     } else {
-//       localStorage.removeItem("AUTH_TOKEN");
-//       window.JWT = null;
-//     }
-//   }
-
-//   function getToken() {
-//     if (window.JWT) {
-//       return window.JWT;
-//     } else {
-//       const jwt = localStorage.getItem("AUTH_TOKEN");
-//       if (jwt) {
-//         window.JWT = { context: jwt_decode(jwt), token: jwt };
-//         return window.JWT;
-//       }
-//     }
-//     return null;
-//   }
-
-//   function isLoggedIn() {
-//     return window.JWT || localStorage.getItem("AUTH_TOKEN");
-//   }
-
-//   return {
-//     getToken,
-//     setToken,
-//     isLoggedIn,
-//   };
-// };
-
+// curent context content
+// {
+//   account: "admin";
+//   iat: 1629031499;
+//   password: "pass123";
+// }
 function JWT() {
   let _token = localStorage.getItem("AUTH_TOKEN") || "";
   let _context = _token ? jwt_decode(_token) : {};
 
+  function logout() {
+    return new Promise((resolve, reject) => {
+      try {
+        _token = "";
+        _context = {};
+        localStorage.removeItem("AUTH_TOKEN");
+        resolve("logout success");
+      } catch (error) {
+        console.log(error);
+        reject("logout fail");
+      }
+    });
+  }
+
   return {
+    logout: logout,
     get isLogin() {
       return _token !== "";
     },
@@ -55,9 +41,7 @@ function JWT() {
         _context = jwt_decode(_token);
         localStorage.setItem("AUTH_TOKEN", token);
       } else {
-        _token = "";
-        _context = {};
-        localStorage.removeItem("AUTH_TOKEN");
+        logout();
       }
     },
   };
