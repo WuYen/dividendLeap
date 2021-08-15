@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { formatDate } from "../../utility/formatHelper";
 import api from "../../utility/api";
 import { useParams } from "react-router-dom";
@@ -8,6 +8,7 @@ import { LinkIcon } from "@chakra-ui/icons";
 import Loading from "../Common/Loading";
 
 function DividendDetail(props) {
+  const divRef = useRef();
   const [data, setData] = useState(null);
   const { stockNo, name } = useParams();
   const variant = useBreakpointValue({
@@ -15,7 +16,6 @@ function DividendDetail(props) {
     sm: "sm",
     md: "md",
   });
-
   useEffect(() => {
     api.get(`/stock/detail/${stockNo}`).then((data) => {
       console.log("data", data);
@@ -28,26 +28,8 @@ function DividendDetail(props) {
   }
 
   return (
-    <>
-      {variant === "sm" && (
-        <Box w="100%" p={4}>
-          <Link
-            color="teal.500"
-            as={RouterLink}
-            _hover={{
-              textDecoration: "none",
-              color: "teal.800",
-            }}
-            to={{
-              pathname: `/`,
-            }}
-          >
-            回列表
-            <LinkIcon mx="4px" viewBox="0 0 30 30" />
-          </Link>
-        </Box>
-      )}
-
+    <div ref={divRef}>
+      <BackButton variant={variant} />
       <Box d="flex" flexWrap="wrap" alignItems="baseline">
         <Box m="4" color="gray.600">
           名稱:
@@ -105,7 +87,53 @@ function DividendDetail(props) {
           <HistoryPrice data={data.HighLY} />
         </Box>
       </Box>
-    </>
+      <StockFrame stockNo={stockNo} divRef={divRef} />
+    </div>
+  );
+}
+
+function BackButton(props) {
+  return (
+    props.variant === "sm" && (
+      <Box w="100%" p={4}>
+        <Link
+          color="teal.500"
+          as={RouterLink}
+          _hover={{
+            textDecoration: "none",
+            color: "teal.800",
+          }}
+          to={{
+            pathname: `/`,
+          }}
+        >
+          回列表
+          <LinkIcon mx="4px" viewBox="0 0 30 30" />
+        </Link>
+      </Box>
+    )
+  );
+}
+
+function StockFrame(props) {
+  const { stockNo, divRef } = props;
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    const height = divRef.current.clientHeight;
+    setHeight(window.innerHeight - 100 > height ? height : 10);
+  }, []);
+
+  return (
+    height && (
+      <iframe
+        src={`https://www.cmoney.tw/finance/technicalanalysis.aspx?s=${stockNo}`}
+        width="100%"
+        style={{
+          height: `calc(100vh - 60px - ${height}px)`,
+        }}
+      ></iframe>
+    )
   );
 }
 
