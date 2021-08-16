@@ -5,7 +5,7 @@ const { getAllDayInfo } = require("../services/dayInfoService");
 const { update } = require("../services/scheduleService");
 
 //個股除權息資料
-router.get("/getAllDayInfo", async function (req, res) {
+router.get("/getAllDayInfo", async function (req, res, next) {
   try {
     let result = await getAllDayInfo();
     return res.send(success(result));
@@ -15,7 +15,7 @@ router.get("/getAllDayInfo", async function (req, res) {
 });
 
 //從twse拉新的schedule下來
-router.get("/getNewSchedule", async function (req, res) {
+router.get("/getNewSchedule", async function (req, res, next) {
   try {
     let result = await update();
     return res.send(success(result));
