@@ -87,7 +87,7 @@ function DividendDetail(props) {
           <HistoryPrice data={data.HighLY} />
         </Box>
       </Box>
-      <StockFrame stockNo={stockNo} divRef={divRef} />
+      <StockFrame stockNo={stockNo} divRef={divRef} variant={variant} />
     </div>
   );
 }
@@ -116,12 +116,16 @@ function BackButton(props) {
 }
 
 function StockFrame(props) {
-  const { stockNo, divRef } = props;
+  const { stockNo, divRef, variant } = props;
   const [height, setHeight] = useState(0);
 
   useEffect(() => {
-    const height = divRef.current.clientHeight;
-    setHeight(window.innerHeight - 100 > height ? height : 10);
+    if (variant !== "sm") {
+      const height = divRef.current.clientHeight;
+      setHeight(window.innerHeight - 100 > height ? height : 10);
+    } else {
+      setHeight(window.innerHeight);
+    }
   }, []);
 
   return (
@@ -130,7 +134,10 @@ function StockFrame(props) {
         src={`https://www.cmoney.tw/finance/technicalanalysis.aspx?s=${stockNo}`}
         width="100%"
         style={{
-          height: `calc(100vh - 60px - ${height}px)`,
+          height:
+            variant == "sm"
+              ? `${height}px`
+              : `calc(100vh - 60px - ${height}px)`,
         }}
       ></iframe>
     )

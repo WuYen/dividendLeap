@@ -6,14 +6,17 @@ const { today } = require("../utility/dateTime");
 const config = require("../utility/config");
 const puppeteer = require("puppeteer");
 
+//增資、合併、訂單、設廠、利多消息
+
 (async () => {
   const link = "https://udn.com/news/index";
-
+  const keyWord = "現金股利";
   const chromeOptions = {
-    headless: true, // run in a non-headless mode
-    args: ["--incognito", "--no-sandbox", "--single-process", "--no-zygote"],
-    defaultViewport: null,
-    slowMo: 100, // slows down Puppeteer operation
+    // headless: true, // run in a non-headless mode
+    // args: ["--incognito", "--no-sandbox", "--single-process", "--no-zygote"],
+    // defaultViewport: null,
+    // slowMo: 100, // slows down Puppeteer operation
+    headless: false,
   };
 
   const browser = await puppeteer.launch(chromeOptions);
@@ -24,6 +27,9 @@ const puppeteer = require("puppeteer");
   await page.exposeFunction("writeLog", (text) => {
     console.log(text);
   });
+  await page.exposeFunction("keyWord", (text) => {
+    console.log(text);
+  });
 
   await page.setDefaultNavigationTimeout(70000);
   console.log("go to page");
@@ -31,7 +37,7 @@ const puppeteer = require("puppeteer");
   await page.waitForSelector(".menu-toggler.search");
   await page.click(".menu-toggler.search");
   console.log("start search");
-  await page.type('.overlay-menu input[type="search"]', "現金股利", {
+  await page.type('.overlay-menu input[type="search"]', keyWord, {
     delay: 150,
   });
   await page.click('.overlay-menu [aria-label="submit-search"]');
@@ -42,6 +48,7 @@ const puppeteer = require("puppeteer");
 
   const data = await page.evaluate(async () => {
     const todayStr = await window.getToday();
+    const keyWord = await window.keyWord;
     window.writeLog("inside evaluate today" + todayStr);
 
     const temp = [];
@@ -54,7 +61,7 @@ const puppeteer = require("puppeteer");
         const time = node.querySelector("time").textContent; //2021-07-29 16:36:10
         if (todayStr == time.replace(/\D/g, "").substr(0, 8)) {
           temp.push({
-            category: "現金股利",
+            category: keyWord,
             key,
             title,
             link,
