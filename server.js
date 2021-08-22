@@ -19,8 +19,29 @@ async function start() {
     config.MONGODB_URI || "mongodb://localhost/mern_youtube"
   );
 
+  const server = require("http").createServer(app);
+  const io = require("socket.io")(server, {
+    cors: {
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"],
+    },
+  });
+
+  io.on("connection", function (socket) {
+    console.log("A user connected");
+
+    socket.on("message", function (message) {
+      console.log("server receive " + message);
+      socket.emit("message", "hi client");
+    });
+
+    socket.on("disconnect", function () {
+      console.log("A user disconnected");
+    });
+  });
+
   const PORT = config.PORT || 8080;
-  app.listen(PORT, console.log(`Server is starting at ${PORT}`));
+  server.listen(PORT, console.log(`Server is starting at ${PORT}`));
 }
 
 start();
