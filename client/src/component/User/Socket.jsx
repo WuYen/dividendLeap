@@ -1,8 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 
-export default function Socket() {
+export default function Socket(props) {
   const [socket, setSocket] = useState(null);
+  const [data, update] = useState([]);
+  const keywordRef = useRef();
 
   useEffect(() => {
     const newSocket = io(`http://localhost:8080`);
@@ -10,11 +12,15 @@ export default function Socket() {
     return () => newSocket.close();
   }, [setSocket]);
 
-  const sendMessage = useCallback(() => {
+  const search = useCallback(() => {
+    console.log("search", keywordRef.current.value);
     if (socket) {
-      socket.emit("message", "hello server");
+      socket.emit("search", keywordRef.current.value, (response) => {
+        console.log(response); // ok
+        update(response);
+      });
     }
-  }, [socket]);
+  }, [socket, update]);
 
   useEffect(() => {
     if (socket) {
@@ -26,7 +32,9 @@ export default function Socket() {
 
   return (
     <div>
-      <button onClick={sendMessage}>To server</button>
+      <input style={{ border: "1px solid" }} ref={keywordRef}></input>
+      <button onClick={search}>Search</button>
+      {props.children(data)}
     </div>
   );
 }

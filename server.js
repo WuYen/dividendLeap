@@ -2,6 +2,7 @@ const express = require("express");
 const connectDB = require("./utility/connectDB");
 const config = require("./utility/config");
 const path = require("path");
+const { getByKeyword } = require("./services/newsService");
 
 const app = express();
 app.use(require("./middleware"));
@@ -28,11 +29,12 @@ async function start() {
   });
 
   io.on("connection", function (socket) {
-    console.log("A user connected");
+    console.log("A user connected", socket.id);
 
-    socket.on("message", function (message) {
-      console.log("server receive " + message);
-      socket.emit("message", "hi client");
+    socket.on("search", async function (keyword, callback) {
+      console.log("server receive from " + socket.id + " " + keyword);
+      let data = await getByKeyword(keyword);
+      callback(data);
     });
 
     socket.on("disconnect", function () {
