@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useRef, useEffect } from "react";
 import {
   SimpleGrid,
   Box,
@@ -6,31 +6,34 @@ import {
   useMediaQuery,
   Divider,
 } from "@chakra-ui/react";
-import api from "../../utility/api";
 import { toDateString } from "../../utility/formatHelper";
 
 import MoreButton from "./MoreButton";
 import DataList from "./DataList";
 import KeyWord from "./KeyWord";
+import Socket from "../User/Socket";
 
 export default function News(props) {
   const [queryDate, setQueryDate] = useState(getLastNDay(4));
   const [over768px] = useMediaQuery("(min-width: 768px)");
   const loadMore = useCallback(() => {
-    console.log("load more click");
-    setQueryDate((x) => {
-      return getLastNDay(x.length + 4);
-    });
-  }, []);
+    setQueryDate((x) => getLastNDay(x.length + 4));
+  }, [setQueryDate]);
 
   return (
     <Box p="4" width="100%">
       <Box>
         <KeyWord text="現金股利" />
+        {/* <Socket>{(data) => <DataList data={data} />}</Socket> */}
       </Box>
       <SimpleGrid columns={over768px ? 4 : 1} spacing={10} marginTop="20px">
         {queryDate.map((d, i) => {
-          return <DataList key={i} date={d} fetchData={fetchData} />;
+          return (
+            <DataList.Container key={d} date={d} loading={0} list={1}>
+              <DataList.Loading />
+              <DataList.List />
+            </DataList.Container>
+          );
         })}
       </SimpleGrid>
       <Divider paddingTop="4" />
@@ -51,11 +54,4 @@ function getLastNDay(n) {
     result.push(toDateString(d));
   }
   return result;
-}
-
-function fetchData(date) {
-  return api.get(`/news/${date}`).then((data) => {
-    console.log("fetchData result", data);
-    return data;
-  });
 }
