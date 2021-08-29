@@ -37,6 +37,11 @@ async function start() {
       callback(data);
     });
 
+    socket.on("test", async function (msg) {
+      console.log("server receive msg " + msg);
+      socket.emit("receive", "hihi"); //send message to self
+    });
+
     socket.on("disconnect", function () {
       console.log("A user disconnected");
     });

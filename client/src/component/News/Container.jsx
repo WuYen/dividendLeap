@@ -24,7 +24,11 @@ export default function News(props) {
     <Box p="4" width="100%">
       <Box>
         <KeyWord text="現金股利" />
-        {/* <Socket>{(data) => <DataList data={data} />}</Socket> */}
+        <Socket>
+          {(data) => {
+            return data ? <DataList.List list={data} /> : <div>Empty</div>;
+          }}
+        </Socket>
       </Box>
       <SimpleGrid columns={over768px ? 4 : 1} spacing={10} marginTop="20px">
         {queryDate.map((d, i) => {

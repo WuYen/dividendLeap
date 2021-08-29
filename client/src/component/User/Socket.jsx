@@ -1,39 +1,49 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import io from "socket.io-client";
+import useSocket from "../../utility/useSocket";
 
 export default function Socket(props) {
-  const [socket, setSocket] = useState(null);
-  const [data, update] = useState([]);
+  const socket = useSocket();
+  const [data, updateData] = useState(null);
   const keywordRef = useRef();
 
-  useEffect(() => {
-    const newSocket = io(`http://localhost:8080`);
-    setSocket(newSocket);
-    return () => newSocket.close();
-  }, [setSocket]);
-
   const search = useCallback(() => {
-    console.log("search", keywordRef.current.value);
-    if (socket) {
-      socket.emit("search", keywordRef.current.value, (response) => {
-        console.log(response); // ok
-        update(response);
-      });
-    }
-  }, [socket, update]);
+    socket.emit("search", keywordRef.current.value, (response) => {
+      console.log(response); // ok
+      if (Array.isArray(response) && response.length > 0) {
+        updateData(response);
+      }
+    });
+  }, [updateData, socket]);
 
   useEffect(() => {
     if (socket) {
-      socket.on("message", (message) => {
+      const receiveHandler = (message) => {
         console.log("client receive " + message);
-      });
+      };
+      socket.on("message", receiveHandler);
+      socket.on("receive", receiveHandler);
     }
+    return () => {
+      if (socket) {
+        socket.off("message");
+        socket.off("receive");
+      }
+    };
   }, [socket]);
 
   return (
     <div>
       <input style={{ border: "1px solid" }} ref={keywordRef}></input>
       <button onClick={search}>Search</button>
+      <button onClick={() => socket.connect()}>Connect</button>
+      <button onClick={() => socket.disconnect()}>Disconnect</button>
+      <button
+        onClick={() => {
+          socket.emit("test", "TTTTest");
+        }}
+      >
+        Send Test
+      </button>
       {props.children(data)}
     </div>
   );
