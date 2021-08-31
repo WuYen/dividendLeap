@@ -5,16 +5,24 @@ import {
   Center,
   useMediaQuery,
   Divider,
+  IconButton,
+  Flex,
+  Spacer,
+  InputGroup,
+  Input,
+  InputRightElement,
 } from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
 import { toDateString } from "../../utility/formatHelper";
+import auth from "../../utility/auth";
 
 import MoreButton from "./MoreButton";
 import DataList from "./DataList";
 import KeyWord from "./KeyWord";
-import Socket from "../User/Socket";
 
 export default function News(props) {
   const [queryDate, setQueryDate] = useState(getLastNDay(4));
+  const [keyWord, setKeyWord] = useState("");
   const [over768px] = useMediaQuery("(min-width: 768px)");
   const loadMore = useCallback(() => {
     setQueryDate((x) => getLastNDay(x.length + 4));
@@ -22,29 +30,75 @@ export default function News(props) {
 
   return (
     <Box p="4" width="100%">
-      <Box>
-        <KeyWord text="現金股利" />
-        <Socket>
-          {(data) => {
-            return data ? <DataList.List list={data} /> : <div>Empty</div>;
-          }}
-        </Socket>
-      </Box>
-      <SimpleGrid columns={over768px ? 4 : 1} spacing={10} marginTop="20px">
-        {queryDate.map((d, i) => {
-          return (
-            <DataList.Container key={d} date={d} loading={0} list={1}>
-              <DataList.Loading />
-              <DataList.List />
-            </DataList.Container>
-          );
-        })}
+      <Flex>
+        <Box paddingRight="8px">
+          <KeyWord
+            onClick={() => {
+              setKeyWord("");
+            }}
+            active={keyWord == ""}
+            text="現金股利"
+          />
+        </Box>
+        <Spacer />
+        <Box>{auth.isLogin && <Search setKeyWord={setKeyWord} />}</Box>
+      </Flex>
+
+      <SimpleGrid columns={over768px ? 4 : 1} spacing={10} paddingTop={"12px"}>
+        {keyWord ? (
+          <DataList.Container
+            key={keyWord}
+            keyWord={keyWord}
+            loading={0}
+            list={1}
+          >
+            <DataList.Loading />
+            <DataList.List />
+          </DataList.Container>
+        ) : (
+          queryDate.map((d, i) => {
+            return (
+              <DataList.Container key={d} date={d} loading={0} list={1}>
+                <DataList.Loading />
+                <DataList.List />
+              </DataList.Container>
+            );
+          })
+        )}
       </SimpleGrid>
       <Divider paddingTop="4" />
       <Center paddingTop="4">
-        <MoreButton showMore={true} onClick={loadMore} />
+        {!keyWord && <MoreButton showMore={true} onClick={loadMore} />}
       </Center>
     </Box>
+  );
+}
+
+function Search(props) {
+  const { setKeyWord } = props;
+  const inputRef = useRef();
+
+  return (
+    <InputGroup size="md">
+      <Input placeholder="關鍵字" ref={inputRef} />
+      <InputRightElement
+        width="4.5rem"
+        paddingRight="6px"
+        justifyContent="flex-end"
+      >
+        <IconButton
+          onClick={() => {
+            console.log("search click");
+            setKeyWord(inputRef.current.value);
+          }}
+          size="sm"
+          aria-label="Search"
+          icon={<SearchIcon />}
+          h="1.75rem"
+          _focus={{ outline: "none" }}
+        />
+      </InputRightElement>
+    </InputGroup>
   );
 }
 

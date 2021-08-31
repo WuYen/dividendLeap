@@ -8,7 +8,8 @@ async function getNews(date) {
 }
 
 async function getByKeyword(keyWord) {
-  const link = "https://udn.com/news/index";
+  //const link = "https://udn.com/news/index";
+  const link = `https://udn.com/search/word/2/${keyWord}`;
   const chromeOptions = {
     // headless: true, // run in a non-headless mode
     // args: ["--incognito", "--no-sandbox", "--single-process", "--no-zygote"],
@@ -26,22 +27,8 @@ async function getByKeyword(keyWord) {
   await page.exposeFunction("keyWord", () => keyWord);
   await page.setDefaultNavigationTimeout(70000);
 
-  console.log("go to page");
+  console.log("go to page " + keyWord);
   await page.goto(link);
-  await page.waitForSelector(".menu-toggler.search");
-  await page.click(".menu-toggler.search");
-
-  console.log("start search");
-
-  for (let index = 0; index < keyWord.length; index++) {
-    const character = keyWord[index];
-    await page.type('.overlay-menu input[type="search"]', character, {
-      delay: 350,
-    });
-  }
-
-  await page.click('.overlay-menu [aria-label="submit-search"]');
-  await page.waitForSelector(".menu-toggler.search");
   await page.waitForSelector(".search-total");
 
   console.log("start get data " + keyWord);
@@ -68,7 +55,7 @@ async function getByKeyword(keyWord) {
 
     return temp;
   });
-  console.log("end get data", data.length);
+  console.log("end get data " + keyWord, data.length);
   await browser.close();
   return data;
 }

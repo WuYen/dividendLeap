@@ -15,43 +15,63 @@ import { formatDate } from "../../utility/formatHelper";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import MoreButton from "./MoreButton";
 import api from "../../utility/api";
+import useSocket from "../../utility/useSocket";
+import auth from "../../utility/auth";
 
 export function Container(props) {
-  const { date } = props;
+  const { date, keyWord } = props;
   const [list, setList] = useState([]);
+  const socket = useSocket();
   const isLoaded = useRef(false);
 
   useEffect(() => {
-    api
-      .get(`/news/${date}`)
-      .then((data) => {
-        console.log("fetchData result", data);
-        return data;
-      })
-      .then(({ success, data }) => {
-        isLoaded.current = true;
-        success ? setList(data) : console.error("fetchData fail");
-      });
+    if (date) {
+      api
+        .get(`/news/${date}`)
+        .then((data) => {
+          console.log("fetchData result", data);
+          return data;
+        })
+        .then(({ success, data }) => {
+          isLoaded.current = true;
+          success ? setList(data) : console.error("fetchData fail");
+        });
+    }
   }, [date]);
+
+  useEffect(() => {
+    if (keyWord && socket && auth.isLogin) {
+      socket.emit("search", keyWord, (response) => {
+        console.log(response); // ok
+        isLoaded.current = true;
+        setList(response);
+        // if (Array.isArray(response) && response.length > 0) {}
+      });
+    }
+  }, [keyWord, socket]);
 
   if (!isLoaded.current) {
     return props.children[props.loading];
   } else {
-    return React.cloneElement(props.children[props.list], { date, list });
+    return React.cloneElement(props.children[props.list], {
+      date,
+      keyWord,
+      list,
+    });
   }
 }
 
 const showLine = 8;
 
 export const DataList = React.memo(function DataList(props) {
-  const { list = [], date } = props;
+  const { list = [], date, keyWord } = props;
   const [more, setMore] = useState(false);
   const needShowMore = list.length > showLine;
 
   return (
     <Fade in={true}>
       <Box>
-        {date && <h5>{formatDate(date)}</h5>}
+        <h5> {date ? formatDate(date) : keyWord}</h5>
         {list.length == 0 ? (
           <Box>No Record</Box>
         ) : (
