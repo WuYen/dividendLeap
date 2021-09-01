@@ -2,15 +2,17 @@ import React from "react";
 import { Badge } from "@chakra-ui/react";
 
 export default function KeyWord(props) {
-  const { text } = props;
+  const { text, onClick, active = false } = props;
   return (
     <Badge
-      px={2}
-      py={1}
+      px={3}
+      py={2}
       fontWeight={"800"}
       fontSize={"medium"}
-      color={"teal.600"}
+      color={active ? "teal.600" : "gray.400"}
       rounded={"full"}
+      onClick={onClick}
+      cursor="pointer"
     >
       #{text}
     </Badge>

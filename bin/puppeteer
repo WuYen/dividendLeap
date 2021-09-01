@@ -12,11 +12,11 @@ const puppeteer = require("puppeteer");
   const link = "https://udn.com/news/index";
   const keyWord = "現金股利";
   const chromeOptions = {
-    // headless: true, // run in a non-headless mode
-    // args: ["--incognito", "--no-sandbox", "--single-process", "--no-zygote"],
-    // defaultViewport: null,
-    // slowMo: 100, // slows down Puppeteer operation
-    headless: false,
+    headless: true, // run in a non-headless mode
+    args: ["--incognito", "--no-sandbox", "--single-process", "--no-zygote"],
+    defaultViewport: null,
+    slowMo: 100, // slows down Puppeteer operation
+    // headless: false,
   };
 
   const browser = await puppeteer.launch(chromeOptions);
@@ -73,6 +73,8 @@ const puppeteer = require("puppeteer");
 
     return temp;
   });
+
+  await browser.close();
 
   await connectDB.toMongo(config.MONGODB_URI); //"mongodb+srv://user:P@ssw0rd@cluster0.qeuns.gcp.mongodb.net/<dbname>?retryWrites=true&w=majority"
 

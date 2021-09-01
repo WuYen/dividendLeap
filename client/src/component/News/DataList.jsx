@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useState, useRef, useEffect } from "react";
 import {
   Box,
   List,
@@ -14,41 +14,64 @@ import {
 import { formatDate } from "../../utility/formatHelper";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import MoreButton from "./MoreButton";
+import api from "../../utility/api";
+import useSocket from "../../utility/useSocket";
+import auth from "../../utility/auth";
+
+export function Container(props) {
+  const { date, keyWord } = props;
+  const [list, setList] = useState([]);
+  const socket = useSocket();
+  const isLoaded = useRef(false);
+
+  useEffect(() => {
+    if (date) {
+      api
+        .get(`/news/${date}`)
+        .then((data) => {
+          console.log("fetchData result", data);
+          return data;
+        })
+        .then(({ success, data }) => {
+          isLoaded.current = true;
+          success ? setList(data) : console.error("fetchData fail");
+        });
+    }
+  }, [date]);
+
+  useEffect(() => {
+    if (keyWord && socket && auth.isLogin) {
+      socket.emit("search", keyWord, (response) => {
+        console.log(response); // ok
+        isLoaded.current = true;
+        setList(response);
+        // if (Array.isArray(response) && response.length > 0) {}
+      });
+    }
+  }, [keyWord, socket]);
+
+  if (!isLoaded.current) {
+    return props.children[props.loading];
+  } else {
+    return React.cloneElement(props.children[props.list], {
+      date,
+      keyWord,
+      list,
+    });
+  }
+}
 
 const showLine = 8;
 
-export default React.memo(DataList);
-function DataList(props) {
-  const { fetchData, date } = props;
-  const [list, setList] = useState([]);
+export const DataList = React.memo(function DataList(props) {
+  const { list = [], date, keyWord } = props;
   const [more, setMore] = useState(false);
-  const isLoaded = useRef(false);
   const needShowMore = list.length > showLine;
-
-  useEffect(() => {
-    fetchData(date).then(({ success, data }) => {
-      isLoaded.current = true;
-      success ? setList(data) : console.error("fetchData fail");
-    });
-  }, []);
-
-  if (!isLoaded.current) {
-    return (
-      <Stack spacing={3}>
-        <Skeleton height="24px" width="100px" />
-        <Skeleton height="24px" />
-        <Skeleton height="24px" />
-        <Skeleton height="24px" />
-        <Skeleton height="24px" />
-        <Skeleton height="24px" />
-      </Stack>
-    );
-  }
 
   return (
     <Fade in={true}>
       <Box>
-        <h5>{formatDate(date)}</h5>
+        <h5> {date ? formatDate(date) : keyWord}</h5>
         {list.length == 0 ? (
           <Box>No Record</Box>
         ) : (
@@ -60,12 +83,10 @@ function DataList(props) {
               return (
                 <ListItem key={index}>
                   <Link href={link} isExternal>
-                    {/* <Tooltip label={title} fontSize="md"> */}
                     <Text isTruncated>
                       <ListIcon as={ExternalLinkIcon} color="teal.500" />
                       {title}
                     </Text>
-                    {/* </Tooltip> */}
                   </Link>
                 </ListItem>
               );
@@ -87,7 +108,24 @@ function DataList(props) {
       </Box>
     </Fade>
   );
+});
+
+export function Loading(params) {
+  return (
+    <Fade in={true}>
+      <Stack spacing={3}>
+        <Skeleton height="24px" width="100px" />
+        <Skeleton height="24px" />
+        <Skeleton height="24px" />
+        <Skeleton height="24px" />
+        <Skeleton height="24px" />
+        <Skeleton height="24px" />
+      </Stack>
+    </Fade>
+  );
 }
+
+export default { Loading, List: DataList, Container };
 
 {
   /* <Image

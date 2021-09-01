@@ -2,6 +2,7 @@ const express = require("express");
 const connectDB = require("./utility/connectDB");
 const config = require("./utility/config");
 const path = require("path");
+const { getByKeyword } = require("./services/newsService");
 
 const app = express();
 app.use(require("./middleware"));
@@ -19,8 +20,35 @@ async function start() {
     config.MONGODB_URI || "mongodb://localhost/mern_youtube"
   );
 
+  const server = require("http").createServer(app);
+  const io = require("socket.io")(server, {
+    cors: {
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"],
+    },
+  });
+
+  io.on("connection", function (socket) {
+    console.log("A user connected", socket.id);
+
+    socket.on("search", async function (keyword, callback) {
+      console.log("server receive from " + socket.id + " " + keyword);
+      let data = await getByKeyword(keyword);
+      callback(data);
+    });
+
+    socket.on("test", async function (msg) {
+      console.log("server receive msg " + msg);
+      socket.emit("receive", "hihi"); //send message to self
+    });
+
+    socket.on("disconnect", function () {
+      console.log("A user disconnected");
+    });
+  });
+
   const PORT = config.PORT || 8080;
-  app.listen(PORT, console.log(`Server is starting at ${PORT}`));
+  server.listen(PORT, console.log(`Server is starting at ${PORT}`));
 }
 
 start();
