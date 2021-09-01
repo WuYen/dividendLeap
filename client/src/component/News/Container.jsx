@@ -28,17 +28,24 @@ export default function News(props) {
     setQueryDate((x) => getLastNDay(x.length + 4));
   }, [setQueryDate]);
 
+  const keyWords = ["現金股利", "增資", "合併", "訂單", "設廠", "利多消息"];
   return (
     <Box p="4" width="100%">
       <Flex>
         <Box paddingRight="8px">
-          <KeyWord
-            onClick={() => {
-              setKeyWord("");
-            }}
-            active={keyWord == ""}
-            text="現金股利"
-          />
+          {keyWords.map((text) => {
+            return (
+              <KeyWord
+                text={text}
+                active={
+                  text == keyWord || (keyWord == "" && text == "現金股利")
+                }
+                onClick={() => {
+                  text == "現金股利" ? setKeyWord("") : setKeyWord(text);
+                }}
+              />
+            );
+          })}
         </Box>
         <Spacer />
         <Box>{auth.isLogin && <Search setKeyWord={setKeyWord} />}</Box>
@@ -80,7 +87,15 @@ function Search(props) {
 
   return (
     <InputGroup size="md">
-      <Input placeholder="關鍵字" ref={inputRef} />
+      <Input
+        placeholder="關鍵字"
+        ref={inputRef}
+        onKeyUp={(e) => {
+          if (e.which === 13) {
+            setKeyWord(inputRef.current.value);
+          }
+        }}
+      />
       <InputRightElement
         width="4.5rem"
         paddingRight="6px"

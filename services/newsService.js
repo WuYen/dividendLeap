@@ -11,11 +11,11 @@ async function getByKeyword(keyWord) {
   //const link = "https://udn.com/news/index";
   const link = `https://udn.com/search/word/2/${keyWord}`;
   const chromeOptions = {
-    // headless: true, // run in a non-headless mode
-    // args: ["--incognito", "--no-sandbox", "--single-process", "--no-zygote"],
-    // defaultViewport: null,
-    // slowMo: 100, // slows down Puppeteer operation
-    headless: false,
+    headless: true, // run in a non-headless mode
+    args: ["--incognito", "--no-sandbox", "--single-process", "--no-zygote"],
+    defaultViewport: null,
+    slowMo: 100, // slows down Puppeteer operation
+    //headless: false,
   };
 
   const browser = await puppeteer.launch(chromeOptions);
