@@ -1,5 +1,8 @@
 const NewsInfo = require("../models/newsInfo/repository");
 const puppeteer = require("puppeteer");
+const { today } = require("../utility/dateTime");
+const connectDB = require("../utility/connectDB");
+const config = require("../utility/config");
 
 async function getNews(date) {
   const news = await NewsInfo.getData({ updateDate: date });
@@ -8,7 +11,6 @@ async function getNews(date) {
 }
 
 async function getByKeyword(keyWord) {
-  //const link = "https://udn.com/news/index";
   const link = `https://udn.com/search/word/2/${keyWord}`;
   const chromeOptions = {
     headless: true, // run in a non-headless mode
@@ -20,7 +22,9 @@ async function getByKeyword(keyWord) {
 
   const browser = await puppeteer.launch(chromeOptions);
   const page = await browser.newPage();
-
+  await page.exposeFunction("getToday", () => {
+    return today();
+  });
   await page.exposeFunction("writeLog", (text) => {
     console.log(text);
   });
@@ -33,8 +37,9 @@ async function getByKeyword(keyWord) {
 
   console.log("start get data " + keyWord);
   const data = await page.evaluate(async () => {
-    // window.writeLog("inside evaluate today " + keyWord);
     const keyWord = await window.keyWord();
+    const todayStr = await window.getToday();
+    window.writeLog(`inside evaluate today ${todayStr} ${keyWord}`);
     const temp = [];
     document
       .querySelectorAll(".story-list__news:not(.feature-guess__list)") //
@@ -57,6 +62,22 @@ async function getByKeyword(keyWord) {
   });
   console.log("end get data " + keyWord, data.length);
   await browser.close();
+  if (keyWord == "現金股利") {
+    await connectDB.toMongo(config.MONGODB_URI);
+
+    const existData = await NewsInfo.getData({ updateDate: today() });
+
+    const newData = data.filter((x) => !existData.find((y) => y.key == x.key));
+
+    await NewsInfo.saveData(newData);
+
+    console.log(
+      "save data done",
+      existData.length,
+      data.length,
+      newData.length
+    );
+  }
   return data;
 }
 
