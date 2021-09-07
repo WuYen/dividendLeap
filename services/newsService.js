@@ -55,6 +55,7 @@ async function getByKeyword(keyWord) {
           title,
           link,
           time,
+          updateDate: todayStr,
         });
       });
 
