@@ -19,7 +19,6 @@ export function tryParseFloat(value) {
 }
 
 export function toDateString(date) {
-  console.log(date, typeof date);
   const { year, month, day } = getDateFragment(date);
   return `${year}${month}${day}`;
 }
