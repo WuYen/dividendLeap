@@ -2,8 +2,28 @@
 
 const newsService = require("../services/newsService");
 
-//增資、合併、訂單、設廠、利多消息
 (async () => {
-  await newsService.getByKeyword("現金股利");
+  const keywords = ["現金股利", "增資", "合併", "訂單", "設廠", "利多消息"];
+
+  for (let i = 0; i < keywords.length; i++) {
+    const keyword = keywords[i];
+    await newsService.getByKeyword(keyword, false);
+    await delay(getRandomIntInclusive(4000, 8000));
+  }
+
   process.exit(1);
 })();
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
+}
+
+function delay(time) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      resolve("continue");
+    }, time);
+  });
+}

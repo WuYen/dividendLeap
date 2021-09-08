@@ -4,13 +4,13 @@ const { today } = require("../utility/dateTime");
 const connectDB = require("../utility/connectDB");
 const config = require("../utility/config");
 
-async function getNews(date) {
-  const news = await NewsInfo.getData({ updateDate: date });
+async function getNews(date, keyword) {
+  const news = await NewsInfo.getData({ updateDate: date, category: keyword });
 
   return news;
 }
 
-async function getByKeyword(keyWord) {
+async function getByKeyword(keyWord, custom = false) {
   const link = `https://udn.com/search/word/2/${keyWord}`;
   const chromeOptions = {
     headless: true, // run in a non-headless mode
@@ -29,6 +29,9 @@ async function getByKeyword(keyWord) {
     console.log(text);
   });
   await page.exposeFunction("keyWord", () => keyWord);
+  await page.exposeFunction("isCustom", () => {
+    return custom;
+  });
   await page.setDefaultNavigationTimeout(70000);
 
   console.log("go to page " + keyWord);
@@ -38,6 +41,7 @@ async function getByKeyword(keyWord) {
   console.log("start get data " + keyWord);
   const data = await page.evaluate(async () => {
     const keyWord = await window.keyWord();
+    const isCustom = await window.isCustom();
     const todayStr = await window.getToday();
     window.writeLog(`inside evaluate today ${todayStr} ${keyWord}`);
     const temp = [];
@@ -48,32 +52,36 @@ async function getByKeyword(keyWord) {
         const key = link.split("/").pop();
         const title = node.querySelector("a").getAttribute("aria-label");
         const time = node.querySelector("time").textContent; //2021-07-29 16:36:10
-
-        temp.push({
-          category: keyWord,
-          key,
-          title,
-          link,
-          time,
-          updateDate: todayStr,
-        });
+        if (isCustom || todayStr == time.replace(/\D/g, "").substr(0, 8)) {
+          temp.push({
+            category: keyWord,
+            key,
+            title,
+            link,
+            time,
+            updateDate: todayStr,
+          });
+        }
       });
 
     return temp;
   });
   console.log("end get data " + keyWord, data.length);
   await browser.close();
-  if (keyWord == "現金股利") {
+  if (!custom) {
     await connectDB.toMongo(config.MONGODB_URI);
 
-    const existData = await NewsInfo.getData({ updateDate: today() });
+    const existData = await NewsInfo.getData({
+      updateDate: today(),
+      category: keyWord,
+    });
 
     const newData = data.filter((x) => !existData.find((y) => y.key == x.key));
 
     await NewsInfo.saveData(newData);
 
     console.log(
-      "save data done",
+      "save data done " + keyWord,
       existData.length,
       data.length,
       newData.length

@@ -20,15 +20,30 @@ import MoreButton from "./MoreButton";
 import DataList from "./DataList";
 import KeyWord from "./KeyWord";
 
-export default function News(props) {
-  const [queryDate, setQueryDate] = useState(getLastNDay(4));
-  const [keyWord, setKeyWord] = useState("");
-  const [over768px] = useMediaQuery("(min-width: 768px)");
-  const loadMore = useCallback(() => {
-    setQueryDate((x) => getLastNDay(x.length + 4));
-  }, [setQueryDate]);
+const keyWords = ["現金股利", "增資", "合併", "訂單", "設廠", "利多消息"];
 
-  const keyWords = ["現金股利", "增資", "合併", "訂單", "設廠", "利多消息"];
+export default function News(props) {
+  const [search, setSearch] = useState({
+    keyWord: "現金股利",
+    queryDate: getLastNDay(4),
+  });
+  const { keyWord, queryDate } = search;
+  const [over768px] = useMediaQuery("(min-width: 768px)");
+  const isCustomSearch = !keyWords.includes(keyWord);
+
+  const loadMore = useCallback(() => {
+    setSearch((x) => {
+      return { ...x, queryDate: getLastNDay(x.queryDate.length + 4) };
+    });
+  }, [setSearch]);
+
+  const setKeyWord = useCallback(
+    (text) => {
+      setSearch({ keyWord: text, queryDate: getLastNDay(4) });
+    },
+    [setSearch]
+  );
+
   return (
     <Box p="4" width="100%">
       <Flex>
@@ -37,11 +52,9 @@ export default function News(props) {
             return (
               <KeyWord
                 text={text}
-                active={
-                  text == keyWord || (keyWord == "" && text == "現金股利")
-                }
+                active={text == keyWord}
                 onClick={() => {
-                  text == "現金股利" ? setKeyWord("") : setKeyWord(text);
+                  setKeyWord(text);
                 }}
               />
             );
@@ -52,10 +65,11 @@ export default function News(props) {
       </Flex>
 
       <SimpleGrid columns={over768px ? 4 : 1} spacing={10} paddingTop={"12px"}>
-        {keyWord ? (
+        {isCustomSearch ? (
           <DataList.Container
             key={keyWord}
             keyWord={keyWord}
+            search={true}
             loading={0}
             list={1}
           >
@@ -65,7 +79,13 @@ export default function News(props) {
         ) : (
           queryDate.map((d, i) => {
             return (
-              <DataList.Container key={d} date={d} loading={0} list={1}>
+              <DataList.Container
+                key={d}
+                keyWord={keyWord}
+                date={d}
+                loading={0}
+                list={1}
+              >
                 <DataList.Loading />
                 <DataList.List />
               </DataList.Container>
@@ -85,15 +105,17 @@ function Search(props) {
   const { setKeyWord } = props;
   const inputRef = useRef();
 
+  const doSetKeyWord = () => {
+    inputRef.current.value && setKeyWord(inputRef.current.value);
+  };
+
   return (
     <InputGroup size="md">
       <Input
         placeholder="關鍵字"
         ref={inputRef}
         onKeyUp={(e) => {
-          if (e.which === 13) {
-            setKeyWord(inputRef.current.value);
-          }
+          e.which === 13 && doSetKeyWord();
         }}
       />
       <InputRightElement
@@ -102,10 +124,7 @@ function Search(props) {
         justifyContent="flex-end"
       >
         <IconButton
-          onClick={() => {
-            console.log("search click");
-            setKeyWord(inputRef.current.value);
-          }}
+          onClick={doSetKeyWord}
           size="sm"
           aria-label="Search"
           icon={<SearchIcon />}

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   List,
@@ -19,15 +19,14 @@ import useSocket from "../../utility/useSocket";
 import auth from "../../utility/auth";
 
 export function Container(props) {
-  const { date, keyWord } = props;
+  const { date, keyWord, search = false } = props;
   const [list, setList] = useState([]);
   const socket = useSocket();
   const isLoaded = useRef(false);
-
   useEffect(() => {
     if (date) {
       api
-        .get(`/news/${date}`)
+        .get(`/news/${date}/${keyWord}`)
         .then((data) => {
           console.log("fetchData result", data);
           return data;
@@ -37,18 +36,17 @@ export function Container(props) {
           success ? setList(data) : console.error("fetchData fail");
         });
     }
-  }, [date]);
+  }, [date, keyWord]);
 
   useEffect(() => {
-    if (keyWord && socket && auth.isLogin) {
+    if (search && keyWord && socket && auth.isLogin) {
       socket.emit("search", keyWord, (response) => {
         console.log(response); // ok
         isLoaded.current = true;
         setList(response);
-        // if (Array.isArray(response) && response.length > 0) {}
       });
     }
-  }, [keyWord, socket]);
+  }, [search, socket]);
 
   if (!isLoaded.current) {
     return props.children[props.loading];

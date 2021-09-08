@@ -33,7 +33,7 @@ async function start() {
 
     socket.on("search", async function (keyword, callback) {
       console.log("server receive from " + socket.id + " " + keyword);
-      let data = await getByKeyword(keyword);
+      let data = await getByKeyword(keyword, true);
       callback(data);
     });
 
