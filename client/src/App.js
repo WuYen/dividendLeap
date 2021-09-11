@@ -1,29 +1,28 @@
-import React, { useReducer } from "react";
+import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 
-import Context from "./store/context";
-import * as Reducer from "./store/reducers/reducer";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
 import Header from "./component/Header";
 import Routing from "./component/Routing";
 
-function App() {
-  const [reducer, dispatch] = useReducer(
-    Reducer.ScheduleReducer,
-    Reducer.initialState
-  );
-
+export default function App() {
   return (
-    <Context.Provider value={{ ...reducer, dispatch }}>
-      <ChakraProvider>
-        <Router>
-          <Header />
-          <Routing />
-        </Router>
-      </ChakraProvider>
-    </Context.Provider>
+    <Providers>
+      <Header />
+      <Routing />
+    </Providers>
   );
 }
 
-export default App;
+function Providers(props) {
+  return (
+    <Provider store={store}>
+      <ChakraProvider>
+        <Router>{props.children}</Router>
+      </ChakraProvider>
+    </Provider>
+  );
+}

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Switch,
   FormLabel,
@@ -10,12 +10,10 @@ import {
 import { RepeatIcon } from "@chakra-ui/icons";
 import api from "../../utility/api";
 import auth from "../../utility/auth";
-import Context from "../../store/context";
-import { GET_SCHEDULE_SUCCESS } from "../../store/actions/actionType";
 
 export default function ControlPanel(props) {
-  const { filter, toggleFilter, count } = props;
-  const { dispatch } = useContext(Context);
+  const { filter, toggleFilter, getScheduleSuccess, count } = props;
+
   const [loading, setLoading] = useState(false);
   return (
     <Flex alignItems="center" p={4}>
@@ -47,7 +45,7 @@ export default function ControlPanel(props) {
               })
               .then((res) => {
                 console.log("result", res);
-                dispatch({ type: GET_SCHEDULE_SUCCESS, payload: res.data });
+                getScheduleSuccess(res.data);
                 setLoading(false);
               });
           }}

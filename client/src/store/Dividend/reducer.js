@@ -1,4 +1,4 @@
-import * as ACTION_TYPES from "../actions/actionType";
+import * as ACTION_TYPES from "./actionType";
 
 export const initialState = {
   schedule: [],
@@ -7,7 +7,7 @@ export const initialState = {
     : true,
 };
 
-export const ScheduleReducer = (state = initialState, action) => {
+export default function ScheduleReducer(state = initialState, action) {
   switch (action.type) {
     case ACTION_TYPES.GET_SCHEDULE_SUCCESS:
       return {
@@ -28,4 +28,4 @@ export const ScheduleReducer = (state = initialState, action) => {
     default:
       return state;
   }
-};
+}
