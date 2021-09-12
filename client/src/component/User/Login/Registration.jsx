@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { dataAPI } from "../../../utility/config";
 import { Formik } from "formik";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
-import { Box, ButtonGroup, Link } from "@chakra-ui/react";
+import { Box, ButtonGroup, Link, Center,Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton } from "@chakra-ui/react";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
 import { string } from "yup/lib/locale";
@@ -62,10 +62,13 @@ function Form(props) {
   return (
     <Formik {...formProps}>
       {({ handleSubmit, values, errors, ...rest }) => (
-        <Box
+        <Center>
+          <Box
           borderWidth="1px"
           rounded="lg"
           as="form"
+          w="100%"
+          maxWidth="1000px"
           p={4}
           onSubmit={handleSubmit}
         >
@@ -102,6 +105,7 @@ function Form(props) {
             </ResetButton>
           </ButtonGroup>
         </Box>
+        </Center>
       )}
     </Formik>
   );

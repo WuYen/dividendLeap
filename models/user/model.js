@@ -18,8 +18,7 @@ const model = mongoose.model(
         islogin:   Boolean,
         ispwreset: Boolean
       }
-    },
-    mystock: Array
+    }
   })
 );
 

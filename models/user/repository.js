@@ -33,8 +33,7 @@ async function setData({account, name, email, password, ...rest}){
           islogin:   false,
           ispwreset: false
         }
-      },
-      mystock: []
+      }
     };
     let registerresult = await new userinfo(entity).save();
     if(registerresult) return {result: result, user:registerresult}
