@@ -93,17 +93,30 @@ export default function Header() {
           spacing={0}
         >
           {!auth.isLogin && (
-            <Button
-              as={"a"}
-              p={2}
-              fontSize={"sm"}
-              fontWeight={500}
-              variant={"link"}
-              href={"/login"}
-              cursor="pointer"
-            >
-              登入
-            </Button>
+            <>
+              <Button
+                as={"a"}
+                p={2}
+                fontSize={"sm"}
+                fontWeight={500}
+                variant={"link"}
+                href={"/login"}
+                cursor="pointer"
+              >
+                登入
+              </Button>
+              <Button
+                as={"a"}
+                p={2}
+                fontSize={"sm"}
+                fontWeight={500}
+                variant={"link"}
+                href={"/Registration"}
+                cursor="pointer"
+              >
+                註冊
+              </Button>
+            </>
           )}
           {auth.isLogin && (
             <>

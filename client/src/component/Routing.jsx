@@ -5,7 +5,9 @@ import auth from "../utility/auth";
 import ErrorBoundary from "./Common/ErrorBoundary";
 import { DividendSchedule, DividendDetail } from "./Dividend";
 import MaintainSchedule from "./MaintainSchedule/Container";
-import Login from "./User/Login";
+import Login from "./User/Login/Login";
+import Registration from "./User/Login/Registration";
+import ResetPassword from "./User/Login/ResetPassword";
 import MyStock from "./User/MyStock";
 import ToolPage from "./ToolPage/Page";
 import News from "./News/Container";
@@ -22,6 +24,12 @@ export default function Routing(props) {
         </Route>
         <Route path="/login">
           <Login />
+        </Route>
+        <Route path="/registration">
+          <Registration />
+        </Route>
+        <Route path="/resetpassword">
+          <ResetPassword />
         </Route>
         <Route path="/news">
           <News />

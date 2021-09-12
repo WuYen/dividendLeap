@@ -1,11 +1,18 @@
 import React, { useState } from "react";
-import { dataAPI } from "../../utility/config";
+import { dataAPI } from "../../../utility/config";
 import { Formik } from "formik";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
-import { Box, ButtonGroup } from "@chakra-ui/react";
+import { Box, ButtonGroup, Link } from "@chakra-ui/react";
 import * as Yup from "yup";
-import auth from "../../utility/auth";
+import auth from "../../../utility/auth";
 import { useHistory } from "react-router-dom";
+import { loginstatus } from "../../../definition/status";
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from "@chakra-ui/react";
 
 export default function Login(props) {
   return auth.isLogin ? (
@@ -36,14 +43,13 @@ const callLogin = async (values, actions) => {
     headers: { "content-type": "application/json" },
     body: payload,
   });
-  const result = await res.json();
-  console.log("login result", result);
+  const resInfo = await res.json();
+  console.log("login result", resInfo);
   actions.setSubmitting(false);
-  if (result.success) {
-    // auth.setToken(res.token);
-    auth.token = result.token;
+  if (resInfo && resInfo.result.code == loginstatus.Success.code) {
+    auth.token = resInfo.token;
   }
-  return result.token;
+  return resInfo.token;
 };
 
 function Form(props) {
@@ -70,6 +76,7 @@ function Form(props) {
           p={4}
           onSubmit={handleSubmit}
         >
+          {console.log(`rest`, rest, "value:", values)}
           <InputControl
             name="account"
             label="帳號"
@@ -82,7 +89,6 @@ function Form(props) {
             mb="2"
             inputProps={{ type: "password", autoComplete: "current-password" }}
           />
-
           <ButtonGroup mt="2">
             <SubmitButton _focus={{ outline: "none" }}>登入</SubmitButton>
             <ResetButton
@@ -94,6 +100,7 @@ function Form(props) {
             >
               清除
             </ResetButton>
+            <Link href="./">忘記密碼</Link>
           </ButtonGroup>
         </Box>
       )}
