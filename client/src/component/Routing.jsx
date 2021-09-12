@@ -6,9 +6,9 @@ import ErrorBoundary from "./Common/ErrorBoundary";
 import { DividendSchedule, DividendDetail } from "./Dividend";
 import MaintainSchedule from "./MaintainSchedule/Container";
 import Login from "./User/Login";
-import MyStock from "./User/MyStock";
 import ToolPage from "./ToolPage/Page";
 import News from "./News/Container";
+import MyStock from "../pages/MyStock/MyStock";
 
 export default function Routing(props) {
   return (

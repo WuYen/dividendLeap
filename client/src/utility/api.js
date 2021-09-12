@@ -21,7 +21,7 @@ export function get(url) {
 }
 
 export function post(url, payload) {
-  fetch(dataAPI + url, {
+  return fetch(dataAPI + url, {
     method: "POST",
     headers: headers(),
     body: payload,
