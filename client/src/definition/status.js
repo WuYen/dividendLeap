@@ -6,7 +6,14 @@ const loginstatus = Object.freeze({
     AccountNotExitst :  { code: 4, message: "帳號不存在" },
 });
 
+const registerstatus = Object.freeze({
+    Success:        { code:0, message:"註冊成功"  },
+    Failed:         { code:1, message:"註冊失敗"  },
+    AccountExist:   { code:2, message:"帳號已存在"},
+    EmailExist:     { code:3, message:"信箱已註冊"},
+})
+
 module.exports = {
     loginstatus,
-
+    registerstatus
 };

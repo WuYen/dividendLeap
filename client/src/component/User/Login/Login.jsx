@@ -10,10 +10,13 @@ import { loginstatus } from "../../../definition/status";
 import AlertComponent from "../../Common/Alert";
 
 export default function Login(props) {
+  const [state, setstate] = useState({});
   return auth.isLogin ? (
-    <div style={{ textAlign: "center" }}>
-      Already login as {auth.context.account}
-    </div>
+    <AlertComponent
+      state="info"
+      show={true}
+      description={`Already login as ${auth.context.account}`}
+    />
   ) : (
     <Form />
   );
@@ -38,27 +41,30 @@ const callLogin = async (values, actions) => {
     headers: { "content-type": "application/json" },
     body: payload,
   });
+
   const resInfo = await res.json();
-  console.log("login result", resInfo);
   actions.setSubmitting(false);
+
   if (resInfo && resInfo.result.code == loginstatus.Success.code) {
     auth.token = resInfo.token;
   }
-  return resInfo.token;
+  return resInfo;
 };
 
 function Form(props) {
   let history = useHistory();
-
+  const [alertInfo, setalertInfo] = useState({});
   const formProps = {
     initialValues: initialValues,
     validationSchema,
     onSubmit: (values, actions) =>
       callLogin(values, actions).then((res) => {
         console.log("ouSubmit result", res);
-        history.push("/");
+        setalertInfo(res.result);
+        if (res.result.code == loginstatus.Success.code) history.push("/");
       }),
     enableReinitialize: true,
+    alertInfo: alertInfo,
   };
 
   return (
@@ -76,9 +82,9 @@ function Form(props) {
           >
             <AlertComponent
               status="error"
-              show={true}
-              title="TestTitle"
-              description="TestDescriptions"
+              open={!!formProps.alertInfo.code}
+              description={formProps.alertInfo.message}
+              closeFunc={setalertInfo}
             />
             <InputControl
               name="account"
@@ -90,7 +96,10 @@ function Form(props) {
               name="password"
               label="密碼"
               mb="2"
-              inputProps={{ type: "password", autoComplete: "current-password" }}
+              inputProps={{
+                type: "password",
+                autoComplete: "current-password",
+              }}
             />
             <ButtonGroup mt="2">
               <SubmitButton _focus={{ outline: "none" }}>登入</SubmitButton>
@@ -99,6 +108,7 @@ function Form(props) {
                 _focus={{ outline: "none" }}
                 onClick={() => {
                   rest.resetForm({ values: initialValues });
+                  setalertInfo({});
                 }}
               >
                 清除

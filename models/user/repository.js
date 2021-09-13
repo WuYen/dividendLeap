@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 const userinfo = require("./model");
-const {loginstatus, registerstatus} = require("../../definition/status");
+const {loginstatus, registerstatus} = require("../../client/src/definition/status");
 
 async function getData({ account, password }) {
-  if( !account ) return loginstatus.Failed;
+  if( !account ) return { result: loginstatus.Failed, user: null }
   let user = await userinfo.findOne({ account: account }).exec();
   let result = !!user ? user.password == password 
                         ? loginstatus.Success
                         : loginstatus.InvalidPassword
                      : loginstatus.AccountNotExitst;
-  delete user.password;
+  if(!!user) delete user.password;
   return { result: result, user: user };
 }
 
