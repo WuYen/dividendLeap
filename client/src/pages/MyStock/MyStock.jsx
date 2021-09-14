@@ -1,10 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, useMediaQuery, Input } from "@chakra-ui/react";
+import {
+  Box,
+  useMediaQuery,
+  Input,
+  Grid,
+  VStack,
+  StackDivider,
+  Text,
+  HStack,
+} from "@chakra-ui/react";
 import api from "../../utility/api";
+
+import TabView from "./TabView";
 
 export default function News(props) {
   const [over768px] = useMediaQuery("(min-width: 768px)");
   const [selected, setSelected] = useState([]);
+
+  const [inspect, setInstpect] = useState("");
 
   useEffect(() => {
     fetchList().then((res) => {
@@ -28,23 +41,45 @@ export default function News(props) {
 
   return (
     <Box p="4" width="100%">
-      <div>
-        Selected:
-        {selected.map((item) => {
-          return (
-            <div
-              key={item._id}
-              style={{ padding: "5px" }}
-              onClick={() => {
-                handleRemove(item._id);
-              }}
-            >
-              {item.stockNo}
-            </div>
-          );
-        })}
-      </div>
-      <AutoComplete handleSelect={handleSelect} />
+      <Grid templateColumns="280px 4fr" gap={4}>
+        <Box>
+          <VStack
+            divider={<StackDivider borderColor="gray.200" />}
+            spacing={4}
+            align="stretch"
+          >
+            <Box>
+              Selected:
+              {selected.map((item) => {
+                return (
+                  <HStack key={item._id}>
+                    <Text
+                      color={inspect == item.stockNo ? "teal.500" : "grey.500"}
+                      onClick={() => {
+                        setInstpect(item.stockNo);
+                      }}
+                    >
+                      {item.stockNo}
+                    </Text>
+                    <div
+                      style={{ padding: "5px", display: "inline-block" }}
+                      onClick={() => {
+                        handleRemove(item._id);
+                      }}
+                    >
+                      Remove
+                    </div>
+                  </HStack>
+                );
+              })}
+            </Box>
+            <Box>
+              <AutoComplete handleSelect={handleSelect} />
+            </Box>
+          </VStack>
+        </Box>
+        <Box>{inspect && <TabView stockNo={inspect} />}</Box>
+      </Grid>
     </Box>
   );
 }

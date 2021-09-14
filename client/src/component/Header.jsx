@@ -321,11 +321,11 @@ const NAV_ITEMS = [
   //   href: "/schedule/maintain",
   //   auth: true,
   // },
-  // {
-  //   label: "我的清單",
-  //   href: "/my/stock",
-  //   auth: true,
-  // },
+  {
+    label: "自選列表",
+    href: "/my/stock",
+    auth: true,
+  },
   {
     label: "新聞",
     href: "/news",
