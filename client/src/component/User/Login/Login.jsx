@@ -1,17 +1,23 @@
 import React, { useState } from "react";
-import { dataAPI } from "../../utility/config";
+import { dataAPI } from "../../../utility/config";
 import { Formik } from "formik";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
-import { Box, ButtonGroup } from "@chakra-ui/react";
+import { Box, ButtonGroup, Link, Center } from "@chakra-ui/react";
 import * as Yup from "yup";
-import auth from "../../utility/auth";
+import auth from "../../../utility/auth";
 import { useHistory } from "react-router-dom";
+import { loginstatus } from "../../../definition/status";
+import AlertComponent from "../../Common/Alert";
 
 export default function Login(props) {
+  //TODO: toggle
+  const [state, setstate] = useState({});
   return auth.isLogin ? (
-    <div style={{ textAlign: "center" }}>
-      Already login as {auth.context.account}
-    </div>
+    <AlertComponent
+      state="info"
+      show={true}
+      description={`Already login as ${auth.context.account}`}
+    />
   ) : (
     <Form />
   );
@@ -36,66 +42,82 @@ const callLogin = async (values, actions) => {
     headers: { "content-type": "application/json" },
     body: payload,
   });
-  const result = await res.json();
-  console.log("login result", result);
+
+  const resInfo = await res.json();
   actions.setSubmitting(false);
-  if (result.success) {
-    // auth.setToken(res.token);
-    auth.token = result.token;
+
+  if (resInfo && resInfo.result.code == loginstatus.Success.code) {
+    auth.token = resInfo.token;
   }
-  return result.token;
+  return resInfo;
 };
 
 function Form(props) {
   let history = useHistory();
-
+  const [alertInfo, setalertInfo] = useState({});
   const formProps = {
     initialValues: initialValues,
     validationSchema,
     onSubmit: (values, actions) =>
       callLogin(values, actions).then((res) => {
         console.log("ouSubmit result", res);
-        history.push("/");
+        setalertInfo(res.result);
+        if (res.result.code == loginstatus.Success.code) history.push("/");
       }),
     enableReinitialize: true,
+    alertInfo: alertInfo,
   };
 
   return (
     <Formik {...formProps}>
       {({ handleSubmit, values, errors, ...rest }) => (
-        <Box
-          borderWidth="1px"
-          rounded="lg"
-          as="form"
-          p={4}
-          onSubmit={handleSubmit}
-        >
-          <InputControl
-            name="account"
-            label="帳號"
-            mb="2"
-            inputProps={{ type: "text", autoComplete: "username" }}
-          />
-          <InputControl
-            name="password"
-            label="密碼"
-            mb="2"
-            inputProps={{ type: "password", autoComplete: "current-password" }}
-          />
-
-          <ButtonGroup mt="2">
-            <SubmitButton _focus={{ outline: "none" }}>登入</SubmitButton>
-            <ResetButton
-              isDisabled={false}
-              _focus={{ outline: "none" }}
-              onClick={() => {
-                rest.resetForm({ values: initialValues });
+        <Center>
+          <Box
+            borderWidth="1px"
+            rounded="lg"
+            as="form"
+            p={4}
+            w="100%"
+            maxWidth="1000px"
+            onSubmit={handleSubmit}
+          >
+            <AlertComponent
+              status="error"
+              open={!!formProps.alertInfo.code}
+              description={formProps.alertInfo.message}
+              closeFunc={setalertInfo}
+            />
+            <InputControl
+              name="account"
+              label="帳號"
+              mb="2"
+              inputProps={{ type: "text", autoComplete: "username" }}
+            />
+            <InputControl
+              name="password"
+              label="密碼"
+              mb="2"
+              inputProps={{
+                type: "password",
+                autoComplete: "current-password",
               }}
-            >
-              清除
-            </ResetButton>
-          </ButtonGroup>
-        </Box>
+            />
+            <ButtonGroup mt="2">
+              <SubmitButton _focus={{ outline: "none" }}>登入</SubmitButton>
+              <ResetButton
+                isDisabled={false}
+                _focus={{ outline: "none" }}
+                onClick={() => {
+                  rest.resetForm({ values: initialValues });
+                  setalertInfo({});
+                }}
+              >
+                清除
+              </ResetButton>
+              <Link href="./">忘記密碼</Link>
+            </ButtonGroup>
+          </Box>
+        </Center>
       )}
     </Formik>
   );

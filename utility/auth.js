@@ -26,7 +26,7 @@ function authentication(req, res, next) {
 }
 
 function sign(data) {
-  const token = jwt.sign(data, config.TOKEN_SECRET);
+  const token = jwt.sign(JSON.stringify(data), config.TOKEN_SECRET);
   return token;
 }
 
