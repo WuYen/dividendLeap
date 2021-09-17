@@ -5,14 +5,14 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import store from "./store/store";
 
-import Header from "./component/Header";
-import Routing from "./component/Routing";
+import Header from "./components/Header";
+import Routes from "./components/Routing/Routes";
 
 export default function App() {
   return (
     <Providers>
       <Header />
-      <Routing />
+      <Routes />
     </Providers>
   );
 }

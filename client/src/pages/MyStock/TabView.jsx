@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
-import DataList from "../../component/News/DataList";
+import DataList from "../../pages/News/DataList";
 
 export default function MyStockTabView(props) {
   const { stockNo } = props;
@@ -13,12 +13,7 @@ export default function MyStockTabView(props) {
 
         <TabPanels>
           <TabPanel>
-            <DataList.Container
-              keyWord={stockNo}
-              search={true}
-              loading={0}
-              list={1}
-            >
+            <DataList.Container keyWord={stockNo} search={true} loading={0} list={1}>
               <DataList.Loading />
               <DataList.List />
             </DataList.Container>
