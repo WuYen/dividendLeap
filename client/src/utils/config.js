@@ -1,4 +1,4 @@
-const useLocalServer = false;
+const useLocalServer = true;
 
 export const dataAPI =
   process.env.NODE_ENV === "development"
