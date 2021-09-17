@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { dataAPI } from "../../utils/config";
 import { Formik } from "formik";
+import * as Yup from "yup";
+import { useHistory } from "react-router-dom";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
 import { Box, ButtonGroup, Link, Center } from "@chakra-ui/react";
-import * as Yup from "yup";
-import auth from "../../utils/auth";
-import { useHistory } from "react-router-dom";
+
+import { auth, api } from "../../utils";
 import { loginstatus } from "../../constants/status";
 import AlertComponent from "../../components//Alert";
 
@@ -31,17 +31,8 @@ const validationSchema = Yup.object({
 
 const callLogin = async (values, actions) => {
   const payload = JSON.stringify(values);
-
-  const url = `${dataAPI}/user/login`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: payload,
-  });
-
-  const resInfo = await res.json();
+  const resInfo = await api.post(`/user/login`, payload);
   actions.setSubmitting(false);
-
   if (resInfo && resInfo.result.code == loginstatus.Success.code) {
     auth.token = resInfo.token;
   }
@@ -103,45 +94,5 @@ function Form(props) {
         </Center>
       )}
     </Formik>
-  );
-}
-
-function TestAPI(props) {
-  const [state, setState] = useState();
-  //client-side code
-  const url = `${dataAPI}/user/validate`;
-
-  return (
-    <div>
-      state: {state}
-      <br />
-      <button
-        onClick={() => {
-          console.log("auth token:", auth.token);
-          fetch(url, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${auth.token}`,
-            },
-          })
-            .then(function (response) {
-              console.log(response);
-              return response.json();
-            })
-            .then(function (data) {
-              console.log("response", data);
-              setState(data.message);
-            })
-            .catch((error) => {
-              console.log("error", error);
-              setState("invalid");
-            });
-        }}
-      >
-        Call API
-      </button>
-    </div>
   );
 }
