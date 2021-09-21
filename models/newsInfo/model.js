@@ -5,10 +5,10 @@ const Schema = mongoose.Schema;
 
 // Model
 const model = mongoose.model(
-  "NewsInfo",
+  "NewsInfo", // news by topic and date
   new Schema({
     category: String, //search key word
-    key: String,
+    key: String, // unique id generate by source
     title: String, //news title
     link: String, //href
     time: String,

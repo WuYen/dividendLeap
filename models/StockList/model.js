@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 // Model
 const model = mongoose.model(
-  "StockList",
+  "StockList", // all stock no and name
   new Schema({
     stockNo: String,
     stockName: String,

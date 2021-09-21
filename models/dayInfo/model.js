@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 // Model
 const model = mongoose.model(
-  "DayInfo",
+  "DayInfo", // history price by day
   new Schema({
     stockNo: String,
     date: String, //完整日期 20200101

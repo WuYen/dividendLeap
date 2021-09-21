@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 // Model
 const model = mongoose.model(
-  "MyStock",
+  "MyStock", // user's stock watch list
   new Schema({
     account: String,
     list: [{ stockNo: String }],
