@@ -37,6 +37,7 @@ function JWT() {
     },
     set token(token) {
       if (token) {
+        console.log("token update");
         _token = token;
         _context = jwt_decode(_token);
         localStorage.setItem("AUTH_TOKEN", token);

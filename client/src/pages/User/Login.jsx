@@ -12,10 +12,18 @@ import AlertComponent from "../../components//Alert";
 export default function Login(props) {
   //TODO: toggle
   const [state, setstate] = useState({});
-  return auth.isLogin ? (
-    <AlertComponent state="info" show={true} description={`Already login as ${auth.context.account}`} />
-  ) : (
-    <Form />
+  return (
+    <Box p="4" width="100%">
+      {auth.isLogin ? (
+        <AlertComponent
+          state="info"
+          show={true}
+          description={`Already login as ${auth.context.account}`}
+        />
+      ) : (
+        <Form />
+      )}
+    </Box>
   );
 }
 
@@ -29,27 +37,25 @@ const validationSchema = Yup.object({
   password: Yup.string().required("必填欄位"),
 });
 
-const callLogin = async (values, actions) => {
+const handleLogin = async (values, actions) => {
   const payload = JSON.stringify(values);
-  const resInfo = await api.post(`/user/login`, payload);
+  const response = await api.post(`/user/login`, payload);
   actions.setSubmitting(false);
-  if (resInfo && resInfo.result.code == loginstatus.Success.code) {
-    auth.token = resInfo.token;
+  if (response && response.result.code == loginstatus.Success.code) {
+    auth.token = response.token;
   }
-  return resInfo;
+  return response;
 };
 
 function Form(props) {
-  let history = useHistory();
-  const [alertInfo, setalertInfo] = useState({});
+  const [alertInfo, setAlertInfo] = useState({});
   const formProps = {
     initialValues: initialValues,
     validationSchema,
     onSubmit: (values, actions) =>
-      callLogin(values, actions).then((res) => {
+      handleLogin(values, actions).then((res) => {
         console.log("ouSubmit result", res);
-        setalertInfo(res.result);
-        if (res.result.code == loginstatus.Success.code) history.push("/");
+        res.result.code == loginstatus.Success.code && (window.location = "/");
       }),
     enableReinitialize: true,
     alertInfo: alertInfo,
@@ -59,14 +65,27 @@ function Form(props) {
     <Formik {...formProps}>
       {({ handleSubmit, values, errors, ...rest }) => (
         <Center>
-          <Box borderWidth="1px" rounded="lg" as="form" p={4} w="100%" maxWidth="1000px" onSubmit={handleSubmit}>
+          <Box
+            borderWidth="1px"
+            rounded="lg"
+            as="form"
+            p={4}
+            w="100%"
+            maxWidth="1000px"
+            onSubmit={handleSubmit}
+          >
             <AlertComponent
               status="error"
               open={!!formProps.alertInfo.code}
               description={formProps.alertInfo.message}
-              closeFunc={setalertInfo}
+              closeFunc={setAlertInfo}
             />
-            <InputControl name="account" label="帳號" mb="2" inputProps={{ type: "text", autoComplete: "username" }} />
+            <InputControl
+              name="account"
+              label="帳號"
+              mb="2"
+              inputProps={{ type: "text", autoComplete: "username" }}
+            />
             <InputControl
               name="password"
               label="密碼"
@@ -83,12 +102,12 @@ function Form(props) {
                 _focus={{ outline: "none" }}
                 onClick={() => {
                   rest.resetForm({ values: initialValues });
-                  setalertInfo({});
+                  setAlertInfo({});
                 }}
               >
                 清除
               </ResetButton>
-              <Link href="./">忘記密碼</Link>
+              {/* <Link href="./">忘記密碼</Link> */}
             </ButtonGroup>
           </Box>
         </Center>

@@ -16,13 +16,18 @@ import {
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import {
+  HamburgerIcon,
+  CloseIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+} from "@chakra-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
 import auth from "../utils/auth";
 
 export default function Header() {
   const { isOpen, onToggle } = useDisclosure();
-
+  console.log("header render");
   return (
     <Box>
       <Flex
@@ -36,10 +41,16 @@ export default function Header() {
         borderColor={useColorModeValue("gray.200", "gray.900")}
         align={"center"}
       >
-        <Flex flex={{ base: 1, md: "auto" }} ml={{ base: -2 }} display={{ base: "flex", md: "none" }}>
+        <Flex
+          flex={{ base: 1, md: "auto" }}
+          ml={{ base: -2 }}
+          display={{ base: "flex", md: "none" }}
+        >
           <IconButton
             onClick={onToggle}
-            icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
+            icon={
+              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
+            }
             variant={"ghost"}
             aria-label={"Toggle Navigation"}
           />
@@ -69,14 +80,34 @@ export default function Header() {
           </Flex>
         </Flex>
 
-        <Stack flex={{ base: 1, md: 0 }} justify={"flex-end"} direction={"row"} spacing={0}>
+        <Stack
+          flex={{ base: 1, md: 0 }}
+          justify={"flex-end"}
+          direction={"row"}
+          spacing={0}
+        >
           {!auth.isLogin && (
             <>
-              <Button as={"a"} p={2} fontSize={"sm"} fontWeight={500} variant={"link"} href={"/login"} cursor="pointer">
+              <Button
+                as={RouterLink}
+                to={{
+                  pathname: "/login",
+                }}
+                _focus={{ outline: "none" }}
+                p={2}
+                fontSize={"sm"}
+                fontWeight={500}
+                variant={"link"}
+                cursor="pointer"
+              >
                 登入
               </Button>
               <Button
-                as={"a"}
+                as={RouterLink}
+                to={{
+                  pathname: "/Registration",
+                }}
+                _focus={{ outline: "none" }}
                 p={2}
                 fontSize={"sm"}
                 fontWeight={500}
@@ -193,7 +224,11 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
     >
       <Stack direction={"row"} align={"center"}>
         <Box>
-          <Text transition={"all .3s ease"} _groupHover={{ color: "pink.400" }} fontWeight={500}>
+          <Text
+            transition={"all .3s ease"}
+            _groupHover={{ color: "pink.400" }}
+            fontWeight={500}
+          >
             {label}
           </Text>
           <Text fontSize={"sm"}>{subLabel}</Text>
@@ -216,7 +251,11 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
 
 const MobileNav = () => {
   return (
-    <Stack bg={useColorModeValue("white", "gray.800")} p={4} display={{ md: "none" }}>
+    <Stack
+      bg={useColorModeValue("white", "gray.800")}
+      p={4}
+      display={{ md: "none" }}
+    >
       {NAV_ITEMS.map((navItem) =>
         (navItem.auth == true && auth.isLogin) || !navItem.auth ? (
           <MobileNavItem key={navItem.label} {...navItem} />
@@ -241,7 +280,10 @@ const MobileNavItem = ({ label, children, href }) => {
           textDecoration: "none",
         }}
       >
-        <Text fontWeight={600} color={useColorModeValue("gray.600", "gray.200")}>
+        <Text
+          fontWeight={600}
+          color={useColorModeValue("gray.600", "gray.200")}
+        >
           {label}
         </Text>
         {children && (
@@ -288,11 +330,6 @@ const NAV_ITEMS = [
     label: "除權息列表",
     href: "/",
   },
-  // {
-  //   label: "管理列表",
-  //   href: "/schedule/maintain",
-  //   auth: true,
-  // },
   {
     label: "自選列表",
     href: "/my/stock",
@@ -310,6 +347,7 @@ const NAV_ITEMS = [
   },
 ];
 
+//nested link sample
 //{
 //   label: "Inspiration",
 //   children: [
