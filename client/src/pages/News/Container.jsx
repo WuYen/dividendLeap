@@ -80,7 +80,7 @@ export default function News(props) {
           queryDate.map((d, i) => {
             return (
               <DataList.Container
-                key={d}
+                key={`${keyWord}-${d}`}
                 keyWord={keyWord}
                 date={d}
                 loading={0}
@@ -107,7 +107,7 @@ function Search(props) {
   const { setKeyWord } = props;
   const inputRef = useRef();
 
-  const doSetKeyWord = () => {
+  const handleSetKeyWord = () => {
     inputRef.current.value && setKeyWord(inputRef.current.value);
   };
 
@@ -117,7 +117,7 @@ function Search(props) {
         placeholder="關鍵字"
         ref={inputRef}
         onKeyUp={(e) => {
-          e.which === 13 && doSetKeyWord();
+          e.which === 13 && handleSetKeyWord();
         }}
       />
       <InputRightElement
@@ -126,7 +126,7 @@ function Search(props) {
         justifyContent="flex-end"
       >
         <IconButton
-          onClick={doSetKeyWord}
+          onClick={handleSetKeyWord}
           size="sm"
           aria-label="Search"
           icon={<SearchIcon />}
