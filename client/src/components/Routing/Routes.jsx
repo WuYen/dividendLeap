@@ -12,6 +12,7 @@ import {
   News,
   MyStock,
   ToolPage,
+  Validation,
 } from "../../pages/index";
 
 export default function Routing(props) {
@@ -42,6 +43,9 @@ export default function Routing(props) {
         </Route>
         <Route path="/login">
           <Login />
+        </Route>
+        <Route path="/validation">
+          <Validation />
         </Route>
         <Route path="/" exact>
           <DividendSchedule />

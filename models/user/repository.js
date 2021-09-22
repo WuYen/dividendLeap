@@ -1,7 +1,13 @@
 const mongoose = require("mongoose");
 const userinfo = require("./model");
-const { loginstatus, registerstatus } = require("../../client/src/constants/status");
+const {
+  loginstatus,
+  registerstatus,
+  activity,
+} = require("../../client/src/constants/status");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+
 const saltRounds = 10;
 
 async function getData({ account, password }) {
@@ -16,10 +22,17 @@ async function getData({ account, password }) {
   return { result: result, user: user };
 }
 
-async function setData({ account, name, email, password, ...rest }) {
-  if (!account && !name && !email && !password) return { result: registerstatus.Failed, user: null };
+async function getDataByCondition(condition) {
+  return (await userinfo.$where(condition).exec())[0];
+}
 
-  let user = await userinfo.find({ $or: [{ account: account }, { email: email }] }).exec();
+async function setData({ account, name, email, password, ...rest }) {
+  if (!account && !name && !email && !password)
+    return { result: registerstatus.Failed, user: null };
+
+  let user = await userinfo
+    .find({ $or: [{ account: account }, { email: email }] })
+    .exec();
 
   let result = registerstatus.Success;
 
@@ -34,23 +47,33 @@ async function setData({ account, name, email, password, ...rest }) {
       password: bcrypt.hashSync(password, saltRounds),
       name: name,
       email: email,
+      validateToken: crypto.randomBytes(16).toString("hex"),
       auth: {
         role: 0,
-        twofe: {},
+        useOTP: false,
       },
       status: {
-        activity: 0,
+        activity: activity.Unvalidate,
         islogin: false,
         ispwreset: false,
       },
     };
     let registerresult = await new userinfo(entity).save();
-    if (registerresult) return { result: result, user: registerresult };
+    if (registerresult) return { result: result, user: registerresult._doc };
   }
   return { result: result, user: null };
 }
 
+async function updateData(query, newdata) {
+  let user = await userinfo
+    .findOneAndUpdate(query, newdata, { upsert: true })
+    .exec();
+  return user;
+}
+
 module.exports = {
   getData,
+  getDataByCondition,
   setData,
+  updateData,
 };
