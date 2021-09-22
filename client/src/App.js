@@ -10,18 +10,12 @@ import Routes from "./components/Routing/Routes";
 
 export default function App() {
   return (
-    <Providers>
-      <Header />
-      <Routes />
-    </Providers>
-  );
-}
-
-function Providers(props) {
-  return (
     <Provider store={store}>
       <ChakraProvider>
-        <Router>{props.children}</Router>
+        <Header />
+        <Router>
+          <Routes />
+        </Router>
       </ChakraProvider>
     </Provider>
   );

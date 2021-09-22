@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useHistory } from "react-router-dom";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
-import { Box, ButtonGroup, Link, Center } from "@chakra-ui/react";
+import { Box, ButtonGroup, Center } from "@chakra-ui/react";
 
 import { auth, api } from "../../utils";
 import { loginstatus } from "../../constants/status";
@@ -15,11 +14,7 @@ export default function Login(props) {
   return (
     <Box p="4" width="100%">
       {auth.isLogin ? (
-        <AlertComponent
-          state="info"
-          show={true}
-          description={`Already login as ${auth.context.account}`}
-        />
+        <AlertComponent state="info" show={true} description={`Already login as ${auth.context.account}`} />
       ) : (
         <Form />
       )}
@@ -65,27 +60,14 @@ function Form(props) {
     <Formik {...formProps}>
       {({ handleSubmit, values, errors, ...rest }) => (
         <Center>
-          <Box
-            borderWidth="1px"
-            rounded="lg"
-            as="form"
-            p={4}
-            w="100%"
-            maxWidth="1000px"
-            onSubmit={handleSubmit}
-          >
+          <Box borderWidth="1px" rounded="lg" as="form" p={4} w="100%" maxWidth="1000px" onSubmit={handleSubmit}>
             <AlertComponent
               status="error"
               open={!!formProps.alertInfo.code}
               description={formProps.alertInfo.message}
               closeFunc={setAlertInfo}
             />
-            <InputControl
-              name="account"
-              label="帳號"
-              mb="2"
-              inputProps={{ type: "text", autoComplete: "username" }}
-            />
+            <InputControl name="account" label="帳號" mb="2" inputProps={{ type: "text", autoComplete: "username" }} />
             <InputControl
               name="password"
               label="密碼"

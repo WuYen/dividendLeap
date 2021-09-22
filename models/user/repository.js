@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const userinfo = require("./model");
-const {
-  loginstatus,
-  registerstatus,
-} = require("../../client/src/constants/status");
+const { loginstatus, registerstatus } = require("../../client/src/constants/status");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -20,24 +17,9 @@ async function getData({ account, password }) {
 }
 
 async function setData({ account, name, email, password, ...rest }) {
-  if (!account && !name && !email && !password)
-    return { result: registerstatus.Failed, user: null };
+  if (!account && !name && !email && !password) return { result: registerstatus.Failed, user: null };
 
-  // atlas mongodb not support where syntax
-  // let user = await userinfo
-  //   .where(`this.account == "${account}" || this.email == "${email}"`)
-  //   .exec();
-
-  let user = await userinfo
-    .find({ $or: [{ account: account }, { email: email }] })
-    .exec();
-
-  // let result =
-  //   user.length != 0
-  //     ? user[0].email == email
-  //       ? registerstatus.EmailExist
-  //       : registerstatus.AccountExist
-  //     : registerstatus.Success;
+  let user = await userinfo.find({ $or: [{ account: account }, { email: email }] }).exec();
 
   let result = registerstatus.Success;
 
