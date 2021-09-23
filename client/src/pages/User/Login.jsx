@@ -51,6 +51,7 @@ function Form(props) {
       handleLogin(values, actions).then((res) => {
         console.log("ouSubmit result", res);
         res.result.code == loginstatus.Success.code && (window.location = "/");
+        setAlertInfo(res.result);
       }),
     enableReinitialize: true,
     alertInfo: alertInfo,
