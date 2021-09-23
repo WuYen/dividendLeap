@@ -29,6 +29,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.9",
     "morgan": "^1.9.1",
+    "nodemailer": "^6.6.3",
     "nodemon": "^2.0.12",
     "parse5": "^6.0.1",
     "puppeteer": "^10.1.0",
