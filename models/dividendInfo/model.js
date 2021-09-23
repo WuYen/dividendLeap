@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 // Model
 const model = mongoose.model(
-  "DividendInfoV2",
+  "DividendInfoV2", // dividend history by stock no
   new Schema({
     stockNo: String,
     data: [

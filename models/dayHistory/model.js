@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 // Model
 const model = mongoose.model(
-  "DayHistory",
+  "DayHistory", // history price by year
   new Schema({
     stockNo: String,
     year: String, //年度 2019

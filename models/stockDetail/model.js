@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 // Model
 const model = mongoose.model(
-  "StockDetail",
+  "StockDetail", // cache data for dividend detail page
   new Schema({
     stockNo: String,
     dDate: String, //"除息日",

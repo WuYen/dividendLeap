@@ -10,11 +10,16 @@ const model = mongoose.model(
     account:   String,
     password:  String,
     name:      String,
-    status:  {
-      islogin:   Boolean,
-      ispwreset: Boolean,
+    email:     String,
+    auth:{
+      role:      Number,
+      twofe:     Object,
     },
-    mystock: Array
+    status:{  
+      activity:  Number,
+      islogin:   Boolean,
+      ispwreset: Boolean
+    }
   })
 );
 
