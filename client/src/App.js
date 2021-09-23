@@ -12,8 +12,8 @@ export default function App() {
   return (
     <Provider store={store}>
       <ChakraProvider>
-        <Header />
         <Router>
+          <Header />
           <Routes />
         </Router>
       </ChakraProvider>
