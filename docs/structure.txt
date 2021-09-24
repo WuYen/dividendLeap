@@ -24,15 +24,16 @@ src
 └───/utility                # 常用的funcion
 └───/client                 # React 前端
 
-//https://www.taniarascia.com/react-architecture-directory-structure/
+//Refer to: https://www.taniarascia.com/react-architecture-directory-structure/
 client
 └───/src
     └───/assets             # Global static assets such as images, svgs, company logo, etc
     └───/components         # Global shared/reusable components
+    └───/constants          # Enum and constant string
     └───/hooks              # All custom hooks 
-    └───/services           # JavaScript modules
-    └───/store              # Global Redux store
-    └───/utils              # Utilities, helpers, constants, and the like
     └───/pages              # The majority of the app would be contained here
-    └───index.js            # 
-    └─── App.js             # 
+    └───/store              # Global Redux store and reduce per module
+    └───/utils              # Utilities, helpers, constants, and the like
+    └─── App.js             # Root component
+    └───index.js            # Entry point
+    
