@@ -14,7 +14,7 @@ export default function Login(props) {
   return (
     <Box p="4" width="100%">
       {auth.isLogin ? (
-        <AlertComponent state="info" show={true} description={`Already login as ${auth.context.account}`} />
+        <AlertComponent status="info" open={true} description={`Already login as ${auth.context.account}`} />
       ) : (
         <Form />
       )}

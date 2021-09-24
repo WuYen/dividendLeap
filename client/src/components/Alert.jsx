@@ -1,19 +1,11 @@
 import React, { useState } from "react";
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  CloseButton,
-  Collapse,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton, Collapse, useDisclosure } from "@chakra-ui/react";
 
 // props = {
 //     status: String, //error, success, warning, and info
 //     title: String,
 //     description: String,
-//     show: Boolean,
+//     open: Boolean,
 //     closeBtnFunc: Fuction,
 // }
 
