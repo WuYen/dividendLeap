@@ -1,5 +1,5 @@
 const auth = require("../utility/auth");
-const { loginstatus, registerstatus, activity } = require("../client/src/constants/status");
+const { loginStatus, registerStatus, activity } = require("../client/src/constants/status");
 const { getData, setData, updateData } = require("../models/user/repository");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
@@ -7,28 +7,28 @@ const saltRounds = 10;
 
 async function login(loginInfo) {
   const data = await getData({ account: loginInfo.account });
-  if (!data) return { result: loginstatus.AccountNotExitst, token: null };
+  if (!data) return { result: loginStatus.AccountNotExitst, token: null };
 
   let { password, validateToken, ...user } = data.toObject({ getters: true });
   const token = bcrypt.compareSync(loginInfo.password, password) ? auth.sign(user) : null;
   return {
-    result: token ? loginstatus.Success : loginstatus.InvalidPassword,
+    result: token ? loginStatus.Success : loginStatus.InvalidPassword,
     token: token,
   };
 }
 
 async function registration({ account, email, password }) {
-  if (!account && !email && !password) return { result: registerstatus.Failed, user: null };
+  if (!account && !email && !password) return { result: registerStatus.Failed, user: null };
 
   let data = await getData({ $or: [{ account: account }, { email: email }] });
-  let result = registerstatus.Success;
+  let result = registerStatus.Success;
 
   if (data) {
-    result = registerstatus.AccountExist;
-    data.email == email && (result = registerstatus.EmailExist);
+    result = registerStatus.AccountExist;
+    data.email == email && (result = registerStatus.EmailExist);
   }
 
-  if (result == registerstatus.Success) {
+  if (result == registerStatus.Success) {
     let entity = {
       account: account,
       password: bcrypt.hashSync(password, saltRounds),

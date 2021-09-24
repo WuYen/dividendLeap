@@ -5,7 +5,7 @@ import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
 import { Box, ButtonGroup, Center } from "@chakra-ui/react";
 
 import { auth, api } from "../../utils";
-import { loginstatus } from "../../constants/status";
+import { loginStatus } from "../../constants/status";
 import AlertComponent from "../../components//Alert";
 
 export default function Login(props) {
@@ -36,7 +36,7 @@ const handleLogin = async (values, actions) => {
   const payload = JSON.stringify(values);
   const response = await api.post(`/user/login`, payload);
   actions.setSubmitting(false);
-  if (response && response.result.code == loginstatus.Success.code) {
+  if (response && response.result.code == loginStatus.Success.code) {
     auth.token = response.token;
   }
   return response;
@@ -50,7 +50,7 @@ function Form(props) {
     onSubmit: (values, actions) =>
       handleLogin(values, actions).then((res) => {
         console.log("ouSubmit result", res);
-        res.result.code == loginstatus.Success.code && (window.location = "/");
+        res.result.code == loginStatus.Success.code && (window.location = "/");
         setAlertInfo(res.result);
       }),
     enableReinitialize: true,
