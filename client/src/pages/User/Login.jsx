@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
-import { Box, ButtonGroup, Center } from "@chakra-ui/react";
+import { Box, ButtonGroup, Center, useToast } from "@chakra-ui/react";
 
 import { auth, api } from "../../utils";
 import { loginStatus } from "../../constants/status";
@@ -44,13 +44,22 @@ const handleLogin = async (values, actions) => {
 
 function Form(props) {
   const [alertInfo, setAlertInfo] = useState({});
+  const toast = useToast();
   const formProps = {
     initialValues: initialValues,
     validationSchema,
     onSubmit: (values, actions) =>
       handleLogin(values, actions).then((res) => {
         console.log("ouSubmit result", res);
-        res.result.code == loginStatus.Success.code && (window.location = "/");
+        if (res.result.code == loginStatus.Success.code) {
+          toast({
+            title: "Login Success!",
+            status: "success",
+            isClosable: true,
+            duration: 1000,
+          });
+          window.location = "/";
+        }
         setAlertInfo(res.result);
       }),
     enableReinitialize: true,

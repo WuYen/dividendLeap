@@ -1,41 +1,24 @@
-const nodemailer = require("nodemailer");
+const nodeMailer = require("nodemailer");
 const { MAIL_ACCOUNT, MAIL_PASSWORD } = require("../utility/config");
-const officalGMail = "astock0050@gmail.com";
+const officalGMail = MAIL_ACCOUNT;
 const contentTemplate = {
   registration: {
     subject: "Stock Account Validation",
-    content: ({ url }) =>
-      `<div
-      style="
-        width: 100%;
-        height: 500px;
-        border: 3px ridge black;
-        background: seagreen;
-        align-items: center;
-        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-      "
-    >
-      <h1
-        style="
-          color: rgba(0, 0, 0, 0.6);
-          text-shadow: 2px 8px 6px rgba(0, 0, 0, 0.2), 0px -5px 35px rgba(255, 255, 255, 0.3);
-        "
-      >
-        StockOverFlow
-      </h1>
-      <div style="width: 100%">
-        <p>Please click url to confirm your account, url: ${url}</p>
-      </div>
-    </div>
-    `,
+    content: (param) =>
+      `<h1 style="
+        color: rgba(0, 0, 0, 0.6); 
+        text-shadow: 2px 8px 6px rgba(0, 0, 0, 0.2), 0px -5px 35px rgba(255, 255, 255, 0.3)"
+      >StockOverFlow</h1>
+      <p>Please click url to confirm your account, url: <a href="${param[0]}">here</a></p>
+      `,
   },
   OTP: {
     subject: "Stock OTP QRCode",
-    content: ({ QRCode }) => `Please scan your QRCode: ${QRCode}`,
+    content: (param) => `Please scan your QRCode: ${param[0]}`,
   },
 };
 
-const transport = nodemailer.createTransport({
+const transport = nodeMailer.createTransport({
   service: "gmail",
   auth: {
     user: MAIL_ACCOUNT,
@@ -45,8 +28,8 @@ const transport = nodemailer.createTransport({
 
 function sendMail(mailAddress, { subject, content }, ...additional) {
   let mailFormat = {
-    From: officalGMail,
-    To: mailAddress,
+    from: officalGMail,
+    to: mailAddress,
     subject: subject,
     html: content(additional),
   };
