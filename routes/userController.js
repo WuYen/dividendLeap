@@ -1,7 +1,14 @@
 const router = require("express").Router();
 const auth = require("../utility/auth");
 const mailService = require("../services/mailService");
-const { login, registration, accountValidate, resetPassword } = require("../services/userService");
+const {
+  login,
+  registration,
+  accountValidate,
+  resetPassword,
+  enableOTP,
+  confirmOTP,
+} = require("../services/userService");
 //const { success } = require("../utility/response");
 
 router.post("/login", async (req, res, next) => {
@@ -47,6 +54,27 @@ router.post("/accountvalidate", async (req, res, next) => {
     res.send(await accountValidate(token));
   } catch (error) {
     next(error);
+  }
+});
+
+router.post("/OTP", async (req, res, next) => {
+  try {
+    const { account, action, token } = req.body;
+    switch (action) {
+      case "generate":
+        res.send(await enableOTP(account));
+        break;
+      case "confirm":
+        res.send(await confirmOTP(account, token));
+        break;
+
+      default:
+        resres.status(404).send();
+        break;
+    }
+  } catch (error) {
+    console.log(error);
+    res.send(error);
   }
 });
 

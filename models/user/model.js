@@ -14,9 +14,10 @@ const model = mongoose.model(
     validateToken: String,
     auth: {
       role: Number,
-      useOTP: Boolean,
-      OTPToken: Object,
+      enableOTP: Boolean, // for client
+      OTPToken: String,
     },
+    //TODO: status not implenment
     status: {
       activity: Number,
       islogin: Boolean,

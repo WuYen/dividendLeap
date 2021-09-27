@@ -12,10 +12,6 @@ const contentTemplate = {
       <p>Please click url to confirm your account, url: <a href="${param[0]}">here</a></p>
       `,
   },
-  OTP: {
-    subject: "Stock OTP QRCode",
-    content: (param) => `Please scan your QRCode: ${param[0]}`,
-  },
 };
 
 const transport = nodeMailer.createTransport({
