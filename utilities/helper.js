@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const config = require("./config");
 
 function tryParseFloat(value) {
-  let result = parseFloat(value.replace(/[^0-9\.]/g, ""));
+  let result = value && parseFloat(value.replace(/[^0-9\.]/g, ""));
   return isNaN(result) ? 0 : result;
 }
 
