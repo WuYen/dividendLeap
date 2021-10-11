@@ -1,15 +1,12 @@
-const { mongooseQuickSetup } = require("./utilities/helper");
-const { getData, setData, updateData } = require("./models/UserInfo");
-//const repository = require("./models/newsInfo/repository");
-//const service = require("./services/newsService");
+const { mongooseQuickSetup } = require("./utility/helper");
+//const repository = require("./models/dividendDetail/repository");
+const service = require("./services/forcastService");
 //const source = require("./models/StockList/source");
 //const request = require("./utilities/requestCore");
 
 mongooseQuickSetup(async () => {
-  // let data = await repository.update();
-  // console.log("result", data);
-
-  console.log("result", getData, setData, updateData);
+  let data = await service.predict(2451, 2022);
+  console.log("result", data);
 });
 
 //node .\TestRun.js
