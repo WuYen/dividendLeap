@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Box, useMediaQuery, Input, Grid, VStack, StackDivider, Text, HStack } from "@chakra-ui/react";
 import api from "../../utils/api";
 
-import TabView from "./TabView";
+import Content from "./Content";
 
 export default function Container(props) {
   const [over768px] = useMediaQuery("(min-width: 768px)");
@@ -65,7 +65,7 @@ export default function Container(props) {
             </Box>
           </VStack>
         </Box>
-        <Box>{inspect && <TabView stockNo={inspect} />}</Box>
+        <Box>{inspect && <Content stockNo={inspect} />}</Box>
       </Grid>
     </Box>
   );
