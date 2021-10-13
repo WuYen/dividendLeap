@@ -11,6 +11,11 @@ function connectMongo(URI, callBack) {
   });
 }
 
+function disconnectMongo() {
+  return mongoose.disconnect();
+}
+
 module.exports = {
   toMongo: connectMongo,
+  disconnect: disconnectMongo,
 };
