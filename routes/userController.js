@@ -1,14 +1,7 @@
 const router = require("express").Router();
 const auth = require("../utility/auth");
 const mailService = require("../services/mailService");
-const {
-  login,
-  registration,
-  accountValidate,
-  resetPassword,
-  enableOTP,
-  confirmOTP,
-} = require("../services/userService");
+const { login, registration, accountValidate, resetPassword, registerOTP } = require("../services/userService");
 //const { success } = require("../utility/response");
 
 router.post("/login", async (req, res, next) => {
@@ -57,24 +50,28 @@ router.post("/accountvalidate", async (req, res, next) => {
   }
 });
 
-router.post("/OTP", async (req, res, next) => {
+//Validate OTP parameter
+router.param("OTPaction", function (req, res, next, OTPaction) {
+  ["generate", "confirm"].includes(OTPaction) ? next() : res.status(400).send();
+});
+router.post("/OTP/:OTPaction", async (req, res, next) => {
   try {
-    const { account, action, token } = req.body;
-    switch (action) {
+    const { account, token } = req.body;
+    switch (req.params.OTPaction) {
       case "generate":
-        res.send(await enableOTP(account));
+        res.send(await registerOTP(account));
         break;
       case "confirm":
-        res.send(await confirmOTP(account, token));
+        res.send(await registerOTP(account, token));
         break;
 
       default:
-        resres.status(404).send();
+        res.status(404).send();
         break;
     }
   } catch (error) {
     console.log(error);
-    res.send(error);
+    next(error);
   }
 });
 

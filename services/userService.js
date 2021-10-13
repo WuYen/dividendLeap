@@ -69,32 +69,24 @@ async function accountValidate(token) {
   return { result: false };
 }
 
-async function enableOTP(account) {
+async function registerOTP(account, token) {
   const query = { account: account };
   let user = await getData(query);
-  if (user) {
-    const tempToken = speakeasy.generateSecret();
-    let qrCodeUrl = await qrcode.toDataURL(tempToken.otpauth_url.replace("SecretKey", "StockeOverFlow"));
-    user.auth.OTPToken = tempToken.base32;
-    let result = await updateData(query, user);
-    return { result: result ? qrCodeUrl : null };
-  }
-  return { result: null };
-}
-
-async function confirmOTP(account, token) {
-  const query = { account: account };
-  let user = await getData(query);
-
-  if (user) {
+  if (!user) return { result: null };
+  if (token) {
     const verified = speakeasy.totp.verify({ secret: user.auth.OTPToken, encoding: "base32", token: token });
     if (verified) {
       user.auth.enableOTP = true;
       let result = await updateData(query, user);
       return { result: result ? verified : false };
     }
+  } else {
+    const tempToken = speakeasy.generateSecret();
+    let qrCodeUrl = await qrcode.toDataURL(tempToken.otpauth_url.replace("SecretKey", "StockeOverFlow"));
+    user.auth.OTPToken = tempToken.base32;
+    let result = await updateData(query, user);
+    return { result: result ? qrCodeUrl : null };
   }
-  return { result: false };
 }
 
 function validate() {}
@@ -105,6 +97,5 @@ module.exports = {
   resetPassword,
   accountValidate,
   validate,
-  enableOTP,
-  confirmOTP,
+  registerOTP,
 };
