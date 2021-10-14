@@ -12,7 +12,7 @@ export default function Container(props) {
 
   useEffect(() => {
     fetchList().then((res) => {
-      setSelected(res.data.list);
+      if (res.success) setSelected(res.data.list);
     });
   }, []);
 

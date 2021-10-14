@@ -17,6 +17,12 @@ export function get(url) {
     .then((res) => res.json())
     .catch((error) => {
       console.log("error", error);
+      return {
+        success: false,
+        data: null,
+        error: error.name,
+        message: error.message,
+      };
     });
 }
 
