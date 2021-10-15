@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-function connectMongo(URI, callBack) {
+function connectMongo(URI) {
+  console.log("connect to Mongo " + URI);
   mongoose.connection.on("connected", () => {
     console.log("Mongoose is connected!!!!");
   });
@@ -16,6 +17,7 @@ function disconnectMongo() {
 }
 
 module.exports = {
+  mongoose: mongoose,
   toMongo: connectMongo,
   disconnect: disconnectMongo,
 };

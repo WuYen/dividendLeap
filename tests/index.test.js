@@ -1,29 +1,27 @@
-//const request = require("supertest");
-//const server = require("../server");
-//const connectDB = require("../utility/connectDB");
+const supertest = require("supertest");
+const app = require("../server");
+const request = supertest(app.app);
+const connectDB = require("../utility/connectDB");
 
 //https://dev.to/franciscomendes10866/testing-express-api-with-jest-and-supertest-3gf
+//https://www.freecodecamp.org/news/end-point-testing/
 
-beforeAll((done) => {
+beforeAll(async () => {
   console.log("before All");
-  done();
+  await app.server;
 });
 
 describe("Test Route", () => {
-  test("stock/scheudle", (done) => {
-    request(server).get("/stock/scheudle").expect("Content-Type", /json/).expect(200);
+  //非同步測試
+  test("/tool/test", async () => {
+    const response = await request.get("/tool/test");
+    expect(response.status).toBe(200);
   });
 });
 
-describe("Test example", () => {
-  test("Sample", () => {
-    expect(2).toBe(2);
-  });
-});
-
-afterAll((done) => {
+afterAll(async () => {
   console.log("after All");
-  // Closing the DB connection allows Jest to exit successfully.
-  // connectDB.disconnect();
-  done();
+  let server = await app.server;
+  server.close();
+  await connectDB.disconnect();
 });

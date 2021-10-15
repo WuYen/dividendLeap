@@ -16,9 +16,7 @@ if (config.NODE_ENV === "production") {
 }
 
 async function start() {
-  await connectDB.toMongo(
-    config.MONGODB_URI || "mongodb://localhost/mern_youtube"
-  );
+  await connectDB.toMongo(config.MONGODB_URI || "mongodb://localhost/mern_youtube");
 
   const server = require("http").createServer(app);
   const io = require("socket.io")(server, {
@@ -49,6 +47,10 @@ async function start() {
 
   const PORT = config.PORT || 8080;
   server.listen(PORT, console.log(`Server is starting at ${PORT}`));
+
+  return server;
 }
 
-start();
+const server = start();
+
+module.exports = { server, app };

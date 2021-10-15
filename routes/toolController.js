@@ -17,4 +17,16 @@ router.get("/datetime", async function (req, res, next) {
   }
 });
 
+router.get("/test", async function (req, res, next) {
+  try {
+    return res.send(
+      success({
+        today: today(),
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
