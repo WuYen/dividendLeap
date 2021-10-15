@@ -11,11 +11,17 @@ beforeAll(async () => {
   await app.server;
 });
 
-describe("Test Route", () => {
+//mock 的 path 是從test file 出發的相對路徑
+jest.mock("../utility/dateTime", () => ({
+  today: () => "123",
+}));
+
+describe("Tool Route Test", () => {
   //非同步測試
   test("/tool/test", async () => {
-    const response = await request.get("/tool/test");
-    expect(response.status).toBe(200);
+    const { status, body } = await request.get("/tool/test");
+    expect(status).toBe(200);
+    expect(body).toEqual({ success: true, data: { today: "123" } });
   });
 });
 
