@@ -23,6 +23,28 @@ describe("Tool Route Test", () => {
     expect(status).toBe(200);
     expect(body).toEqual({ success: true, data: { today: "123" } });
   });
+
+  // test("/stock/scheudle", async () => {
+  //   const { status, body } = await request.get("/tool/test");
+  //   expect(status).toBe(200);
+  //   const { success, data } = body;
+  //   expect(success).toEqual(true);
+  //   expect(data).toMatchObject({
+  //     _id: "616d29f39f3f2e5d1c96e7fa",
+  //     stockNo: "006204",
+  //     stockName: "永豐臺灣加權",
+  //     year: "2021",
+  //     month: "10",
+  //     date: "20211019",
+  //     cashDividen: 5.3,
+  //     updateDate: "20211018",
+  //     sourceType: "twse",
+  //     __v: 0,
+  //     rate: "5.81",
+  //     price: 91.15,
+  //     priceDate: "20211018",
+  //   });
+  // });
 });
 
 afterAll(async () => {
