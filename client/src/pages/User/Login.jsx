@@ -6,7 +6,7 @@ import { Box, ButtonGroup, Center, useToast } from "@chakra-ui/react";
 
 import { auth, api } from "../../utils";
 import { loginStatus } from "../../constants/status";
-import AlertComponent from "../../components//Alert";
+import AlertComponent from "../../components/General/Alert";
 
 export default function Login(props) {
   //TODO: toggle

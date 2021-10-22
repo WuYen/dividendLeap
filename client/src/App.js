@@ -8,6 +8,8 @@ import store from "./store/store";
 import Header from "./components/Header";
 import Routes from "./components/Routing/Routes";
 
+import ModalDialog from "./components/General/ModalDialog";
+
 export default function App() {
   return (
     <Provider store={store}>
@@ -16,6 +18,7 @@ export default function App() {
           <Header />
           <Routes />
         </Router>
+        <ModalDialog />
       </ChakraProvider>
     </Provider>
   );

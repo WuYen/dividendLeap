@@ -5,7 +5,7 @@ import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
 import { Box, ButtonGroup, Center } from "@chakra-ui/react";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
-import AlertComponent from "../../components//Alert";
+import AlertComponent from "../../components/General/Alert";
 import { loginStatus } from "../../constants/status";
 
 export default function Registration(prop) {

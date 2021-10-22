@@ -1,25 +1,12 @@
-import React from "react";
-import { auth } from "../../utils";
+import React, { useState, useEffect } from "react";
+import { api, auth } from "../../utils";
 import { Center, Box, Heading } from "@chakra-ui/layout";
-import {
-  Table,
-  Tbody,
-  Tr,
-  Td,
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  OrderedList,
-  ListItem,
-  Input,
-  Text,
-} from "@chakra-ui/react";
+import { Table, Tbody, Tr, Td, Button, OrderedList, ListItem, Input, Text, ButtonGroup } from "@chakra-ui/react";
+import * as Yup from "yup";
+import { Formik } from "formik";
+import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
+import useModalDialog from "../../hooks/useModalDialog";
+import { useSelector } from "react-redux";
 //TODO: Settings Page
 export default function Settings(prop) {
   //TODO: need login page
@@ -27,117 +14,173 @@ export default function Settings(prop) {
 }
 
 function Content(props) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialValues = {
+    password: "",
+    password_cf: "",
+  };
+
+  const validationSchema = Yup.object({
+    password: Yup.string(),
+    password_cf: Yup.string().oneOf([Yup.ref("password")], "密碼不相同"),
+  });
+
+  const formProps = {
+    initialValues: initialValues,
+    validationSchema,
+    onSubmit: (values, actions) => callUpdateUser(values, actions).then((res) => {}),
+    enableReinitialize: true,
+  };
+
+  const { isOpen, onOpen } = useSelector(({ modalDialog }) => modalDialog);
+  function callUpdateUser() {}
   return (
-    <Center>
-      <Box borderWidth="1px" rounded="lg" p={4} w="100%" h="300px" maxWidth="1000px">
-        <Center m="4">
-          <Heading as="h1" size="lg" isTruncated>
-            設定
-          </Heading>
+    <Formik {...formProps}>
+      {({ handleSubmit, values, errors, ...rest }) => (
+        <Center>
+          <Box borderWidth="1px" rounded="lg" p={4} w="100%" minHeight="300px" maxWidth="1000px">
+            <Center m="4">
+              <Heading as="h1" size="lg" isTruncated>
+                設定
+              </Heading>
+            </Center>
+            <Heading as="h2" size="md" p="2" isTruncated>
+              個人化
+            </Heading>
+            <Table variant="simple">
+              <Tbody>
+                <Tr>
+                  <Td w="30%">圖片</Td>
+                  <Td>
+                    <Input placeholder="File" />
+                  </Td>
+                </Tr>
+              </Tbody>
+            </Table>
+            <Heading as="h2" size="md" p="2" isTruncated>
+              安全
+            </Heading>
+            <Table variant="simple">
+              <Tbody>
+                <Tr>
+                  <Td w="30%">密碼變更</Td>
+                  <Td>
+                    <InputControl
+                      name="password_old"
+                      label="舊密碼"
+                      mb="2"
+                      inputProps={{
+                        type: "password",
+                      }}
+                    />
+                    <InputControl
+                      name="password_new"
+                      label="更新密碼"
+                      mb="2"
+                      inputProps={{
+                        type: "password",
+                      }}
+                    />
+                    <InputControl
+                      name="password_cf"
+                      label="確認密碼"
+                      mb="2"
+                      inputProps={{
+                        type: "password",
+                      }}
+                    />
+                  </Td>
+                </Tr>
+                <Tr>
+                  <Td>設定一次性動態密碼</Td>
+                  <Td>
+                    <Button onClick={onOpen} colorScheme="blue">
+                      啟用
+                    </Button>
+                  </Td>
+                </Tr>
+              </Tbody>
+            </Table>
+            <Center>
+              <ButtonGroup mt="2" p="2">
+                <SubmitButton _focus={{ outline: "none" }}>更新</SubmitButton>
+                <ResetButton
+                  isDisabled={false}
+                  _focus={{ outline: "none" }}
+                  onClick={() => {
+                    rest.resetForm({ values: initialValues });
+                  }}
+                >
+                  清除
+                </ResetButton>
+              </ButtonGroup>
+            </Center>
+            <OTPContainer isOpen={isOpen} />
+          </Box>
         </Center>
-        <Box>
-          <Heading as="h2" size="md" isTruncated>
-            安全
-          </Heading>
-        </Box>
-
-        <Table variant="simple">
-          <Tbody>
-            <Tr>
-              <Td w="50%">密碼變更</Td>
-              <Td>
-                <Button onClick={onOpen} colorScheme="blue">
-                  更改
-                </Button>
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>設定一次性動態密碼</Td>
-              <Td>
-                <Button onClick={onOpen} colorScheme="blue">
-                  啟用
-                </Button>
-                <Text> 啟用後將發送信件</Text>
-              </Td>
-            </Tr>
-          </Tbody>
-        </Table>
-        <OTP isOpen={isOpen} onClose={onClose} />
-      </Box>
-    </Center>
+      )}
+    </Formik>
   );
 }
 
-function ModalDialog(props) {
-  const { isOpen, onClose, Header, hasSubmitBtn } = props;
-  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>{Header}</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>{props.children}</ModalBody>
-        <ModalFooter>
-          {hasSubmitBtn && (
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              確認
-            </Button>
-          )}
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  );
-}
+function OTPContainer(props) {
+  //#region define
+  const { isOpen } = props;
+  const [qrCode, setQrCode] = useState();
+  const handleSubmit = async (values, actions) => {
+    const { result } = await api.post(
+      "/user/OTP/confirm",
+      JSON.stringify({ account: auth.context.account, token: values })
+    );
+    if (result) {
+      // useToast()({
+      //   title: "啟動成功",
+      //   status: "success",
+      //   duration: 3000,
+      // });
+    }
+  };
+  const getQrCode = async () => {
+    let result = await api.post("/user/OTP/generate", JSON.stringify({ account: auth.context.account, token: null }));
+    result && setQrCode(result.result);
+  };
+  //#endregion
+  useEffect(() => {
+    !qrCode && getQrCode();
+  }, [qrCode]);
 
-function ChangePW(props) {
+  const { onOpen } = useModalDialog({
+    header: "設定一次性動態密碼",
+    Body: () => (
+      <>
+        <OrderedList>
+          <Center>
+            <img src={qrCode} />
+          </Center>
+          <ListItem>請使用Google Authendicator掃描QRCode進行設定</ListItem>
+          <ListItem>於下方輸入一次性密碼進行確認</ListItem>
+          <ListItem>設定完成</ListItem>
+        </OrderedList>
+        <Text p="3" fontWeight="bold">
+          一次性密碼確認
+        </Text>
+        <InputControl
+          name="token"
+          mb="2"
+          placeholder="OTP"
+          inputProps={{
+            type: "token",
+          }}
+        />
+      </>
+    ),
+    Footer: ({ handleSubmit }) => (
+      <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+        確認
+      </Button>
+    ),
+  });
+  useEffect(() => {
+    isOpen && onOpen();
+  }, [isOpen]);
   return <></>;
 }
-
-function OTP(props) {
-  return (
-    <ModalDialog Header="設定一次性動態密碼" hasSubmitBtn="true" {...props}>
-      <OrderedList>
-        <ListItem>查閱信箱內一次性密碼設定信件</ListItem>
-        <ListItem>請使用Google Authendicator掃描QRCode進行設定</ListItem>
-        <ListItem>於此頁面輸入Google Authendicator一次性密碼</ListItem>
-        <ListItem>設定完成</ListItem>
-      </OrderedList>
-      <Text p="3" fontWeight="bold">
-        一次性密碼確認
-      </Text>
-      <Input placeholder="OTP" />
-    </ModalDialog>
-  );
-}
-// function ModalDialog(props) {
-//   const { isOpen, onClose, Header, body } = props;
-//   return (
-//     <Modal isOpen={isOpen} onClose={onClose}>
-//       <ModalOverlay />
-//       <ModalContent>
-//         <ModalHeader>設定一次性動態密碼</ModalHeader>
-//         <ModalCloseButton />
-//         <ModalBody>
-//           <OrderedList>
-//             <ListItem>查閱信箱內一次性密碼設定信件</ListItem>
-//             <ListItem>請使用Google Authendicator掃描QRCode進行設定</ListItem>
-//             <ListItem>於此頁面輸入Google Authendicator一次性密碼</ListItem>
-//             <ListItem>設定完成</ListItem>
-//           </OrderedList>
-//           <Text p="3" fontWeight="bold">
-//             一次性密碼確認
-//           </Text>
-//           <Input placeholder="OTP" />
-//         </ModalBody>
-
-//         <ModalFooter>
-//           <Button mr={3}>Submit</Button>
-//           <Button colorScheme="blue" mr={3} onClick={onClose}>
-//             Close
-//           </Button>
-//         </ModalFooter>
-//       </ModalContent>
-//     </Modal>
-//   );
-// }
