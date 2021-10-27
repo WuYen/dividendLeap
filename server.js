@@ -46,7 +46,7 @@ async function start() {
   });
 
   const PORT = config.PORT || 8080;
-  server.listen(PORT, console.log(`Server is starting at ${PORT}`));
+  await server.listen(PORT, console.log(`Server is starting at ${PORT}`));
 
   return server;
 }
