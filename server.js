@@ -6,7 +6,7 @@ const { getByKeyword } = require("./services/newsService");
 
 const app = express();
 app.use(require("./middleware"));
-app.use(require("./routes"));
+app.use(require("./contrtollers"));
 
 if (config.NODE_ENV === "production") {
   app.use(express.static("client/build"));
@@ -16,9 +16,7 @@ if (config.NODE_ENV === "production") {
 }
 
 async function start() {
-  await connectDB.toMongo(
-    config.MONGODB_URI || "mongodb://localhost/mern_youtube"
-  );
+  await connectDB.toMongo(config.MONGODB_URI || "mongodb://localhost/mern_youtube");
 
   const server = require("http").createServer(app);
   const io = require("socket.io")(server, {
