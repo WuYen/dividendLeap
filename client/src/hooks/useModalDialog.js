@@ -4,7 +4,7 @@ import { openModalDialog, closeModalDialog } from "../store/ModalDialog/action";
 
 export default function useModalDialog(props) {
   const dispatch = useDispatch();
-  const [isOpen, setState] = useState(false);
+  const { data, isOpen } = props;
 
   const onClose = () => {
     setState(false);
@@ -13,7 +13,7 @@ export default function useModalDialog(props) {
     setState(true);
   };
 
-  var newProps = { isOpen, onClose, onOpen, ...props };
+  var newProps = { ...props, isOpen, onClose, onOpen };
 
   useEffect(() => {
     dispatch(isOpen ? openModalDialog(newProps) : closeModalDialog(newProps));
