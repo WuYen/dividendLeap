@@ -12,6 +12,8 @@ import {
   News,
   MyStock,
   ToolPage,
+  Validation,
+  Settings,
 } from "../../pages/index";
 
 export default function Routing(props) {
@@ -31,17 +33,23 @@ export default function Routing(props) {
         <Route path="/schedule/maintain">
           <DividendMaintain />
         </Route>
-        <Route path="/registration">
-          <Registration />
-        </Route>
-        <Route path="/resetpassword">
-          <ResetPassword />
-        </Route>
         <Route path="/news">
           <News />
         </Route>
-        <Route path="/login">
+        <Route path="/user/registration">
+          <Registration />
+        </Route>
+        <Route path="/user/login">
           <Login />
+        </Route>
+        <Route path="/user/validation">
+          <Validation />
+        </Route>
+        <Route path="/user/settings">
+          <Settings />
+        </Route>
+        <Route path="/user/resetpassword">
+          <ResetPassword />
         </Route>
         <Route path="/" exact>
           <DividendSchedule />

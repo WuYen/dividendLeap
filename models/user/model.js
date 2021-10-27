@@ -7,19 +7,22 @@ const Schema = mongoose.Schema;
 const model = mongoose.model(
   "userinfo",
   new Schema({
-    account:   String,
-    password:  String,
-    name:      String,
-    email:     String,
-    auth:{
-      role:      Number,
-      twofe:     Object,
+    account: String,
+    password: String,
+    name: String,
+    email: String,
+    validateToken: String,
+    auth: {
+      role: Number,
+      enableOTP: Boolean, // for client
+      OTPToken: String,
     },
-    status:{  
-      activity:  Number,
-      islogin:   Boolean,
-      ispwreset: Boolean
-    }
+    //TODO: status not implenment
+    status: {
+      activity: Number,
+      islogin: Boolean,
+      ispwreset: Boolean,
+    },
   })
 );
 

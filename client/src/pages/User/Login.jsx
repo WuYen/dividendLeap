@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
-import { Box, ButtonGroup, Center } from "@chakra-ui/react";
+import { Box, ButtonGroup, Center, useToast } from "@chakra-ui/react";
 
 import { auth, api } from "../../utils";
-import { loginstatus } from "../../constants/status";
-import AlertComponent from "../../components//Alert";
+import { loginStatus } from "../../constants/status";
+import AlertComponent from "../../components/General/Alert";
 
 export default function Login(props) {
   //TODO: toggle
@@ -14,7 +14,7 @@ export default function Login(props) {
   return (
     <Box p="4" width="100%">
       {auth.isLogin ? (
-        <AlertComponent state="info" show={true} description={`Already login as ${auth.context.account}`} />
+        <AlertComponent status="info" open={true} description={`Already login as ${auth.context.account}`} />
       ) : (
         <Form />
       )}
@@ -36,7 +36,7 @@ const handleLogin = async (values, actions) => {
   const payload = JSON.stringify(values);
   const response = await api.post(`/user/login`, payload);
   actions.setSubmitting(false);
-  if (response && response.result.code == loginstatus.Success.code) {
+  if (response && response.result.code == loginStatus.Success.code) {
     auth.token = response.token;
   }
   return response;
@@ -44,13 +44,23 @@ const handleLogin = async (values, actions) => {
 
 function Form(props) {
   const [alertInfo, setAlertInfo] = useState({});
+  const toast = useToast();
   const formProps = {
     initialValues: initialValues,
     validationSchema,
     onSubmit: (values, actions) =>
       handleLogin(values, actions).then((res) => {
         console.log("ouSubmit result", res);
-        res.result.code == loginstatus.Success.code && (window.location = "/");
+        if (res.result.code == loginStatus.Success.code) {
+          toast({
+            title: "Login Success!",
+            status: "success",
+            isClosable: true,
+            duration: 1000,
+          });
+          window.location = "/";
+        }
+        setAlertInfo(res.result);
       }),
     enableReinitialize: true,
     alertInfo: alertInfo,
