@@ -1,32 +1,29 @@
 const axios = require("axios");
-const Model = require("./model");
-const {
-  today,
-  tryParseFloat,
-  parseChineseDate,
-  getDateFragment,
-} = require("../../utility/helper");
+const { today, tryParseFloat, parseChineseDate, getDateFragment } = require("../utility/helper");
 
 /**
  * 從 twse 抓每日盤後個股股價
  * @param {object} {date, stockNo}
  * @returns trade info of that date
  */
-async function getData({ date, stockNo = "5522" }) {
-  let response = await axios.get(
-    `https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=${date}&stockNo=${stockNo}`
-  );
+function getData(Model) {
+  return async function (query) {
+    const { date, stockNo = "5522" } = query;
+    let response = await axios.get(
+      `https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=${date}&stockNo=${stockNo}`
+    );
 
-  let rawData = response.data.data;
+    let rawData = response.data.data;
 
-  let processedData = processData(rawData, stockNo);
+    let processedData = processData(rawData, stockNo);
 
-  const { year, month } = getDateFragment(date);
-  await Model.deleteMany({ stockNo, year, month });
+    const { year, month } = getDateFragment(date);
+    await Model.deleteMany({ stockNo, year, month });
 
-  let result = await Model.insertMany(processedData);
-  // console.log(`save dayInfo success`, result);
-  return result.find((x) => x.date == date);
+    let result = await Model.insertMany(processedData);
+    // console.log(`save dayInfo success`, result);
+    return result.find((x) => x.date == date);
+  };
 }
 
 //field index for RawData

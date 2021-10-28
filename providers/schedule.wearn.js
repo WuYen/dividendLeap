@@ -1,4 +1,3 @@
-const DividendSchedule = require("./model");
 const request = require("../../utility/requestCore");
 const { tryParseFloat, today, getPureDate } = require("../../utility/helper");
 
@@ -6,25 +5,24 @@ const { tryParseFloat, today, getPureDate } = require("../../utility/helper");
  * 取歷年除權息資料 from 聚財網
  * @param {string}} stockNo
  */
-async function getData() {
-  const $ = await request.getHTML(
-    `https://stock.wearn.com/divid.asp`,
-    request.big5Option
-  );
+function getData(Model) {
+  return async function () {
+    const $ = await request.getHTML(`https://stock.wearn.com/divid.asp`, request.big5Option);
 
-  let rawData = parseRawData($);
+    let rawData = parseRawData($);
 
-  let processedData = processData(rawData);
+    let processedData = processData(rawData);
 
-  let entity = {
-    data: [...processedData],
-    updateDate: today(),
+    let entity = {
+      data: [...processedData],
+      updateDate: today(),
+    };
+
+    const dividendSchedule = new Model(entity);
+    let result = await dividendSchedule.save();
+    console.log(`save Dividend Schedule success`, result);
+    return result;
   };
-
-  const dividendSchedule = new DividendSchedule(entity);
-  let result = await dividendSchedule.save();
-  console.log(`save Dividend Schedule success`, result);
-  return result;
 }
 
 //convert html document to data

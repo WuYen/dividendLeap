@@ -1,9 +1,10 @@
-const DividendInfo = require("../models/dividendInfo/repository");
-const DayInfo = require("../models/dayInfo/repository");
-const DayHistory = require("../models/dayHistory/repository");
-const DividendSchedule = require("../models/dividendSchedule/repository.v2");
-const StockDetail = require("../models/stockDetail/repository");
-const { latestTradeDate } = require("../utility/helper");
+const DividendInfoModel = require("../models/DividendInfo");
+const DayInfoModel = require("../models/DayInfo");
+const DayHistoryModel = require("../models/DayHistory");
+const ScheduleModel = require("../models/Schedule");
+const StockDetailModel = require("../models/StockDetail");
+
+const { latestTradeDate, today } = require("../utility/helper");
 
 /* 取得除權息分析資料 */
 async function getDetail(stockNo) {
@@ -11,14 +12,15 @@ async function getDetail(stockNo) {
   const lastYear = "2020";
 
   //從 stockDetail 抓資料 query:{stockNo, priceDate:latestTradDate}
-  let { data, isExpire } = await StockDetail.getData({
+  let { data, isExpire } = await StockDetailModel.getData({
     stockNo,
     priceDate: latestTradDate,
   });
 
   if (!data || isExpire) {
     data = await buildData(stockNo, lastYear, latestTradDate);
-    StockDetail.saveData(data); // no need to wait
+    data.updateDate = today();
+    StockDetailModel.saveData(data); // no need to wait
   }
 
   return data;
@@ -26,7 +28,7 @@ async function getDetail(stockNo) {
 
 async function buildData(stockNo, lastYear, latestTradDate) {
   //歷史的dividend info
-  let dInfo = await DividendInfo.getData(stockNo); //沒有今年的
+  let dInfo = await DividendInfoModel.getData(stockNo); //沒有今年的
   let dInfoLY = dInfo.data.find((x) => x.year == lastYear) || {};
 
   let last5 = dInfo.data.filter((x) => +x.year < 2021 && +x.year > 2015);
@@ -42,15 +44,16 @@ async function buildData(stockNo, lastYear, latestTradDate) {
   });
 
   //找今年的dividend info
-  let dInfoTY = await DividendSchedule.getByStockNo(stockNo);
-  let dayInfo = await DayInfo.getData({ stockNo, date: latestTradDate });
+  let dInfoTY = await ScheduleModel.getByStockNo(stockNo);
+
+  let dayInfo = await DayInfoModel.getData({ stockNo, date: latestTradDate });
 
   if (dInfoTY.sourceType == "manual") {
-    dayInfo = await DayInfo.getData2({ stockNo, date: latestTradDate });
+    dayInfo = await DayInfoModel.getDataFromWeb({ stockNo, date: latestTradDate });
   }
 
   //去年整年每天股價
-  let dayHistory = await DayHistory.getData({ stockNo, year: lastYear });
+  let dayHistory = await DayHistoryModel.getData({ stockNo, year: lastYear });
   let dayHistoryByMonth = groupByMonth(dayHistory.data);
   let rankByHigh = dayHistoryByMonth
     .map((x) => x.high)
@@ -87,9 +90,7 @@ async function buildData(stockNo, lastYear, latestTradDate) {
     rateAvg10: total10 ? (total10 / last10.length).toFixed(2) : "--",
     priceLY: dInfoLY.value || "--",
     dDateLY: dInfoLY.date || "--",
-    dFDayLY:
-      `${parseDate(dInfoLY.fillDate)}` ||
-      "--" + (!isNaN(dInfoLY.fillDay) ? `(${dInfoLY.fillDay}天)` : ""),
+    dFDayLY: `${parseDate(dInfoLY.fillDate)}` || "--" + (!isNaN(dInfoLY.fillDay) ? `(${dInfoLY.fillDay}天)` : ""),
     lowLY: rankByLow.slice(0, 3),
     HighLY: rankByHigh.slice(rankByHigh.length - 3, rankByHigh.length), //最高的三個月份
   };

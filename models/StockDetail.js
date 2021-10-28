@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Model
-const model = mongoose.model(
+const Model = mongoose.model(
   "StockDetail", // cache data for dividend detail page
   new Schema({
     stockNo: String,
@@ -25,4 +25,23 @@ const model = mongoose.model(
   })
 );
 
-module.exports = model;
+async function getData(query) {
+  //query => { stockNo, date }
+  let isExpire = false;
+  let data = await Model.findOne({ stockNo: query.stockNo }).exec();
+  data && (isExpire = data.priceData !== query.priceData);
+
+  return { data, isExpire };
+}
+
+async function saveData(data) {
+  await Model.deleteOne({ stockNo: data.stockNo });
+
+  let model = new Model(data);
+
+  await model.save();
+}
+
+module.exports = Model;
+module.exports.getData = getData;
+module.exports.saveData = saveData;

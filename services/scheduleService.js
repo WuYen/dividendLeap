@@ -1,5 +1,6 @@
-const DayInfo = require("../models/dayInfo/repository");
-const DividendSchedule = require("../models/dividendSchedule/repository.v2");
+const DayInfoModel = require("../models/DayInfo");
+const ScheduleModel = require("../models/Schedule");
+
 const { today, latestTradeDate } = require("../utility/helper");
 
 async function getSchedule() {
@@ -17,10 +18,10 @@ async function getSchedule() {
     return 0;
   }
 
-  const schedule = await DividendSchedule.getData();
+  const schedule = await ScheduleModel.getData();
   const afterToday = afterDate(today());
   const filtedData = schedule.filter(afterToday).sort(byTime);
-  const dayInfoCollection = await DayInfo.getData({
+  const dayInfoCollection = await DayInfoModel.getData({
     date: latestTradeDate(),
   });
 
@@ -41,14 +42,13 @@ async function getSchedule() {
   return result;
 }
 
-async function insert(data) {
-  let result = await DividendSchedule.insert(data);
-  return result;
-}
-
+/**
+ * update all schedule from provider
+ * @returns
+ */
 async function update() {
-  let result = await DividendSchedule.update();
+  let result = await ScheduleModel.updateAll();
   return result;
 }
 
-module.exports = { getSchedule, insert, update };
+module.exports = { getSchedule, update };

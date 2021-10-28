@@ -333,6 +333,11 @@ const NAV_ITEMS = [
     href: "/tool",
     auth: true,
   },
+  // {
+  //   label: "編輯列表",
+  //   href: "/schedule/maintain",
+  //   auth: false,
+  // },
 ];
 
 //nested link sample

@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const provider = require("../providers/dayHistory.cnyes");
 
 // Schema
 const Schema = mongoose.Schema;
 
 // Model
-const model = mongoose.model(
+const Model = mongoose.model(
   "DayHistory", // history price by year
   new Schema({
     stockNo: String,
@@ -24,4 +25,13 @@ const model = mongoose.model(
   })
 );
 
-module.exports = model;
+async function getData(query) {
+  let data = await Model.findOne(query).exec();
+  if (!data) {
+    data = await provider.getData(Model)(query);
+  }
+  return data;
+}
+
+module.exports = Model;
+module.exports.getData = getData;

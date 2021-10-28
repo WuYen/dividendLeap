@@ -1,20 +1,52 @@
-const MyStock = require("../models/myStock/repository");
+const MyStockModel = require("../models/MyStock");
 
-async function getList({ account }) {
-  const data = await MyStock.getList({ account });
+/**
+ * Get user's stock profile
+ * @param {Object} query { account }
+ * @returns
+ */
+async function getList(query) {
+  const data = await MyStockModel.getProfile(query);
   if (data == null) {
-    return { account: account, list: [] };
+    return { account: query.account, list: [] };
   }
   return data;
 }
 
-async function add({ account, stockNo }) {
-  let result = await MyStock.add({ account, stockNo });
-  return result;
+/**
+ * Add new stock to user
+ * @param {Object} query { account, stockNo }
+ * @returns
+ */
+async function add(query) {
+  const { account, stockNo } = query;
+  let data = await MyStockModel.getProfile(query);
+  if (data) {
+    //user has profile, add to exist list
+    data.list.push({ stockNo });
+    let result = await data.save();
+    return result;
+  } else {
+    //create new profile
+    let myStock = new MyStockModel({
+      account: account,
+      list: [{ stockNo }],
+      updateDate: today(),
+    });
+    let result = await myStock.save();
+    return result;
+  }
 }
 
-async function remove({ account, id }) {
-  let result = await MyStock.remove({ account, id });
+/**
+ * Remove stock from user profile
+ * @param {Object} query { account, id }
+ * @returns
+ */
+async function remove(query) {
+  let data = await MyStockModel.getProfile(query);
+  await data.list.id(query.id).remove();
+  let result = await data.save();
   return result;
 }
 

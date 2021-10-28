@@ -7,10 +7,10 @@ export default function useModalDialog(props) {
   const { data, isOpen } = props;
 
   const onClose = () => {
-    setState(false);
+    //setState(false);
   };
   const onOpen = () => {
-    setState(true);
+    //setState(true);
   };
 
   var newProps = { ...props, isOpen, onClose, onOpen };

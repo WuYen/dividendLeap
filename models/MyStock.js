@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Model
-const model = mongoose.model(
+const Model = mongoose.model(
   "MyStock", // user's stock watch list
   new Schema({
     account: String,
@@ -13,4 +13,10 @@ const model = mongoose.model(
   })
 );
 
-module.exports = model;
+async function getProfile(query) {
+  let data = await Model.findOne({ account: query.account }).exec();
+  return data;
+}
+
+module.exports = Model;
+module.exports.getProfile = getProfile;

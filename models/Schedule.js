@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const provider = require("../providers/schedule.twse");
 
 // Schema
 const Schema = mongoose.Schema;
 
 // Model
-const model = mongoose.model(
+const Model = mongoose.model(
   "Schedule", // dividend schedule
   new Schema({
     stockNo: String,
@@ -18,4 +19,23 @@ const model = mongoose.model(
   })
 );
 
-module.exports = model;
+async function getData(query = {}) {
+  let data = await Model.find(query).exec();
+  if (data.length == 0 && query.sourceType !== "manual") {
+    data = await provider.getData(Model)();
+  }
+  return data;
+}
+
+/**
+ * Update from provider
+ * @returns
+ */
+async function update() {
+  let data = await provider.getData();
+  return data;
+}
+
+module.exports = Model;
+module.exports.getData = getData;
+module.exports.updateAll = update;

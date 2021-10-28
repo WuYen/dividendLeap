@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const provider = require("../providers/dividendInfo");
 
 // Schema
 const Schema = mongoose.Schema;
 
 // Model
-const model = mongoose.model(
+const Model = mongoose.model(
   "DividendInfoV2", // dividend history by stock no
   new Schema({
     stockNo: String,
@@ -28,4 +29,17 @@ const model = mongoose.model(
   })
 );
 
-module.exports = model;
+async function getData(stockNo, needLatest = false) {
+  const query = {
+    stockNo: stockNo,
+    ...(needLatest && { updateDate: today() }),
+  };
+  let data = await Model.findOne(query).exec();
+  if (!data) {
+    data = await provider.getData(Model)(stockNo);
+  }
+  return data;
+}
+
+module.exports = Model;
+module.exports.getData = getData;

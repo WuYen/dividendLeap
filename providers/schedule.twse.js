@@ -1,30 +1,24 @@
-const Model = require("./model.v2");
-const request = require("../../utility/requestCore");
-const {
-  tryParseFloat,
-  today,
-  parseChineseDate,
-  getDateFragment,
-} = require("../../utility/helper");
+const request = require("../utility/requestCore");
+const { tryParseFloat, today, parseChineseDate, getDateFragment } = require("../utility/helper");
 
 /**
  * 取歷年除權息資料 from twse exchangeReport
  * @param {string}} stockNo
  */
-async function getData() {
-  let response = await request.get(
-    `https://www.twse.com.tw/exchangeReport/TWT48U?response=json`
-  );
+function getData(Model) {
+  return async function () {
+    let response = await request.get(`https://www.twse.com.tw/exchangeReport/TWT48U?response=json`);
 
-  let rawData = response.data;
+    let rawData = response.data;
 
-  let processedData = processData(rawData, today());
+    let processedData = processData(rawData, today());
 
-  await Model.deleteMany({ sourceType: "twse" });
+    await Model.deleteMany({ sourceType: "twse" });
 
-  let result = await Model.insertMany(processedData);
+    let result = await Model.insertMany(processedData);
 
-  return result;
+    return result;
+  };
 }
 
 //field index for RawData

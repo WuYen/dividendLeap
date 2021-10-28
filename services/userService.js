@@ -1,6 +1,6 @@
 const auth = require("../utility/auth");
 const { loginStatus, registerStatus, activity } = require("../client/src/constants/status");
-const { getData, setData, updateData } = require("../models/user/repository");
+const { getData, setData, updateData } = require("../models/UserInfo");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const speakeasy = require("speakeasy");

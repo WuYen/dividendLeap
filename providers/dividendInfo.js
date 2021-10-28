@@ -1,7 +1,6 @@
-const DividendInfo = require("./model");
-const helper = require("../../utility/requestCore");
-const config = require("../../utility/config");
-const { tryParseFloat, today, getPureDate } = require("../../utility/helper");
+const helper = require("../utility/requestCore");
+const config = require("../utility/config");
+const { tryParseFloat, today, getPureDate } = require("../utility/helper");
 
 var getUrl = (stockNo) => {
   let url = config.DIVIDENDINFO_URL || "https://stockinfo.tw/";
@@ -12,29 +11,31 @@ var getUrl = (stockNo) => {
  * 從 stockinfo 取歷年除權息資料
  * @param {string}} stockNo
  */
-async function getData(stockNo = "2412") {
-  try {
-    const $ = await helper.getHTML(getUrl(stockNo));
+function getData(Model) {
+  return async function (stockNo = "2412") {
+    try {
+      const $ = await helper.getHTML(getUrl(stockNo));
 
-    let rawData = parseRawData($);
+      let rawData = parseRawData($);
 
-    let processedData = processData(rawData);
+      let processedData = processData(rawData);
 
-    let entity = {
-      stockNo: stockNo,
-      data: [...processedData],
-      updateDate: today(),
-    };
+      let entity = {
+        stockNo: stockNo,
+        data: [...processedData],
+        updateDate: today(),
+      };
 
-    const dividendInfo = new DividendInfo(entity);
+      const dividendInfo = new Model(entity);
 
-    let result = await dividendInfo.save();
-    //console.log(`save schedule success`, result);
-    return result;
-  } catch (error) {
-    console.error("DividendInfo source error", error);
-    return null;
-  }
+      let result = await dividendInfo.save();
+      //console.log(`save schedule success`, result);
+      return result;
+    } catch (error) {
+      console.error("DividendInfo source error", error);
+      return null;
+    }
+  };
 }
 
 //convert html document to data

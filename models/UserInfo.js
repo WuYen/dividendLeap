@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Model
-const model = mongoose.model(
+const Model = mongoose.model(
   "UserInfo",
   new Schema({
     account: String,
@@ -23,4 +23,19 @@ const model = mongoose.model(
   })
 );
 
-module.exports = model;
+async function getData(query) {
+  return await Model.findOne(query).exec();
+}
+
+async function setData(entity) {
+  return await new Model(entity).save();
+}
+
+async function updateData(query, newdata) {
+  return await Model.findOneAndUpdate(query, newdata, { upsert: true }).exec();
+}
+
+module.exports = Model;
+module.exports.getData = getData;
+module.exports.setData = setData;
+module.exports.updateData = updateData;

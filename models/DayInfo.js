@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
+const provider1 = require("../providers/dayInfo.twse");
+const provider2 = require("../providers/dayInfo.cnyes");
 
 // Schema
 const Schema = mongoose.Schema;
 
 // Model
-const model = mongoose.model(
+const Model = mongoose.model(
   "DayInfo", // history price by day
   new Schema({
     stockNo: String,
@@ -18,4 +20,20 @@ const model = mongoose.model(
   })
 );
 
-module.exports = model;
+//custom query
+async function getData(query) {
+  //query => { stockNo, date }
+  if (query.stockNo) {
+    let data = await Model.findOne(query).exec();
+    if (!data) {
+      data = await provider1.getData(Model)(query);
+    }
+    return data;
+  } else {
+    return await Model.find(query).exec();
+  }
+}
+
+module.exports = Model;
+module.exports.getData = getData;
+module.exports.getDataFromWeb = provider2.getData(Model);
