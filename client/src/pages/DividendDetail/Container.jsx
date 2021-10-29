@@ -15,7 +15,7 @@ export default function DividendDetail(props) {
   });
 
   useEffect(() => {
-    api.get(`/stock/detail/${stockNo}`).then((data) => {
+    api.get(`/schedule/detail/${stockNo}`).then((data) => {
       console.log("data", data);
       setPageInfo({
         stockNo,

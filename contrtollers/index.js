@@ -1,13 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-router.use("/stock", require("./stockController"));
-router.use("/data", require("./dataController"));
-router.use("/tool", require("./toolController"));
 router.use("/schedule", require("./scheduleController"));
-router.use("/user", require("./userController"));
-router.use("/news", require("./newsController"));
 router.use("/mystock", require("./myStockController"));
+router.use("/news", require("./newsController"));
+router.use("/user", require("./userController"));
+router.use("/tool", require("./toolController"));
 
 //error handling middleware
 router.use(function (err, req, res, next) {

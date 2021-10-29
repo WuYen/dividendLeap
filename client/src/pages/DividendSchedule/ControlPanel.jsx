@@ -27,9 +27,9 @@ export default function ControlPanel(props) {
           onClick={() => {
             setLoading(true);
             api
-              .get("/data/getNewSchedule")
+              .get("/tool/getNewSchedule")
               .then((res) => {
-                return api.get(`/stock/scheudle`);
+                return api.get(`/schedule`);
               })
               .then((res) => {
                 console.log("result", res);

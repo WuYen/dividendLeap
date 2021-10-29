@@ -10,7 +10,7 @@ export default function Page(props) {
           <ListItem>
             <button
               onClick={() => {
-                api.get("/data/getNewSchedule");
+                api.get("/tool/getNewSchedule");
               }}
             >
               Fetch New Schedule
@@ -19,7 +19,7 @@ export default function Page(props) {
           <ListItem>
             <button
               onClick={() => {
-                api.get("/data/getAllDayInfo");
+                api.get("/tool/getAllDayInfo");
               }}
             >
               Get All Day Info

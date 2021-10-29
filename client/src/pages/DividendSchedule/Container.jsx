@@ -28,7 +28,7 @@ export default function DividendSchedule(props) {
   }, [dispatch]);
 
   useEffect(() => {
-    api.get(`/stock/scheudle`).then((data) => {
+    api.get(`/schedule`).then((data) => {
       console.log("GET_SCHEDULE_SUCCESS data", data);
       if (data.success) handleGetScheduleSuccess(data.data);
     });
