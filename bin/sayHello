@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
 const dayInfoService = require("../services/dayInfoService");
-const { mongooseQuickSetup } = require("../utility/helper");
+const { mongooseQuickSetup } = require("../utilities/helper");
 
 mongooseQuickSetup(dayInfoService.getAllDayInfo);

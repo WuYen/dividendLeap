@@ -1,7 +1,7 @@
 const DayInfoModel = require("../models/DayInfo");
 const ScheduleModel = require("../models/Schedule");
 
-const { today, latestTradeDate } = require("../utility/helper");
+const { today, latestTradeDate } = require("../utilities/helper");
 
 async function getSchedule() {
   function afterDate(date) {

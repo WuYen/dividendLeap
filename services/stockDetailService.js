@@ -4,7 +4,7 @@ const DayHistoryModel = require("../models/DayHistory");
 const ScheduleModel = require("../models/Schedule");
 const StockDetailModel = require("../models/StockDetail");
 
-const { latestTradeDate, today } = require("../utility/helper");
+const { latestTradeDate, today } = require("../utilities/helper");
 
 /* 取得除權息分析資料 */
 async function getDetail(stockNo) {

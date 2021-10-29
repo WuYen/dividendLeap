@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { success } = require("../utility/response");
+const { success } = require("../utilities/response");
 const { getList, insert, update, remove } = require("../services/scheduleEditService");
 const { getDetail } = require("../services/stockDetailService");
 const { getSchedule } = require("../services/scheduleService");

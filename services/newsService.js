@@ -1,8 +1,8 @@
 const NewsInfoModel = require("../models/NewsInfo");
 const puppeteer = require("puppeteer");
-const { today } = require("../utility/dateTime");
-const connectDB = require("../utility/connectDB");
-const config = require("../utility/config");
+const { today } = require("../utilities/dateTime");
+const connectDB = require("../utilities/connectDB");
+const config = require("../utilities/config");
 
 async function getNews(date, keyword) {
   const news = await NewsInfoModel.getData({ updateDate: date, category: keyword });

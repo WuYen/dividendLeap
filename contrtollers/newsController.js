@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { success } = require("../utility/response");
+const { success } = require("../utilities/response");
 const { getNews } = require("../services/newsService");
 
 router.get("/:date/:keyword", async function (req, res, next) {

@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const auth = require("../utility/auth");
+const auth = require("../utilities/auth");
 const mailService = require("../services/mailService");
 const { login, registration, accountValidate, resetPassword, registerOTP } = require("../services/userService");
-//const { success } = require("../utility/response");
+//const { success } = require("../utilities/response");
 
 router.post("/login", async (req, res, next) => {
   try {

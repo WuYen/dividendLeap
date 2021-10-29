@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { today, getDateFragment } = require("../utility/helper");
+const { today, getDateFragment } = require("../utilities/helper");
 
 /**
  * 取歷指定日期的盤後資料

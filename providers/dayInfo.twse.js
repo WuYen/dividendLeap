@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { today, tryParseFloat, parseChineseDate, getDateFragment } = require("../utility/helper");
+const { today, tryParseFloat, parseChineseDate, getDateFragment } = require("../utilities/helper");
 
 /**
  * 從 twse 抓每日盤後個股股價

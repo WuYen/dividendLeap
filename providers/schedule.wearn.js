@@ -1,5 +1,5 @@
-const request = require("../../utility/requestCore");
-const { tryParseFloat, today, getPureDate } = require("../../utility/helper");
+const request = require("../utilities/requestCore");
+const { tryParseFloat, today, getPureDate } = require("../utilities/helper");
 
 /**
  * 取歷年除權息資料 from 聚財網

@@ -1,5 +1,5 @@
 const nodeMailer = require("nodemailer");
-const { MAIL_ACCOUNT, MAIL_PASSWORD } = require("../utility/config");
+const { MAIL_ACCOUNT, MAIL_PASSWORD } = require("../utilities/config");
 const officalGMail = MAIL_ACCOUNT;
 const contentTemplate = {
   registration: {

@@ -1,6 +1,6 @@
-const helper = require("../utility/requestCore");
-const config = require("../utility/config");
-const { tryParseFloat, today, getPureDate } = require("../utility/helper");
+const helper = require("../utilities/requestCore");
+const config = require("../utilities/config");
+const { tryParseFloat, today, getPureDate } = require("../utilities/helper");
 
 var getUrl = (stockNo) => {
   let url = config.DIVIDENDINFO_URL || "https://stockinfo.tw/";

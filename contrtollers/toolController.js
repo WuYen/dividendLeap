@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const { success } = require("../utility/response");
-const { today, latestTradeDate } = require("../utility/dateTime");
+const { success } = require("../utilities/response");
+const { today, latestTradeDate } = require("../utilities/dateTime");
 const { getAllDayInfo } = require("../services/dayInfoService");
 const { update } = require("../services/scheduleService");
 

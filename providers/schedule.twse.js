@@ -1,5 +1,5 @@
-const request = require("../utility/requestCore");
-const { tryParseFloat, today, parseChineseDate, getDateFragment } = require("../utility/helper");
+const request = require("../utilities/requestCore");
+const { tryParseFloat, today, parseChineseDate, getDateFragment } = require("../utilities/helper");
 
 /**
  * 取歷年除權息資料 from twse exchangeReport

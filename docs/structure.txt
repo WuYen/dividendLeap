@@ -8,7 +8,7 @@ src
         └───repository.js   # Define data CRUD interface for outside model use, mainly use in services
 └───/routes                 # Routing entry point and controller for diffent API channel
 └───/services               # All the business logic is here, use repository to build page data or do CRUD(validation is part of business logic)
-└───/utility                # Helpers and common functions
+└───/utilities              # Helpers and common functions
 └───/client                 # Client side react project
 
 src
@@ -21,7 +21,7 @@ src
         └───repository.js   # 對外提供資料的存取
 └───/routes                 # 定義API的route
 └───/services               # 使用repository組出畫面用的資料, 驗證資料然後呼叫repository做CRUD
-└───/utility                # 常用的funcion
+└───/utilities              # 常用的funcion
 └───/client                 # React 前端
 
 //Refer to: https://www.taniarascia.com/react-architecture-directory-structure/

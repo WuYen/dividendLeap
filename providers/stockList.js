@@ -1,4 +1,4 @@
-const { today } = require("../utility/helper");
+const { today } = require("../utilities/helper");
 
 function getData(Model) {
   return async function () {

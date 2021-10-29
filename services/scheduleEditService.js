@@ -1,5 +1,5 @@
 const ScheduleModel = require("../models/Schedule");
-const { today, getDateFragment } = require("../utility/helper");
+const { today, getDateFragment } = require("../utilities/helper");
 
 async function getList() {
   const schedule = await ScheduleModel.getData({ sourceType: "manual" });

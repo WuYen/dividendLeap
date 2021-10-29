@@ -1,4 +1,4 @@
-const auth = require("../utility/auth");
+const auth = require("../utilities/auth");
 const { loginStatus, registerStatus, activity } = require("../client/src/constants/status");
 const { getData, setData, updateData } = require("../models/UserInfo");
 const bcrypt = require("bcrypt");

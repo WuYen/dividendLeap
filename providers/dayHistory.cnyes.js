@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { today, getDateFragment, toDateString } = require("../utility/helper");
+const { today, getDateFragment, toDateString } = require("../utilities/helper");
 
 /**
  * 從 ws.api.cnyes.com 取整年每日資料

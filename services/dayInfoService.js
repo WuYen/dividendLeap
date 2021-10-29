@@ -1,6 +1,6 @@
 const DayInfoModel = require("../models/DayInfo");
 const ScheduleModel = require("../models/Schedule");
-const { latestTradeDate } = require("../utility/helper");
+const { latestTradeDate } = require("../utilities/helper");
 
 //根據 dividendSchedule 取得 清單上的個股每天盤後\
 const chunkSize = 8;

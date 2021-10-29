@@ -1,11 +1,11 @@
 const express = require("express");
-const connectDB = require("./utility/connectDB");
-const config = require("./utility/config");
+const connectDB = require("./utilities/connectDB");
+const config = require("./utilities/config");
 const path = require("path");
 const { getByKeyword } = require("./services/newsService");
 
 const app = express();
-app.use(require("./utility/middleware"));
+app.use(require("./utilities/middleware"));
 app.use(require("./contrtollers"));
 
 if (config.NODE_ENV === "production") {
