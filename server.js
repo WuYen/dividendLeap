@@ -5,7 +5,7 @@ const path = require("path");
 const { getByKeyword } = require("./services/newsService");
 
 const app = express();
-app.use(require("./middleware"));
+app.use(require("./utility/middleware"));
 app.use(require("./contrtollers"));
 
 if (config.NODE_ENV === "production") {
