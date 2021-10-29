@@ -1,33 +1,34 @@
-const EPS = require("./model");
 const puppeteer = require("puppeteer");
-const { tryParseFloat, today, getPureDate } = require("../../utility/helper");
+const { today } = require("../utilities/helper");
 
 /**
  * Get EPS from yahoo(單季每股盈餘)
  * @param {String} stockNo
  * @returns
  */
-async function getData(stockNo = "") {
-  try {
-    let rawData = await getRawData(stockNo);
+function getData(Model) {
+  return async function (stockNo = "") {
+    try {
+      let rawData = await getRawData(stockNo);
 
-    let processedData = processData(rawData);
+      let processedData = processData(rawData);
 
-    let entity = {
-      stockNo: stockNo,
-      data: [...processedData],
-      updateDate: today(),
-    };
+      let entity = {
+        stockNo: stockNo,
+        data: [...processedData],
+        updateDate: today(),
+      };
 
-    let dividendInfo = new EPS(entity);
+      let epsInfo = new Model(entity);
 
-    let result = await dividendInfo.save();
-    //console.log(`save schedule success`, result);
-    return result;
-  } catch (error) {
-    console.error("EPS source error", error);
-    return null;
-  }
+      let result = await epsInfo.save();
+      //console.log(`save schedule success`, result);
+      return result;
+    } catch (error) {
+      console.error("EPS source error", error);
+      return null;
+    }
+  };
 }
 
 // Data format

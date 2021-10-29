@@ -1,9 +1,9 @@
 const router = require("express").Router();
 
-const { success } = require("../utility/response");
+const { success } = require("../utilities/response");
 const { predict } = require("../services/forcastService");
 
-//const auth = require("../utility/auth");
+//const auth = require("../utilities/auth");
 //router.use(auth.authentication);
 //const user = req.user;
 

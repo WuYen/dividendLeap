@@ -1,6 +1,6 @@
-const epsRepository = require("../models/eps/repository");
-const dividendDetailRepository = require("../models/dividendDetail/repository");
-const helper = require("../utility/helper");
+const EpsModel = require("../models/Eps");
+const DividendDetailModel = require("../models/DividendDetail");
+const helper = require("../utilities/helper");
 
 // targetYear = 2022
 async function predict(stockNo = 1604, targetYear) {
@@ -8,8 +8,8 @@ async function predict(stockNo = 1604, targetYear) {
   let epsYearPrev = targetYear - 2; //2020
 
   //取得個股所有 eps 資料
-  let epsPromise = epsRepository.getData(stockNo);
-  let dividendDetailPromise = dividendDetailRepository.getData(stockNo);
+  let epsPromise = EpsModel.getData(stockNo);
+  let dividendDetailPromise = DividendDetailModel.getData(stockNo);
   let [epsData, dividendDetailData] = await Promise.all([epsPromise, dividendDetailPromise]);
   let dividendDetailPrev = dividendDetailData.find((x) => x.year == epsYear);
 

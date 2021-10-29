@@ -1,4 +1,4 @@
-const { mongooseQuickSetup } = require("./utility/helper");
+const { mongooseQuickSetup } = require("./utilities/helper");
 //const repository = require("./models/dividendDetail/repository");
 const service = require("./services/forcastService");
 //const source = require("./models/StockList/source");

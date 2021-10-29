@@ -1,7 +1,5 @@
-const Model = require("./model");
-const helper = require("../../utility/requestCore");
-const config = require("../../utility/config");
-const { tryParseFloat, today, getPureDate } = require("../../utility/helper");
+const helper = require("../utilities/requestCore");
+const { tryParseFloat, today, getPureDate } = require("../utilities/helper");
 
 var getUrl = (stockNo) => `https://goodinfo.tw/StockInfo/StockDividendPolicy.asp?STOCK_ID=${stockNo}&SHOW_ROTC=`;
 
@@ -9,19 +7,22 @@ var getUrl = (stockNo) => `https://goodinfo.tw/StockInfo/StockDividendPolicy.asp
  * 從 good info 取歷年除權息資料
  * @param {string}} stockNo
  */
-async function getData(stockNo = 2451) {
-  const $ = await helper.getHTML(getUrl(stockNo));
+function getData(Model) {
+  return async function (query) {
+    const { stockNo = 2451 } = query;
+    const $ = await helper.getHTML(getUrl(stockNo));
 
-  var rawData = parseRawData($);
+    var rawData = parseRawData($);
 
-  let processedData = processData(stockNo, rawData);
+    let processedData = processData(stockNo, rawData);
 
-  await Model.deleteMany({ stockNo });
+    await Model.deleteMany({ stockNo });
 
-  let result = await Model.insertMany(processedData);
+    let result = await Model.insertMany(processedData);
 
-  console.log(`save dividend detail success`, result);
-  return result;
+    console.log(`save dividend detail success`, result);
+    return result;
+  };
 }
 
 //get raw data from html document

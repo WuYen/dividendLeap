@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const provider = require("../providers/dividendDetail");
 
 // Schema
 const Schema = mongoose.Schema;
 
 // Model
-const model = mongoose.model(
+const Model = mongoose.model(
   "DividendDetail",
   new Schema({
     stockNo: String,
@@ -18,4 +19,14 @@ const model = mongoose.model(
   })
 );
 
-module.exports = model;
+async function getData(stockNo) {
+  const query = { stockNo: stockNo };
+  let data = await Model.find(query).exec();
+  if (data.length == 0) {
+    data = await provider.getData(Model)(stockNo);
+  }
+  return data;
+}
+
+module.exports = Model;
+module.exports.getData = getData;
