@@ -2,25 +2,21 @@ src
 └───server.js               # App entry point
 └───middleware.js           # Common middleware
 └───/models                 # Centralize all data related models and providers
-    └───/FeatureName        # Folder that contain following file
-        └───model.js        # Define mongoose model
-        └───source.js       # Get data from web and save to db(directly use model)
-        └───repository.js   # Define data CRUD interface for outside model use, mainly use in services
-└───/routes                 # Routing entry point and controller for diffent API channel
+    └───Model.js            # Define mongoose model and common CRUD function
+└───/controllers            # Routing entry point and controller for diffent API channel
 └───/services               # All the business logic is here, use repository to build page data or do CRUD(validation is part of business logic)
-└───/utilities              # Helpers and common functions
+└───/providers              # Get data from web on demand
+└───/utilities              # Helpers, common functions and middleware
 └───/client                 # Client side react project
 
 src
 └───server.js               # 進入點, 啟動express跟db連線, apply middleware.js
 └───middleware.js           # 所有用到的middleware統一收在這邊去註冊
 └───/models                 # 定義資料
-    └───/FeatureName        # 資料夾用來區分功能
-        └───model.js        # 定義資料model跟schema
-        └───source.js       # 從網路爬資料下來然後存到DB
-        └───repository.js   # 對外提供資料的存取
-└───/routes                 # 定義API的route
+    └───Model.js            # 定義資料model, schema 跟 常用的CRUD function
+└───/controllers            # 定義API的route
 └───/services               # 使用repository組出畫面用的資料, 驗證資料然後呼叫repository做CRUD
+└───/providers              # 從網路爬資料下來然後存到DB
 └───/utilities              # 常用的funcion
 └───/client                 # React 前端
 

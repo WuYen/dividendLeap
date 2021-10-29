@@ -12,14 +12,13 @@ function authentication(req, res, next) {
   // Gather the jwt access token from the request header
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  if (token == null)
-    return res
-      .status(401)
-      .send({ success: false, message: "沒登入", token: null }); // if there isn't any token
+  if (token == null) return res.status(401).send({ success: false, message: "沒登入", token: null }); // if there isn't any token
 
   jwt.verify(token, config.TOKEN_SECRET, (err, user) => {
-    console.log(err);
-    if (err) return res.sendStatus(403);
+    if (err) {
+      console.log(err);
+      return res.sendStatus(403);
+    }
     req.user = user;
     next(); // pass the execution off to whatever request the client intended
   });
