@@ -1,14 +1,14 @@
 const router = require("express").Router();
 
+//const auth = require("../utilities/auth");
 const { success } = require("../utilities/response");
 const { predict } = require("../services/forcastService");
 
-//const auth = require("../utilities/auth");
 //router.use(auth.authentication);
-//const user = req.user;
 
 router.get("/:stockNo", async function (req, res, next) {
   try {
+    //const user = req.user;
     let result = await predict(req.params.stockNo, 2022);
     return res.send(success(result));
   } catch (error) {

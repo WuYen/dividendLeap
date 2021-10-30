@@ -32,16 +32,25 @@ function getData(Model) {
 }
 
 // Data format
-// [{
-//   "year": 2021,
-//   "date": "2021 Q2",
-//   "eps": 1.91,
-//   "epsQoQ": 0.4692,
-//   "epsYoY": 2.0806,
-//   "epsAcc4Q": null,
-//   "avgPrice": "72.92"
+// window.App.main.context.dispatcher.stores.QuoteFundamental.quote.data
+// sectorName: "金融業"
+// symbolName: "富邦金"
+// systexId: "2881"
+// price: "73.6"
+// change: "-0.9"
+// changePercent: "-1.21%"
+// changeStatus: "down"
+
+// window.App.main.context.dispatcher.stores.QuoteFundamental.fundamental.data.trendPrice
+// "trendPrice": {
+//   "text": "連3跌",
+//   "trend": "",
+//   "trendNow": "DOWN",
+//   "day": 0,
+//   "dayNow": 3,
+//   "change": "-1.90",
+//   "changePercent": "-2.52%"
 // },
-// ...]
 async function getRawData(stockNo) {
   const link = `https://tw.stock.yahoo.com/quote/${stockNo}/eps`;
   const chromeOptions = {

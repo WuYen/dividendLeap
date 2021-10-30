@@ -20,13 +20,36 @@ const Model = mongoose.model(
 );
 
 async function getData(stockNo) {
-  const query = { stockNo: stockNo };
-  let data = await Model.find(query).exec();
+  let data = await Model.find({ stockNo }).exec();
   if (data.length == 0) {
     data = await provider.getData(Model)(stockNo);
   }
   return data;
 }
 
+/**
+ * 取得區間內的Dividend detail by stockNo
+ * @param {Object} query { stockNo, start, end }
+ * @returns
+ */
+async function getByRange(query) {
+  const { stockNo, start, end } = query;
+  let result = await Model.aggregate([
+    { $match: { year: { $gte: start, $lte: end }, stockNo } },
+    {
+      $sort: { year: -1 },
+    },
+  ]).exec();
+
+  if (result.length == 0) {
+    let data = await getData(stockNo);
+    result = data.filter((x) => parseInt(x.year) >= start && parseInt(x.year) <= end);
+    console.log("data", data, result);
+  }
+
+  return result;
+}
+
 module.exports = Model;
 module.exports.getData = getData;
+module.exports.getByRange = getByRange;

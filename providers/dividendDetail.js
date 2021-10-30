@@ -8,8 +8,10 @@ var getUrl = (stockNo) => `https://goodinfo.tw/StockInfo/StockDividendPolicy.asp
  * @param {string}} stockNo
  */
 function getData(Model) {
-  return async function (query) {
-    const { stockNo = 2451 } = query;
+  return async function (stockNo) {
+    if (!stockNo) {
+      throw new Error("Dividend detail not given stockNo");
+    }
     const $ = await helper.getHTML(getUrl(stockNo));
 
     var rawData = parseRawData($);

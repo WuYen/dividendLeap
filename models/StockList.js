@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const provider = require("../providers/stockList");
 
 // Schema
 const Schema = mongoose.Schema;
@@ -14,3 +15,6 @@ const model = mongoose.model(
 );
 
 module.exports = model;
+module.exports.getNameByNo = function (stockNo) {
+  return provider.stocks_stolist.find((x) => x[0] == stockNo);
+};

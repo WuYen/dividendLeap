@@ -36,6 +36,12 @@ async function update() {
   return data;
 }
 
+async function getByStockNo(stockNo) {
+  let data = await Model.findOne({ stockNo }).exec();
+  return data;
+}
+
 module.exports = Model;
 module.exports.getData = getData;
 module.exports.updateAll = update;
+module.exports.getByStockNo = getByStockNo;

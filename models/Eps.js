@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const provider = require("../providers/eps");
+//const provider = require("../providers/eps");
+const provider = require("../providers/eps.histock");
 
 // Schema
 const Schema = mongoose.Schema;
@@ -11,8 +12,8 @@ const Model = mongoose.model(
     stockNo: String,
     data: [
       {
-        year: String, //年度 2019
-        date: String, // 2020 Q4
+        year: String, //年度 "2021"
+        date: String, // "2021 Q2"
         quarter: String, // 季度 1、2、3、4
         eps: Number, // 0.42 小數點兩位
       },

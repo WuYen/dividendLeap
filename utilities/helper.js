@@ -16,7 +16,7 @@ function mongooseQuickSetup(task) {
   mongoose.connection.on("connected", async () => {
     console.log("Mongoose is connected!!!!");
     let result = await task();
-    console.log("finish");
+    console.log("mongooseQuickSetup finish");
     process.exit(1);
   });
 }

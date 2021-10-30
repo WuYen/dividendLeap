@@ -2,23 +2,23 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Box, HStack, Stack } from "@chakra-ui/react";
 import DataList from "../../pages/News/DataList";
 import api from "../../utils/api";
+import { formatHelper } from "../../utils";
 
 export default function Content(props) {
   const { stockNo } = props;
   return (
     <Box>
+      <Forecast stockNo={stockNo} />
       {/* <DataList.Container keyWord={stockNo} search={true} loading={0} list={1}>
         <DataList.Loading />
         <DataList.List />
       </DataList.Container> */}
-
-      <Forecast stockNo={stockNo} />
     </Box>
   );
 }
 
 function Forecast(props) {
-  const stockNo = 2451;
+  const { stockNo } = props;
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -29,17 +29,21 @@ function Forecast(props) {
       }
     });
   }, [stockNo]);
-  console.log("d", data);
+
   return data ? (
     <Box>
       <Box>
-        今年預估:
-        <Element data={data.data[0]} />
+        {data.baseInfo[0]}-{data.baseInfo[1]}
       </Box>
       <Box>
-        去年:
-        <Element data={data.data[1]} />
+        {data.dayInfo.price}({formatHelper.formatDate(data.dayInfo.date)})
       </Box>
+      {data.eps.map((d, index) => (
+        <Box key={index}>
+          {d.year}:
+          <Element data={d} />
+        </Box>
+      ))}
     </Box>
   ) : null;
 }
@@ -64,9 +68,9 @@ function EPS(props) {
       EPS:{eps}
       <HStack>
         <div>Q1:{quarter[0].eps || ""}</div>
-        <div>Q2:{quarter[2]?.eps || ""}</div>
-        <div>Q3:{quarter[3]?.eps || ""}</div>
-        <div>Q4:{quarter[4]?.eps || ""}</div>
+        <div>Q2:{quarter[1]?.eps || ""}</div>
+        <div>Q3:{quarter[2]?.eps || ""}</div>
+        <div>Q4:{quarter[3]?.eps || ""}</div>
       </HStack>
     </div>
   );

@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, useMediaQuery, Input, Grid, VStack, StackDivider, Text, HStack } from "@chakra-ui/react";
 import api from "../../utils/api";
+import { useParams, useHistory } from "react-router-dom";
 
 import Content from "./Content";
 
 export default function Container(props) {
   const [over768px] = useMediaQuery("(min-width: 768px)");
   const [selected, setSelected] = useState([]);
-
-  const [inspect, setInstpect] = useState("");
-
+  const { stockNo } = useParams();
+  const history = useHistory();
+  console.log("stockNo", stockNo);
   useEffect(() => {
     fetchList().then((res) => {
       if (res.success) setSelected(res.data.list);
@@ -36,17 +37,17 @@ export default function Container(props) {
         <Box>
           <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
             <Box>
-              Selected:
+              我的清單
               {selected.map((item) => {
                 return (
                   <HStack key={item._id}>
                     <Text
-                      color={inspect == item.stockNo ? "teal.500" : "grey.500"}
+                      color={stockNo == item.stockNo ? "teal.500" : "grey.500"}
                       onClick={() => {
-                        setInstpect(item.stockNo);
+                        history.push(`/my/stock/${item.stockNo}`);
                       }}
                     >
-                      {item.stockNo}
+                      {item.stockNo} {stocks_stolist.find((x) => x[0] == item.stockNo)[1]}
                     </Text>
                     <div
                       style={{ padding: "5px", display: "inline-block" }}
@@ -65,7 +66,7 @@ export default function Container(props) {
             </Box>
           </VStack>
         </Box>
-        <Box>{inspect && <Content stockNo={inspect} />}</Box>
+        <Box>{stockNo && <Content stockNo={stockNo} />}</Box>
       </Grid>
     </Box>
   );
