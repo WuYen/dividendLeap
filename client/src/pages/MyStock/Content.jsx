@@ -1,14 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { Box, HStack, Input, SliderThumb, SliderFilledTrack, SliderTrack, Slider, Divider } from "@chakra-ui/react";
 import DataList from "../../pages/News/DataList";
 import api from "../../utils/api";
 import { formatHelper } from "../../utils";
+import { LoadingSpinner } from "../../components/Loading";
 
 export default function Content(props) {
   const { stockNo } = props;
   return (
-    <Box>
-      <Forecast stockNo={stockNo} />
+    <Box h="100%">
+      <Forecast key={stockNo} stockNo={stockNo} />
       {/* <DataList.Container keyWord={stockNo} search={true} loading={0} list={1}>
         <DataList.Loading />
         <DataList.List />
@@ -30,20 +31,22 @@ function Forecast(props) {
     });
   }, [stockNo]);
 
-  return (
-    data && (
+  return data ? (
+    <Box>
       <Box>
-        <Box>
-          {data.baseInfo[0]} {data.baseInfo[1]}
-        </Box>
-        <Box>
-          <ComputeStock key={stockNo} eps={data.eps[0]} />
-          目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
-        </Box>
-        <br />
-        <Element data={data.eps} />
+        {data.baseInfo[0]} {data.baseInfo[1]}
       </Box>
-    )
+      <Box>
+        <ComputeStock key={stockNo} eps={data.eps[0]} />
+        目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
+      </Box>
+      <br />
+      <Element data={data.eps} />
+    </Box>
+  ) : (
+    <Box h="100%" className="loading-container" textAlign="center">
+      <LoadingSpinner mt="50%" />
+    </Box>
   );
 }
 
@@ -127,7 +130,7 @@ function Element(props) {
       {data.map((d, index) => {
         const { cashDividend, estimateDividend, q, rate, totalEps, year } = d;
         return (
-          <>
+          <Fragment key={index}>
             <HStack spacing={3}>
               <div>{year}</div>
               <EPS eps={totalEps} quarter={q} />
@@ -151,7 +154,7 @@ function Element(props) {
                 </HStack>
               </>
             )}
-          </>
+          </Fragment>
         );
       })}
     </>
@@ -162,7 +165,7 @@ function EPS(props) {
   const { eps, quarter } = props;
   return (
     <HStack>
-      <div style={{ width: "50px", textAlign: "right" }}>{quarter[0].eps || ""}</div>
+      <div style={{ width: "50px", textAlign: "right" }}>{quarter[0]?.eps || ""}</div>
       <div style={{ width: "50px", textAlign: "right" }}>{quarter[1]?.eps || ""}</div>
       <div style={{ width: "50px", textAlign: "right" }}>{quarter[2]?.eps || ""}</div>
       <div style={{ width: "50px", textAlign: "right" }}>{quarter[3]?.eps || ""}</div>
