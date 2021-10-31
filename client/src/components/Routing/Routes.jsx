@@ -20,13 +20,6 @@ export default function Routing(props) {
   return (
     <ErrorBoundary>
       <Switch>
-        <PrivateRoute path="/my/stock">
-          <MyStock />
-        </PrivateRoute>
-        <PrivateRoute path="/tool">
-          <ToolPage />
-        </PrivateRoute>
-
         <Route path="/detail/:stockNo/:name?">
           <DividendDetail />
         </Route>
@@ -54,6 +47,13 @@ export default function Routing(props) {
         <Route path="/" exact>
           <DividendSchedule />
         </Route>
+
+        <PrivateRoute path="/my/stock/:stockNo?">
+          <MyStock />
+        </PrivateRoute>
+        <PrivateRoute path="/tool">
+          <ToolPage />
+        </PrivateRoute>
       </Switch>
     </ErrorBoundary>
   );

@@ -28,6 +28,9 @@ async function getData(query) {
     if (!data) {
       data = await provider1.getData(Model)(query);
     }
+    if (!data) {
+      data = await provider2.getData(Model)(query);
+    }
     return data;
   } else {
     return await Model.find(query).exec();

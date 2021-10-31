@@ -6,6 +6,7 @@ router.use("/mystock", require("./myStockController"));
 router.use("/news", require("./newsController"));
 router.use("/user", require("./userController"));
 router.use("/tool", require("./toolController"));
+router.use("/forcast", require("./forcastController"));
 
 //error handling middleware
 router.use(function (err, req, res, next) {

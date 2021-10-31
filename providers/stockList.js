@@ -26,8 +26,6 @@ function processData(data) {
   });
 }
 
-module.exports = { getData };
-
 //from pchome stock
 var stocks_stolist = [
   ["0050", "元大台灣50", "元大台灣50", ",0_51,"],
@@ -3019,3 +3017,5 @@ var stocks_stolist = [
   ["9960", "邁達康", "邁達康網路事業股份有限公司", ",1_18,2_2912,4_A002,4_A024,4_A160,"],
   ["9962", "有益", "有益鋼鐵股份有限公司", ",1_10,"],
 ];
+
+module.exports = { getData, stocks_stolist };

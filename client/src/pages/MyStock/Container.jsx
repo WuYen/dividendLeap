@@ -1,18 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, useMediaQuery, Input, Grid, VStack, StackDivider, Text, HStack } from "@chakra-ui/react";
+import { Box, useMediaQuery, Input, Grid, VStack, StackDivider, Text } from "@chakra-ui/react";
 import api from "../../utils/api";
+import { useParams, useHistory } from "react-router-dom";
 
-import TabView from "./TabView";
+import Content from "./Content";
 
 export default function Container(props) {
   const [over768px] = useMediaQuery("(min-width: 768px)");
   const [selected, setSelected] = useState([]);
-
-  const [inspect, setInstpect] = useState("");
-
+  const { stockNo } = useParams();
+  const history = useHistory();
+  console.log("stockNo", stockNo);
   useEffect(() => {
     fetchList().then((res) => {
-      if (res.success) setSelected(res.data.list);
+      if (res.success) {
+        setSelected(res.data.list);
+        res.data.list.length && history.push(`/my/stock/${res.data.list[0].stockNo}`);
+      }
     });
   }, []);
 
@@ -36,27 +40,16 @@ export default function Container(props) {
         <Box>
           <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
             <Box>
-              Selected:
+              我的清單
               {selected.map((item) => {
                 return (
-                  <HStack key={item._id}>
-                    <Text
-                      color={inspect == item.stockNo ? "teal.500" : "grey.500"}
-                      onClick={() => {
-                        setInstpect(item.stockNo);
-                      }}
-                    >
-                      {item.stockNo}
-                    </Text>
-                    <div
-                      style={{ padding: "5px", display: "inline-block" }}
-                      onClick={() => {
-                        handleRemove(item._id);
-                      }}
-                    >
-                      Remove
-                    </div>
-                  </HStack>
+                  <MyListItem
+                    key={item._id}
+                    stockNo={stockNo}
+                    history={history}
+                    item={item}
+                    handleRemove={handleRemove}
+                  />
                 );
               })}
             </Box>
@@ -65,9 +58,44 @@ export default function Container(props) {
             </Box>
           </VStack>
         </Box>
-        <Box>{inspect && <TabView stockNo={inspect} />}</Box>
+        <Box>{stockNo && <Content stockNo={stockNo} />}</Box>
       </Grid>
     </Box>
+  );
+}
+
+function MyListItem(props) {
+  const { history, item, stockNo, handleRemove } = props;
+  const name = `${item.stockNo} ${stocks_stolist.find((x) => x[0] == item.stockNo)[1]}`;
+  return (
+    <Grid templateColumns="1fr auto" gap={2} alignItems="center">
+      <Text
+        color={stockNo == item.stockNo ? "teal.500" : "grey.500"}
+        onClick={() => {
+          history.push(`/my/stock/${item.stockNo}`);
+        }}
+        width="100%"
+        cursor="pointer"
+        _hover={{ backgroundColor: "gray.100" }}
+        paddingY="1"
+      >
+        {name}
+      </Text>
+      <Text
+        paddingY="1"
+        cursor="pointer"
+        _hover={{ backgroundColor: "red.100" }}
+        onClick={() => {
+          var r = window.confirm("確認刪除: " + name);
+          if (r == true) {
+            handleRemove(item._id);
+          }
+        }}
+        textAlign="end"
+      >
+        刪除
+      </Text>
+    </Grid>
   );
 }
 
@@ -102,7 +130,9 @@ function AutoComplete(props) {
   const [text, setText] = useState("");
 
   const options = stocks_stolist.filter((x) => {
-    if (isPureNumber(text)) {
+    if (!text) {
+      return true;
+    } else if (isPureNumber(text)) {
       return x[0].includes(text);
     } else {
       return x[1].includes(text);
@@ -111,24 +141,22 @@ function AutoComplete(props) {
 
   return (
     <>
-      <Input placeholder="Search Stock" size="md" onChange={(e) => setText(e.target.value)} />
-      {text && (
-        <div style={{ height: "400px", overflowY: "auto", width: "300px" }}>
-          {options.map((item) => {
-            return (
-              <div
-                style={{ cursor: "pointer" }}
-                key={item[0]}
-                onClick={() => {
-                  handleSelect(item[0]);
-                }}
-              >
-                {item[1]}({item[0]})
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <Input placeholder="查詢" type="search" size="md" onChange={(e) => setText(e.target.value)} />
+      <div style={{ height: "400px", overflowY: "auto", marginTop: "16px" }}>
+        {options.map((item) => {
+          return (
+            <div
+              style={{ cursor: "pointer" }}
+              key={item[0]}
+              onClick={() => {
+                handleSelect(item[0]);
+              }}
+            >
+              {item[0]} {item[1]}
+            </div>
+          );
+        })}
+      </div>
     </>
   );
 }

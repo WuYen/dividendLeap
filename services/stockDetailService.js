@@ -7,9 +7,8 @@ const StockDetailModel = require("../models/StockDetail");
 const { latestTradeDate, today } = require("../utilities/helper");
 
 /* 取得除權息分析資料 */
-async function getDetail(stockNo) {
+async function getDetail(stockNo, lastYear) {
   const latestTradDate = latestTradeDate();
-  const lastYear = "2020";
 
   //從 stockDetail 抓資料 query:{stockNo, priceDate:latestTradDate}
   let { data, isExpire } = await StockDetailModel.getData({
@@ -30,21 +29,21 @@ async function buildData(stockNo, lastYear, latestTradDate) {
   //歷史的dividend info
   let dInfo = await DividendInfoModel.getData(stockNo); //沒有今年的
   let dInfoLY = dInfo.data.find((x) => x.year == lastYear) || {};
-
-  let last5 = dInfo.data.filter((x) => +x.year < 2021 && +x.year > 2015);
+  let dataRange = { start: lastYear + 1, end5: lastYear - 5, end10: lastYear - 10 };
+  let last5 = dInfo.data.filter((x) => +x.year < dataRange.start && +x.year > dataRange.end5);
   let total5 = 0;
   last5.forEach((d) => {
     total5 += d.yieldRateCash;
   });
 
-  let last10 = dInfo.data.filter((x) => +x.year < 2021 && +x.year > 2010);
+  let last10 = dInfo.data.filter((x) => +x.year < dataRange.start && +x.year > dataRange.end10);
   let total10 = 0;
   last10.forEach((d) => {
     total10 += d.yieldRateCash;
   });
 
   //找今年的dividend info
-  let dInfoTY = await ScheduleModel.getByStockNo(stockNo);
+  let dInfoTY = (await ScheduleModel.getByStockNo(stockNo)) || {};
 
   let dayInfo = await DayInfoModel.getData({ stockNo, date: latestTradDate });
 
@@ -80,11 +79,11 @@ async function buildData(stockNo, lastYear, latestTradDate) {
 
   let result = {
     stockNo: stockNo,
-    dDate: dInfoTY.date,
-    rate: ((dInfoTY.cashDividen / dayInfo.price) * 100).toFixed(2),
+    dDate: dInfoTY.date || "",
+    rate: dInfoTY.cashDividen ? ((dInfoTY.cashDividen / dayInfo.price) * 100).toFixed(2) : "",
     price: dayInfo.price,
     priceDate: latestTradDate,
-    dCash: dInfoTY.cashDividen,
+    dCash: dInfoTY.cashDividen || "",
     rateLY: dInfoLY.yieldRateCash ? dInfoLY.yieldRateCash : "--",
     rateAvg5: total5 ? (total5 / last5.length).toFixed(2) : "--",
     rateAvg10: total10 ? (total10 / last10.length).toFixed(2) : "--",
@@ -131,4 +130,4 @@ function groupByMonth(data) {
   return result; //[{high,low},...]
 }
 
-module.exports = { getDetail };
+module.exports = { getDetail, buildData };
