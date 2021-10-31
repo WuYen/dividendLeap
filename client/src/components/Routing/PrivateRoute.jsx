@@ -8,7 +8,7 @@ export default function PrivateRoute({ children, ...rest }) {
     <Route
       {...rest}
       render={() => {
-        return auth.isLogin ? children : <Redirect to="/login" />;
+        return auth.isLogin ? children : <Redirect to="/user/login" />;
       }}
     />
   );

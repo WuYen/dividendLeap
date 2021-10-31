@@ -5,8 +5,8 @@ import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
 import { Box, ButtonGroup, Center } from "@chakra-ui/react";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
-import AlertComponent from "../../components//Alert";
-import { loginstatus } from "../../constants/status";
+import AlertComponent from "../../components/General/Alert";
+import { loginStatus } from "../../constants/status";
 
 export default function Registration(prop) {
   return <Form />;
@@ -53,7 +53,7 @@ function Form(props) {
       callRegistration(values, actions).then((res) => {
         console.log("ouSubmit result", res);
         setalertInfo(res.result);
-        if (res.result.code == loginstatus.Success.code) history.push("/");
+        if (res.result.code == loginStatus.Success.code) history.push("/");
       }),
     enableReinitialize: true,
     alertInfo: alertInfo,
@@ -64,15 +64,7 @@ function Form(props) {
       <Formik {...formProps}>
         {({ handleSubmit, values, errors, ...rest }) => (
           <Center>
-            <Box
-              borderWidth="1px"
-              rounded="lg"
-              as="form"
-              w="100%"
-              maxWidth="1000px"
-              p={4}
-              onSubmit={handleSubmit}
-            >
+            <Box borderWidth="1px" rounded="lg" as="form" w="100%" maxWidth="1000px" p={4} onSubmit={handleSubmit}>
               <AlertComponent
                 status="error"
                 open={!!formProps.alertInfo.code}

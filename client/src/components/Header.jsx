@@ -15,6 +15,11 @@ import {
   useBreakpointValue,
   useDisclosure,
   Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Avatar,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
@@ -75,7 +80,7 @@ export default function Header() {
               <Button
                 as={RouterLink}
                 to={{
-                  pathname: "/login",
+                  pathname: "/user/login",
                 }}
                 _focus={{ outline: "none" }}
                 p={2}
@@ -89,7 +94,7 @@ export default function Header() {
               <Button
                 as={RouterLink}
                 to={{
-                  pathname: "/registration",
+                  pathname: "/user/registration",
                 }}
                 _focus={{ outline: "none" }}
                 p={2}
@@ -104,23 +109,34 @@ export default function Header() {
           )}
           {auth.isLogin && (
             <>
-              <Text fontSize={"sm"} fontWeight={500} p={2}>
-                {auth.context.account}
-              </Text>
-              <Button
-                as={"a"}
-                p={2}
-                fontSize={"sm"}
-                fontWeight={500}
-                variant={"link"}
-                onClick={() => {
-                  auth.logout();
-                  window.location.reload();
-                }}
-                cursor="pointer"
-              >
-                登出
-              </Button>
+              <Menu isLazy>
+                <MenuButton>
+                  <Flex p={2}>
+                    <Avatar size="xs" />
+                    <Box ml="3">
+                      <Text fontWeight="bold">{auth.context.account}</Text>
+                    </Box>
+                  </Flex>
+                </MenuButton>
+                <MenuList>
+                  <MenuItem
+                    as={RouterLink}
+                    to={{
+                      pathname: "/user/settings",
+                    }}
+                  >
+                    設定
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      auth.logout();
+                      window.location.reload();
+                    }}
+                  >
+                    登出
+                  </MenuItem>
+                </MenuList>
+              </Menu>
             </>
           )}
         </Stack>
@@ -317,6 +333,11 @@ const NAV_ITEMS = [
     href: "/tool",
     auth: true,
   },
+  // {
+  //   label: "編輯列表",
+  //   href: "/schedule/maintain",
+  //   auth: false,
+  // },
 ];
 
 //nested link sample

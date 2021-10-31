@@ -1,11 +1,11 @@
-const NewsInfo = require("../models/newsInfo/repository");
+const NewsInfoModel = require("../models/NewsInfo");
 const puppeteer = require("puppeteer");
-const { today } = require("../utility/dateTime");
-const connectDB = require("../utility/connectDB");
-const config = require("../utility/config");
+const { today } = require("../utilities/dateTime");
+const connectDB = require("../utilities/connectDB");
+const config = require("../utilities/config");
 
 async function getNews(date, keyword) {
-  const news = await NewsInfo.getData({ updateDate: date, category: keyword });
+  const news = await NewsInfoModel.getData({ updateDate: date, category: keyword });
 
   return news;
 }
@@ -71,21 +71,16 @@ async function getByKeyword(keyWord, custom = false) {
   if (!custom) {
     await connectDB.toMongo(config.MONGODB_URI);
 
-    const existData = await NewsInfo.getData({
+    const existData = await NewsInfoModel.getData({
       updateDate: today(),
       category: keyWord,
     });
 
     const newData = data.filter((x) => !existData.find((y) => y.key == x.key));
 
-    await NewsInfo.saveData(newData);
+    await NewsInfoModel.saveData(newData);
 
-    console.log(
-      "save data done " + keyWord,
-      existData.length,
-      data.length,
-      newData.length
-    );
+    console.log("save data done " + keyWord, existData.length, data.length, newData.length);
   }
   return data;
 }
