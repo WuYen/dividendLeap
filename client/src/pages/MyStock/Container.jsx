@@ -1,17 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Box, useMediaQuery, Input, Grid, VStack, StackDivider, Text } from "@chakra-ui/react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import { Box, useMediaQuery, Grid, VStack, StackDivider, Text } from "@chakra-ui/react";
 import api from "../../utils/api";
-import stockList from "../../utils/stockList";
-import { useParams, useHistory } from "react-router-dom";
+import useRouter from "../../hooks/useRouter";
 
 import Content from "./Content";
+import AutoComplete from "./AutoComplete";
+import MyListItem from "./MyListItem";
 
 export default function Container(props) {
-  const [over768px] = useMediaQuery("(min-width: 768px)");
+  // const [over768px] = useMediaQuery("(min-width: 768px)");
   const [myList, setMyList] = useState([]);
-  const { stockNo } = useParams();
-  const history = useHistory();
-  console.log("stockNo", stockNo);
+  const [{ stockNo }, history] = useRouter();
+  const ref = useRef(initialValue);
+
   useEffect(() => {
     fetchList().then((res) => {
       if (res.success) {
@@ -28,27 +29,24 @@ export default function Container(props) {
     });
   }, []);
 
-  const handleRemove = useCallback(
-    (id) => {
-      console.log("handle remove", id);
-      remove(id)
-        .then((res) => {
-          // let index = myList.findIndex((x) => x._id === id);
-          // if (index == 0) {
-          //   let newStockNo = myList[0] ? myList[0].stockNo : "";
-          //   history.push(`/my/stock/${newStockNo}`);
-          // }
-          // if (index > 0) {
-          //   history.push(`/my/stock/${myList[index - 1].stockNo}`);
-          // }
-          return res.data.list;
-        })
-        .then((list) => {
-          setMyList(list);
-        });
-    },
-    [myList]
-  );
+  const handleRemove = useCallback((id) => {
+    console.log("handle remove", id);
+    remove(id).then((res) => {
+      setMyList(res.data.list);
+    });
+  }, []);
+
+  // reload content after remove
+  // useEffect(() => {
+  //   let index = myList.findIndex((x) => x._id === id);
+  //   if (index == 0) {
+  //     let newStockNo = myList[0] ? myList[0].stockNo : "";
+  //     history.push(`/my/stock/${newStockNo}`);
+  //   }
+  //   if (index > 0) {
+  //     history.push(`/my/stock/${myList[index - 1].stockNo}`);
+  //   }
+  // }, [myList]);
 
   return (
     <Box p="4" width="100%">
@@ -80,58 +78,6 @@ export default function Container(props) {
   );
 }
 
-function MyListItem(props) {
-  const { history, item, stockNo, handleRemove } = props;
-  const name = `${item.stockNo} ${stockList.find((x) => x[0] == item.stockNo)[1]}`;
-  return (
-    <Grid templateColumns="1fr auto" gap={2} alignItems="center">
-      <Text
-        color={stockNo == item.stockNo ? "teal.500" : "grey.500"}
-        onClick={() => {
-          history.push(`/my/stock/${item.stockNo}`);
-        }}
-        width="100%"
-        cursor="pointer"
-        _hover={{ backgroundColor: "gray.100" }}
-        paddingY="1"
-      >
-        {name}
-      </Text>
-      <Text
-        paddingY="1"
-        cursor="pointer"
-        _hover={{ backgroundColor: "red.100" }}
-        onClick={() => {
-          var r = window.confirm("確認刪除: " + name);
-          if (r == true) {
-            handleRemove(item._id);
-          }
-        }}
-        textAlign="end"
-      >
-        刪除
-      </Text>
-    </Grid>
-  );
-}
-
-function ListItem(props) {
-  const { item, handleSelect } = props;
-  return (
-    <Text
-      onClick={() => {
-        handleSelect(item[0]);
-      }}
-      width="100%"
-      cursor="pointer"
-      _hover={{ backgroundColor: "gray.100" }}
-      paddingY="1"
-    >
-      {item[0]} {item[1]}
-    </Text>
-  );
-}
-
 function fetchList() {
   return api.get(`/mystock/list`).then((data) => {
     console.log("fetchList result", data);
@@ -152,34 +98,4 @@ function remove(id) {
     console.log("remove result", data);
     return data;
   });
-}
-
-function isPureNumber(value) {
-  return value.replace(/\D/g, "").length > 0;
-}
-
-function AutoComplete(props) {
-  const { handleSelect } = props;
-  const [text, setText] = useState("");
-
-  const options = stockList.filter((x) => {
-    if (!text) {
-      return true;
-    } else if (isPureNumber(text)) {
-      return x[0].includes(text);
-    } else {
-      return x[1].includes(text);
-    }
-  });
-
-  return (
-    <>
-      <Input placeholder="查詢" type="search" size="md" onChange={(e) => setText(e.target.value)} />
-      <div style={{ height: "400px", overflowY: "auto", marginTop: "16px" }}>
-        {options.map((item) => {
-          return <ListItem key={item[0]} item={item} handleSelect={handleSelect} />;
-        })}
-      </div>
-    </>
-  );
 }

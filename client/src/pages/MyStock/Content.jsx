@@ -5,7 +5,7 @@ import api from "../../utils/api";
 import { formatHelper } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
 
-export default function Content(props) {
+export default React.memo(function Content(props) {
   const { stockNo } = props;
   return (
     <Box h="100%">
@@ -16,7 +16,7 @@ export default function Content(props) {
       </DataList.Container> */}
     </Box>
   );
-}
+});
 
 function Forecast(props) {
   const { stockNo } = props;
@@ -41,7 +41,7 @@ function Forecast(props) {
         目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
       </Box>
       <br />
-      <Element data={data.eps} />
+      <EpsList data={data.eps} />
     </Box>
   ) : (
     <Box h="100%" className="loading-container" textAlign="center">
@@ -110,7 +110,7 @@ function ComputeStock(props) {
   );
 }
 
-function Element(props) {
+function EpsList(props) {
   const { data } = props;
 
   return (
