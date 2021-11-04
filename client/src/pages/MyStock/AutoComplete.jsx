@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input } from "@chakra-ui/react";
+import { Input, Text } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
 
 export default function AutoComplete(props) {

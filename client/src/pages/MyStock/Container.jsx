@@ -11,7 +11,6 @@ export default function Container(props) {
   // const [over768px] = useMediaQuery("(min-width: 768px)");
   const [myList, setMyList] = useState([]);
   const [{ stockNo }, history] = useRouter();
-  const ref = useRef(initialValue);
 
   useEffect(() => {
     fetchList().then((res) => {
