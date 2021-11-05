@@ -10,18 +10,18 @@ import MyListItem from "./MyListItem";
 export default function Container(props) {
   // const [over768px] = useMediaQuery("(min-width: 768px)");
   const [myList, setMyList] = useState([]);
-  const [{ stockNo }, history] = useRouter();
+  const [{ stockNo: selectedStockNo }, history] = useRouter();
 
   useEffect(() => {
     fetchList().then((res) => {
       if (res.success) {
         setMyList(res.data.list);
-        !stockNo && res.data.list.length && history.push(`/my/stock/${res.data.list[0].stockNo}`);
+        !selectedStockNo && res.data.list.length && history.push(`/my/stock/${res.data.list[0].stockNo}`);
       }
     });
   }, []);
 
-  const handleSelect = useCallback((stockNo) => {
+  const handleAdd = useCallback((stockNo) => {
     console.log("handle select", stockNo);
     add(stockNo).then((res) => {
       setMyList(res.data.list);
@@ -35,17 +35,9 @@ export default function Container(props) {
     });
   }, []);
 
-  // reload content after remove
-  // useEffect(() => {
-  //   let index = myList.findIndex((x) => x._id === id);
-  //   if (index == 0) {
-  //     let newStockNo = myList[0] ? myList[0].stockNo : "";
-  //     history.push(`/my/stock/${newStockNo}`);
-  //   }
-  //   if (index > 0) {
-  //     history.push(`/my/stock/${myList[index - 1].stockNo}`);
-  //   }
-  // }, [myList]);
+  const handleSelect = useCallback((stockNo) => {
+    history.push(`/my/stock/${stockNo}`);
+  }, []);
 
   return (
     <Box p="4" width="100%">
@@ -54,24 +46,22 @@ export default function Container(props) {
           <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
             <Box>
               我的清單
-              {myList.map((item) => {
-                return (
-                  <MyListItem
-                    key={item._id}
-                    stockNo={stockNo}
-                    history={history}
-                    item={item}
-                    handleRemove={handleRemove}
-                  />
-                );
-              })}
+              {myList.map((item) => (
+                <MyListItem
+                  key={item._id}
+                  item={item}
+                  selectedStockNo={selectedStockNo}
+                  onSelect={handleSelect}
+                  onRemove={handleRemove}
+                />
+              ))}
             </Box>
             <Box>
-              <AutoComplete handleSelect={handleSelect} />
+              <AutoComplete onAdd={handleAdd} />
             </Box>
           </VStack>
         </Box>
-        <Box>{stockNo && <Content stockNo={stockNo} />}</Box>
+        <Box>{selectedStockNo && <Content stockNo={selectedStockNo} />}</Box>
       </Grid>
     </Box>
   );
@@ -98,3 +88,15 @@ function remove(id) {
     return data;
   });
 }
+
+// reload content after remove
+// useEffect(() => {
+//   let index = myList.findIndex((x) => x._id === id);
+//   if (index == 0) {
+//     let newStockNo = myList[0] ? myList[0].stockNo : "";
+//     history.push(`/my/stock/${newStockNo}`);
+//   }
+//   if (index > 0) {
+//     history.push(`/my/stock/${myList[index - 1].stockNo}`);
+//   }
+// }, [myList]);

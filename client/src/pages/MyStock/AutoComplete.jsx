@@ -3,7 +3,7 @@ import { Input, Text } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
 
 export default function AutoComplete(props) {
-  const { handleSelect } = props;
+  const { onAdd } = props;
   const [text, setText] = useState("");
 
   const options = stockList.filter((x) => {
@@ -21,7 +21,7 @@ export default function AutoComplete(props) {
       <Input placeholder="查詢" type="search" size="md" onChange={(e) => setText(e.target.value)} />
       <div style={{ height: "400px", overflowY: "auto", marginTop: "16px" }}>
         {options.map((item) => {
-          return <ListItem key={item[0]} item={item} handleSelect={handleSelect} />;
+          return <ListItem key={item[0]} item={item} onAdd={onAdd} />;
         })}
       </div>
     </>
@@ -29,11 +29,11 @@ export default function AutoComplete(props) {
 }
 
 function ListItem(props) {
-  const { item, handleSelect } = props;
+  const { item, onAdd } = props;
   return (
     <Text
       onClick={() => {
-        handleSelect(item[0]);
+        onAdd(item[0]);
       }}
       width="100%"
       cursor="pointer"

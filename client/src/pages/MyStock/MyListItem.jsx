@@ -3,14 +3,14 @@ import { Grid, Text } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
 
 export default function MyListItem(props) {
-  const { history, item, stockNo, handleRemove } = props;
+  const { item, selectedStockNo, onSelect, onRemove } = props;
   const name = `${item.stockNo} ${stockList.find((x) => x[0] == item.stockNo)[1]}`;
   return (
     <Grid templateColumns="1fr auto" gap={2} alignItems="center">
       <Text
-        color={stockNo == item.stockNo ? "teal.500" : "grey.500"}
+        color={selectedStockNo == item.stockNo ? "teal.500" : "grey.500"}
         onClick={() => {
-          history.push(`/my/stock/${item.stockNo}`);
+          onSelect(item.stockNo);
         }}
         width="100%"
         cursor="pointer"
@@ -24,10 +24,7 @@ export default function MyListItem(props) {
         cursor="pointer"
         _hover={{ backgroundColor: "red.100" }}
         onClick={() => {
-          var r = window.confirm("確認刪除: " + name);
-          if (r == true) {
-            handleRemove(item._id);
-          }
+          window.confirm("確認刪除: " + name) == true && onRemove(item._id);
         }}
         textAlign="end"
       >
