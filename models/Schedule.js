@@ -31,8 +31,8 @@ async function getData(query = {}) {
  * Update from provider
  * @returns
  */
-async function update() {
-  let data = await provider.getData();
+async function updateAll() {
+  let data = await provider.getData(Model)();
   return data;
 }
 
@@ -43,5 +43,5 @@ async function getByStockNo(stockNo) {
 
 module.exports = Model;
 module.exports.getData = getData;
-module.exports.updateAll = update;
+module.exports.updateAll = updateAll;
 module.exports.getByStockNo = getByStockNo;

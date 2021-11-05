@@ -14,15 +14,18 @@ function getData(Model) {
     );
 
     let rawData = response.data.data;
+    if (rawData && Array.isArray(rawData)) {
+      let processedData = processData(rawData, stockNo);
 
-    let processedData = processData(rawData, stockNo);
+      const { year, month } = getDateFragment(date);
+      await Model.deleteMany({ stockNo, year, month });
 
-    const { year, month } = getDateFragment(date);
-    await Model.deleteMany({ stockNo, year, month });
-
-    let result = await Model.insertMany(processedData);
-    // console.log(`save dayInfo success`, result);
-    return result.find((x) => x.date == date);
+      let result = await Model.insertMany(processedData);
+      // console.log(`save dayInfo success`, result);
+      return result.find((x) => x.date == date);
+    } else {
+      return null;
+    }
   };
 }
 
