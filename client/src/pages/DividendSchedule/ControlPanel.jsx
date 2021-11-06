@@ -14,7 +14,7 @@ export default function ControlPanel(props) {
       <FormLabel htmlFor="filter" mb="0">
         殖利率大於 5%
       </FormLabel>
-      {auth.isLogin && (
+      {/* {auth.isLogin && (
         <Button
           isLoading={loading}
           loadingText="刷新列表"
@@ -40,7 +40,7 @@ export default function ControlPanel(props) {
         >
           刷新列表
         </Button>
-      )}
+      )} */}
       <Spacer />
       <Text>筆數: {count}</Text>
     </Flex>

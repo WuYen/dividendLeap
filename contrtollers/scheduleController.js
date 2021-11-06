@@ -15,11 +15,10 @@ router.get("/", async function (req, res, next) {
 });
 
 //個股除權息資料
-router.get("/detail/:stockNo", async function (req, res, next) {
+router.get("/detail/:stockNo/:year?", async function (req, res, next) {
   try {
-    const currentYear = new Date().getFullYear(); // 2020
-    const previousYear = currentYear - 1;
-    let result = await getDetail(req.params.stockNo, previousYear);
+    const currentYear = parseInt(req.params.year) || new Date().getFullYear();
+    let result = await getDetail(req.params.stockNo, currentYear);
     return res.send(success(result));
   } catch (error) {
     next(error);
