@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from "react";
 
-export default function TradingViewWidget(props) {
+//財務數據 https://tw.tradingview.com/widget/fundamental-data/
+export function FundamentalData(props) {
+  const { stockNo } = props;
   const ref = useRef();
 
   useEffect(() => {
@@ -8,12 +10,12 @@ export default function TradingViewWidget(props) {
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-financials.js";
     script.async = true;
     script.innerHTML = `{
-              "symbol": "TWSE:${props.stockNo}",
+              "symbol": "TWSE:${stockNo}",
               "colorTheme": "light",
               "isTransparent": false,
               "largeChartUrl": "",
               "displayMode": "regular",
-              "width": 480,
+              "width": "480",
               "height": 830,
               "locale": "zh_TW"
             }
@@ -27,11 +29,11 @@ export default function TradingViewWidget(props) {
       <div class="tradingview-widget-container__widget"></div>
       <div class="tradingview-widget-copyright">
         <a
-          href={`https://tw.tradingview.com/symbols/TWSE-${props.stockNo}/financials-overview/`}
+          href={`https://tw.tradingview.com/symbols/TWSE-${stockNo}/financials-overview/`}
           rel="noopener"
           target="_blank"
         >
-          <span class="blue-text">{props.stockNo}基本面數據</span>
+          <span class="blue-text">{stockNo}基本面數據</span>
         </a>
         由TradingView提供
       </div>

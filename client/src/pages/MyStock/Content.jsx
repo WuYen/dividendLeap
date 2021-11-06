@@ -1,19 +1,16 @@
 import React, { Fragment, useCallback, useEffect, useState } from "react";
-import { Box, HStack, Input, SliderThumb, SliderFilledTrack, SliderTrack, Slider, Divider } from "@chakra-ui/react";
+import { Box, HStack, Input, SliderThumb, SliderFilledTrack, SliderTrack, Slider, Grid } from "@chakra-ui/react";
 import DataList from "../../pages/News/DataList";
 import api from "../../utils/api";
 import { formatHelper } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
+import { FundamentalData } from "../../components/TradingViewWidget";
 
 export default React.memo(function Content(props) {
   const { stockNo } = props;
   return (
     <Box h="100%">
       <Forecast key={stockNo} stockNo={stockNo} />
-      {/* <DataList.Container keyWord={stockNo} search={true} loading={0} list={1}>
-        <DataList.Loading />
-        <DataList.List />
-      </DataList.Container> */}
     </Box>
   );
 });
@@ -36,15 +33,22 @@ function Forecast(props) {
       <Box>
         {data.baseInfo[0]} {data.baseInfo[1]}
       </Box>
-      <Box>
-        <ComputeStock key={stockNo} eps={data.eps[0]} />
-        目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
-      </Box>
-      <br />
-      <EpsList data={data.eps} />
+      <Grid templateColumns="auto 480px" gap={4}>
+        <Box>
+          <Box>
+            <ComputeStock key={stockNo} eps={data.eps[0]} />
+            目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
+          </Box>
+          <br />
+          <EpsList data={data.eps} />
+        </Box>
+        <Box>
+          <FundamentalData stockNo={stockNo} />
+        </Box>
+      </Grid>
     </Box>
   ) : (
-    <Box h="100%" className="loading-container" textAlign="center">
+    <Box h="88vh" className="loading-container" textAlign="center">
       <LoadingSpinner mt="50%" />
     </Box>
   );
@@ -70,7 +74,7 @@ function ComputeStock(props) {
         defaultValue={5}
         min={0}
         max={10}
-        step={1}
+        step={0.5}
         onChange={(val) => setRatio(val)}
       >
         <SliderTrack>
@@ -79,7 +83,7 @@ function ComputeStock(props) {
         <SliderThumb />
       </Slider>
       <br />
-      預計股利 = 現金股利 * 分配率
+      預計股利 = EPS * 分配率
       <HStack spacing={3}>
         <Input type="number" size="md" value={estimatePayout} readOnly={true} style={{ pointerEvents: "none" }} />
         <div>=</div>
@@ -172,4 +176,11 @@ function EPS(props) {
       <div style={{ width: "50px", textAlign: "right" }}>{eps}</div>
     </HStack>
   );
+}
+
+{
+  /* <DataList.Container keyWord={stockNo} search={true} loading={0} list={1}>
+        <DataList.Loading />
+        <DataList.List />
+      </DataList.Container> */
 }
