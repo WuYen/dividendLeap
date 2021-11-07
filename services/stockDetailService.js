@@ -3,11 +3,12 @@ const DayInfoModel = require("../models/DayInfo");
 const DayHistoryModel = require("../models/DayHistory");
 const ScheduleModel = require("../models/Schedule");
 const StockDetailModel = require("../models/StockDetail");
+const { stock_dividend } = require("../providers/stockList");
 
 const { latestTradeDate, today } = require("../utilities/helper");
 
 /* 取得除權息分析資料 */
-async function getDetail(stockNo, lastYear) {
+async function getDetail(stockNo, year) {
   const latestTradDate = latestTradeDate();
 
   //從 stockDetail 抓資料 query:{stockNo, priceDate:latestTradDate}
@@ -17,7 +18,7 @@ async function getDetail(stockNo, lastYear) {
   });
 
   if (!data || isExpire) {
-    data = await buildData(stockNo, lastYear, latestTradDate);
+    data = await buildData(stockNo, year, latestTradDate);
     data.updateDate = today();
     StockDetailModel.saveData(data); // no need to wait
   }
@@ -25,8 +26,14 @@ async function getDetail(stockNo, lastYear) {
   return data;
 }
 
-async function buildData(stockNo, lastYear, latestTradDate) {
+async function removeCache(stockNo) {
+  let result = await StockDetailModel.deleteOne({ stockNo: stockNo });
+  return result;
+}
+
+async function buildData(stockNo, year, latestTradDate) {
   //歷史的dividend info
+  const lastYear = year - 1;
   let dInfo = await DividendInfoModel.getData(stockNo); //沒有今年的
   let dInfoLY = dInfo.data.find((x) => x.year == lastYear) || {};
   let dataRange = { start: lastYear + 1, end5: lastYear - 5, end10: lastYear - 10 };
@@ -43,11 +50,16 @@ async function buildData(stockNo, lastYear, latestTradDate) {
   });
 
   //找今年的dividend info
-  let dInfoTY = (await ScheduleModel.getByStockNo(stockNo)) || {};
+  let dInfoTY =
+    (await ScheduleModel.getByStockNo(stockNo)) ||
+    stock_dividend.find((x) => x.stockNo == stockNo && x.year == year) ||
+    dInfo.data.find((x) => x.year == year) ||
+    (await DividendInfoModel.getData(stockNo, true)).data.find((x) => x.year == year) ||
+    {};
 
   let dayInfo = await DayInfoModel.getData({ stockNo, date: latestTradDate });
 
-  if (dInfoTY.sourceType == "manual") {
+  if (dInfoTY && dInfoTY.sourceType == "manual") {
     dayInfo = await DayInfoModel.getDataFromWeb({ stockNo, date: latestTradDate });
   }
 
@@ -130,4 +142,4 @@ function groupByMonth(data) {
   return result; //[{high,low},...]
 }
 
-module.exports = { getDetail, buildData };
+module.exports = { getDetail, buildData, removeCache };

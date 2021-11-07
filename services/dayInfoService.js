@@ -1,9 +1,12 @@
 const DayInfoModel = require("../models/DayInfo");
 const ScheduleModel = require("../models/Schedule");
+const dayInfoProvider1 = require("../providers/dayInfo.twse");
+const dayInfoProvider2 = require("../providers/dayInfo.cnyes");
 const { latestTradeDate } = require("../utilities/helper");
+const { stock_dividend } = require("../providers/stockList");
 
 //根據 dividendSchedule 取得 清單上的個股每天盤後\
-const chunkSize = 8;
+const chunkSize = 10;
 async function getAllDayInfo() {
   const latestTRDT = latestTradeDate();
   const schedule = await ScheduleModel.getData();
@@ -45,6 +48,55 @@ async function getAllDayInfo() {
   return { DayInfoCount: count, successCount };
 }
 
+//取得固定列表歷史資料
+async function getAllDayInfoFixed() {
+  const latestTRDT = latestTradeDate();
+  const dayInfoCollection = await DayInfoModel.getData({
+    date: latestTRDT,
+  });
+  const filtedData = stock_dividend.filter((e) => {
+    return !dayInfoCollection.find((x) => x.stockNo == e.stockNo);
+  });
+
+  const groups = filtedData
+    .map((e, i) => {
+      return i % chunkSize === 0 ? filtedData.slice(i, i + chunkSize) : null;
+    })
+    .filter((e) => {
+      return e;
+    });
+
+  let successCount = 0;
+  for (const group of groups) {
+    let groupData = [];
+    for (const data of group) {
+      console.log(`start get data ${data.stockNo}`);
+
+      try {
+        let query = {
+          stockNo: data.stockNo,
+          date: latestTRDT,
+        };
+        let temp = await dayInfoProvider2.getDataSingle(query);
+        if (!temp) {
+          temp = await dayInfoProvider1.getDataSingle(query);
+        }
+        groupData.push(temp);
+        console.log(`${successCount} get ${data.stockNo} data at ${new Date()}`);
+        successCount++;
+        await delay(getRandomIntInclusive(800, 2400));
+      } catch (e) {
+        console.log("getAllDayInfo error", e);
+      }
+
+      //batch save
+      groupData.length > 0 && DayInfoModel.insertMany(groupData);
+    }
+    await delay(getRandomIntInclusive(3000, 6000));
+  }
+  return { DayInfoCount: filtedData.length, successCount };
+}
+
 function afterDate(date) {
   return (item) => item.date > date;
 }
@@ -75,4 +127,5 @@ function delay(time) {
 
 module.exports = {
   getAllDayInfo,
+  getAllDayInfoFixed,
 };

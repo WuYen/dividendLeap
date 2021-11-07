@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const provider = require("../providers/dividendInfo");
+const { today } = require("../utilities/helper");
 
 // Schema
 const Schema = mongoose.Schema;

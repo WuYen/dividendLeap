@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const { today } = require("../utilities/helper");
 
 /**
- * Get EPS from yahoo(單季每股盈餘)
+ * Get EPS from histock(單季每股盈餘)
  * @param {String} stockNo
  * @returns
  */

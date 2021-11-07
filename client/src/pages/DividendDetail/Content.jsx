@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Box, Link, Divider, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Link, Divider, useBreakpointValue, Button } from "@chakra-ui/react";
 import { LinkIcon } from "@chakra-ui/icons";
 
 import { formatHelper } from "../../utils";
@@ -8,8 +8,9 @@ import StockFrame from "./StockFrame";
 import BackButton from "./BackButton";
 
 export default function Content(props) {
-  const { stockNo, name, data } = props;
+  const { stockNo, name, data = {} } = props;
   const divRef = useRef();
+  const [showFrame, setShowFrame] = useState(false);
   const variant = useBreakpointValue({
     base: "sm",
     sm: "sm",
@@ -31,8 +32,23 @@ export default function Content(props) {
     { label: "去年高點", content: <HistoryPrice data={data.HighLY} /> },
   ];
   return (
-    <div ref={divRef}>
-      <BackButton variant={variant} />
+    <Box ref={divRef}>
+      <Box p="4" d="flex" flexWrap="wrap" alignItems="baseline">
+        <BackButton variant={variant} />
+        <Button
+          loadingText="更多資訊"
+          colorScheme="teal"
+          variant="outline"
+          size="sm"
+          spinnerPlacement="end"
+          _focus={{ outline: "none" }}
+          onClick={() => {
+            setShowFrame((x) => !x);
+          }}
+        >
+          {showFrame ? "隱藏資訊" : "更多資訊"}
+        </Button>
+      </Box>
       <Box d="flex" flexWrap="wrap" alignItems="baseline">
         {info.map((item) => (
           <Box m="4" color="gray.600">
@@ -42,8 +58,8 @@ export default function Content(props) {
           </Box>
         ))}
       </Box>
-      <StockFrame stockNo={stockNo} divRef={divRef} variant={variant} />
-    </div>
+      {showFrame && <StockFrame stockNo={stockNo} divRef={divRef} variant={variant} />}
+    </Box>
   );
 }
 

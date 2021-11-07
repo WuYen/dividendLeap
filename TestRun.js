@@ -1,15 +1,13 @@
 const { mongooseQuickSetup, latestTradeDate, today } = require("./utilities/helper");
 
-//const Model = require("./models/DividendDetail");
-//const service = require("./services/forcastService");
-//const source = require("./models/StockList/source");
-//const request = require("./utilities/requestCore");
 //const provider = require("./providers/eps.want");
+//const Model = require("./models/DividendDetail");
+//const service = require("./services/stockDetailService");
 
-const stockNo = "2881"; //創見
+const stockNo = "2451"; //創見
 
 mongooseQuickSetup(async () => {
-  // let data = await service.predict("2881", "2021");
+  // let data = await service.buildData(stockNo, 2021, latestTradeDate());
   // console.log("result", data);
 });
 

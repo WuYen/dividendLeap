@@ -44,7 +44,7 @@ export default function Routing(props) {
         <Route path="/user/resetpassword">
           <ResetPassword />
         </Route>
-        <Route path="/" exact>
+        <Route path={["/", "/schedule"]} exact>
           <DividendSchedule />
         </Route>
 

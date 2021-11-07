@@ -26,11 +26,10 @@ const Model = mongoose.model(
 );
 
 async function getData(query) {
-  //query => { stockNo, date }
+  //query => { stockNo, priceDate }
   let isExpire = false;
   let data = await Model.findOne({ stockNo: query.stockNo }).exec();
-  data && (isExpire = data.priceData !== query.priceData);
-
+  data && (isExpire = data.priceDate !== query.priceDate);
   return { data, isExpire };
 }
 

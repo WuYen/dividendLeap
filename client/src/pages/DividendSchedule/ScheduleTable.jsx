@@ -54,6 +54,7 @@ function NormalTable(props) {
                 {(+item.cashDividen).toFixed(2)}
               </Td>
               <Td p={4} isNumeric>
+                {item.priceBefore && <div>除息前: {item.priceBefore}</div>}
                 {item.price ? (
                   <div>
                     <div
@@ -61,9 +62,11 @@ function NormalTable(props) {
                         display: "inline-block",
                       }}
                     >
-                      {item.price.toFixed(2)}
+                      {item.price?.toFixed(2)}
                     </div>
-                    <div style={{ display: "inline-block" }}>{`(${formatDate(item.priceDate)})`}</div>
+                    {item.priceDate && (
+                      <div style={{ display: "inline-block" }}>{`(${formatDate(item.priceDate)})`}</div>
+                    )}
                   </div>
                 ) : (
                   "--"
