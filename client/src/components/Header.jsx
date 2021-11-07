@@ -316,8 +316,12 @@ const MobileNavItem = ({ label, children, href }) => {
 const NAV_ITEMS = [
   {
     label: "除權息列表",
-    href: "/",
+    href: "/schedule",
   },
+  // {
+  //   label: "歷史列表",
+  //   href: "/schedule/history",
+  // },
   {
     label: "自選列表",
     href: "/my/stock",
@@ -353,6 +357,19 @@ const NAV_ITEMS = [
 //       label: "New & Noteworthy",
 //       subLabel: "Up-and-coming Designers",
 //       href: "#",
+//     },
+//   ],
+// },
+// {
+//   label: "除權息列表",
+//   children: [
+//     {
+//       label: "預告列表",
+//       href: "/schedule",
+//     },
+//     {
+//       label: "歷史列表",
+//       href: "/schedule?history=true",
 //     },
 //   ],
 // },

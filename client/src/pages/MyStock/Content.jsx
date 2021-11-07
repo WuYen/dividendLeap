@@ -5,6 +5,7 @@ import api from "../../utils/api";
 import { formatHelper } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
 import { FundamentalData } from "../../components/TradingViewWidget";
+import InfoPanel from "./InfoPanel";
 
 export default React.memo(function Content(props) {
   const { stockNo } = props;
@@ -39,7 +40,7 @@ function Forecast(props) {
             <ComputeStock key={stockNo} eps={data.eps[0]} />
             目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
           </Box>
-          <br />
+          <InfoPanel data={data.eps} />
           <EpsList data={data.eps} />
         </Box>
         <Box>
@@ -74,7 +75,7 @@ function ComputeStock(props) {
         defaultValue={5}
         min={0}
         max={10}
-        step={0.5}
+        step={0.2}
         onChange={(val) => setRatio(val)}
       >
         <SliderTrack>
