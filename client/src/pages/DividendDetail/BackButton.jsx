@@ -6,7 +6,7 @@ import { LinkIcon } from "@chakra-ui/icons";
 export default function BackButton(props) {
   return (
     props.variant === "sm" && (
-      <Box w="100%" p={4}>
+      <Box p={0}>
         <Link
           color="teal.500"
           as={RouterLink}

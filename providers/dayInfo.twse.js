@@ -29,6 +29,20 @@ function getData(Model) {
   };
 }
 
+async function getDataSingle(query) {
+  const { date, stockNo = "5522" } = query;
+  let response = await axios.get(
+    `https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=${date}&stockNo=${stockNo}`
+  );
+
+  let rawData = response.data.data;
+  if (rawData && Array.isArray(rawData)) {
+    let processedData = processData(rawData, stockNo);
+    return processedData.find((x) => x.date == date);
+  }
+  return null;
+}
+
 //field index for RawData
 const field = {
   date: 0, //日期 ex: 110年06月28日
@@ -61,4 +75,4 @@ function processData(source, stockNo) {
   return result;
 }
 
-module.exports = { getData };
+module.exports = { getData, getDataSingle };

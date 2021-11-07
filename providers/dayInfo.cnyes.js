@@ -43,4 +43,32 @@ function getData(Model) {
   };
 }
 
-module.exports = { getData };
+async function getDataSingle(query) {
+  const { date, stockNo = "5522" } = query;
+  const { year, month, day } = getDateFragment(date);
+  let d = +new Date(`${year}-${month}-${day}`) / 1000;
+  let response = await axios.get(
+    `https://ws.api.cnyes.com/ws/api/v1/charting/history?resolution=D&symbol=TWS:${stockNo}:STOCK&from=${d}&to=${d}&quote=1`
+  );
+
+  let rawData = response.data.data;
+  if (rawData.t[0] === d) {
+    let c = rawData.c[0];
+    let v = rawData.v[0];
+    let entity = {
+      stockNo: stockNo, // String,
+      date: date, //String, //完整日期 20200101
+      year: year, //String, //年度 2020
+      month: month, //String, //月份 01
+      price: c, //Number, //股價
+      count: parseInt(v), //Number, //成交筆數//.replace(/[^\d+]/g, "")
+      updateDate: today(), //String,
+      sourceType: "cnyes",
+    };
+
+    return entity;
+  }
+  return null;
+}
+
+module.exports = { getData, getDataSingle };

@@ -2,11 +2,16 @@ const router = require("express").Router();
 const { success } = require("../utilities/response");
 const { getList, insert, update, remove } = require("../services/scheduleEditService");
 const { getDetail } = require("../services/stockDetailService");
-const { getSchedule } = require("../services/scheduleService");
+const { getSchedule, getScheduleFixed } = require("../services/scheduleService");
 
 //除權息預告列表
-router.get("/", async function (req, res, next) {
+router.get("/:year?", async function (req, res, next) {
   try {
+    const year = parseInt(req.params.year);
+    if (year) {
+      let result = await getScheduleFixed();
+      return res.send(success(result));
+    }
     let result = await getSchedule();
     return res.send(success(result));
   } catch (error) {

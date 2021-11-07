@@ -10,8 +10,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import ScheduleTable from "./ScheduleTable";
 import ControlPanel from "./ControlPanel";
+import useRouter from "../../hooks/useRouter";
 
 export default function DividendSchedule(props) {
+  const [{ history }] = useRouter();
   const [over768px] = useMediaQuery("(min-width: 768px)");
   const { schedule, filter } = useSelector(({ schedule }) => schedule);
   const dispatch = useDispatch();
@@ -28,7 +30,7 @@ export default function DividendSchedule(props) {
   }, [dispatch]);
 
   useEffect(() => {
-    api.get(`/schedule`).then((data) => {
+    api.get("/schedule" + (history ? "/2021" : "")).then((data) => {
       console.log("GET_SCHEDULE_SUCCESS data", data);
       if (data.success) handleGetScheduleSuccess(data.data);
     });

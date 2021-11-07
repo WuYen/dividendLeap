@@ -25,15 +25,15 @@ export function FundamentalData(props) {
   }, []);
 
   return (
-    <div class="tradingview-widget-container" ref={ref}>
-      <div class="tradingview-widget-container__widget"></div>
-      <div class="tradingview-widget-copyright">
+    <div className="tradingview-widget-container" ref={ref}>
+      <div className="tradingview-widget-container__widget"></div>
+      <div className="tradingview-widget-copyright">
         <a
           href={`https://tw.tradingview.com/symbols/TWSE-${stockNo}/financials-overview/`}
           rel="noopener"
           target="_blank"
         >
-          <span class="blue-text">{stockNo}基本面數據</span>
+          <span className="blue-text">{stockNo}基本面數據</span>
         </a>
         由TradingView提供
       </div>

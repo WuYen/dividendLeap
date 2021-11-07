@@ -3,6 +3,7 @@ const DayInfoModel = require("../models/DayInfo");
 const DayHistoryModel = require("../models/DayHistory");
 const ScheduleModel = require("../models/Schedule");
 const StockDetailModel = require("../models/StockDetail");
+const { stock_dividend } = require("../providers/stockList");
 
 const { latestTradeDate, today } = require("../utilities/helper");
 
@@ -23,6 +24,11 @@ async function getDetail(stockNo, year) {
   }
 
   return data;
+}
+
+async function removeCache(stockNo) {
+  let result = await StockDetailModel.deleteOne({ stockNo: stockNo });
+  return result;
 }
 
 async function buildData(stockNo, year, latestTradDate) {
@@ -46,6 +52,7 @@ async function buildData(stockNo, year, latestTradDate) {
   //找今年的dividend info
   let dInfoTY =
     (await ScheduleModel.getByStockNo(stockNo)) ||
+    stock_dividend.find((x) => x.stockNo == stockNo && x.year == year) ||
     dInfo.data.find((x) => x.year == year) ||
     (await DividendInfoModel.getData(stockNo, true)).data.find((x) => x.year == year) ||
     {};
@@ -135,4 +142,4 @@ function groupByMonth(data) {
   return result; //[{high,low},...]
 }
 
-module.exports = { getDetail, buildData };
+module.exports = { getDetail, buildData, removeCache };
