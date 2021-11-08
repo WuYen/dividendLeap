@@ -57,6 +57,7 @@ async function getAllDayInfoFixed() {
   });
 
   const groups = filtedData
+    .slice(0, 100)
     .map((e, i) => {
       return i % chunkSize === 0 ? filtedData.slice(i, i + chunkSize) : null;
     })

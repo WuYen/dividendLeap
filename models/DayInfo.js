@@ -13,7 +13,7 @@ const Model = mongoose.model(
     price: Number, //股價
     count: Number, //成交筆數
     updateDate: String,
-    sourceType: String, //資料源:cnyes、twse
+    sourceType: String, //資料源:cnyes、twse、finMind
   })
 );
 
