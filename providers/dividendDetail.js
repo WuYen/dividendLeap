@@ -7,7 +7,7 @@ var getUrl = (stockNo) => `https://goodinfo.tw/StockInfo/StockDividendPolicy.asp
  * 從 good info 取歷年除權息資料
  * @param {string}} stockNo
  */
-async function getData(Model) {
+async function getData(stockNo) {
   if (!stockNo) {
     throw new Error("Dividend detail not given stockNo");
   }
