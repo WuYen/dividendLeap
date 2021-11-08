@@ -77,9 +77,9 @@ async function getAllDayInfoFixed() {
           stockNo: data.stockNo,
           date: latestTRDT,
         };
-        let temp = await dayInfoProvider2.getDataSingle(query);
+        let temp = await DayInfoModel.provider2.getData(query);
         if (!temp) {
-          temp = await dayInfoProvider1.getDataSingle(query);
+          temp = await DayInfoModel.provider1.getData(query);
         }
         groupData.push(temp);
         console.log(`${successCount} get ${data.stockNo} data at ${new Date()}`);

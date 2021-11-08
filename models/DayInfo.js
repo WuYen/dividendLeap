@@ -2,13 +2,10 @@ const mongoose = require("mongoose");
 const provider1 = require("../providers/dayInfo.twse");
 const provider2 = require("../providers/dayInfo.cnyes");
 
-// Schema
-const Schema = mongoose.Schema;
-
 // Model
 const Model = mongoose.model(
   "DayInfo", // history price by day
-  new Schema({
+  new mongoose.Schema({
     stockNo: String,
     date: String, //完整日期 20200101
     year: String, //年度 2020
@@ -20,23 +17,26 @@ const Model = mongoose.model(
   })
 );
 
-//custom query
+/**
+ * 查詢個股每日盤後
+ * @param {Object} query { stockNo, date }
+ * @returns
+ */
 async function getData(query) {
-  //query => { stockNo, date }
   if (query.stockNo) {
+    //by date and stockNo
     let data = await Model.findOne(query).exec();
-    if (!data) {
-      data = await provider1.getData(Model)(query);
-    }
-    if (!data) {
-      data = await provider2.getData(Model)(query);
-    }
-    return data;
+    !data && (data = await provider1.getData(query));
+    !data && (data = await provider2.getData(query));
+    const result = await new Model(data).save();
+    return result;
   } else {
+    //by date
     return await Model.find(query).exec();
   }
 }
 
 module.exports = Model;
 module.exports.getData = getData;
-module.exports.getDataFromWeb = provider2.getData(Model);
+module.exports.provider1 = provider1;
+module.exports.provider2 = provider2;
