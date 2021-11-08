@@ -1,9 +1,7 @@
 const DayInfoModel = require("../models/DayInfo");
 const ScheduleModel = require("../models/Schedule");
-const dayInfoProvider1 = require("../providers/dayInfo.twse");
-const dayInfoProvider2 = require("../providers/dayInfo.cnyes");
+const StockListModel = require("../models/StockList");
 const { latestTradeDate } = require("../utilities/helper");
-const { stock_dividend } = require("../providers/stockList");
 
 //根據 dividendSchedule 取得 清單上的個股每天盤後\
 const chunkSize = 10;
@@ -54,7 +52,7 @@ async function getAllDayInfoFixed() {
   const dayInfoCollection = await DayInfoModel.getData({
     date: latestTRDT,
   });
-  const filtedData = stock_dividend.filter((e) => {
+  const filtedData = StockListModel.stock_dividend.filter((e) => {
     return !dayInfoCollection.find((x) => x.stockNo == e.stockNo);
   });
 

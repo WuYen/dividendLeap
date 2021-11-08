@@ -22,7 +22,9 @@ const Model = mongoose.model(
 async function getData(stockNo) {
   let data = await Model.find({ stockNo }).exec();
   if (data.length == 0) {
-    data = await provider.getData(Model)(stockNo);
+    data = await provider.getData(stockNo);
+    await Model.deleteMany({ stockNo });
+    await Model.insertMany(data);
   }
   return data;
 }

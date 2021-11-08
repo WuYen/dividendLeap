@@ -6,33 +6,27 @@ const { today, getDateFragment, toDateString } = require("../utilities/helper");
  * @param {object} {date, stockNo}
  * @returns trade info of that date
  */
-function getData(Model) {
-  return async function (query) {
-    const { stockNo, year } = query;
-    let to = +new Date(`${year}-01-01`) / 1000;
-    let from = +new Date(`${year}-12-31`) / 1000;
+async function getData(query) {
+  const { stockNo, year } = query;
+  let to = +new Date(`${year}-01-01`) / 1000;
+  let from = +new Date(`${year}-12-31`) / 1000;
 
-    let response = await axios.get(
-      `https://ws.api.cnyes.com/ws/api/v1/charting/history?resolution=D&symbol=TWS:${stockNo}:STOCK&from=${from}&to=${to}&quote=1`
-    );
+  let response = await axios.get(
+    `https://ws.api.cnyes.com/ws/api/v1/charting/history?resolution=D&symbol=TWS:${stockNo}:STOCK&from=${from}&to=${to}&quote=1`
+  );
 
-    let rawData = response.data.data;
+  let rawData = response.data.data;
 
-    let processedData = processData(rawData);
+  let processedData = processData(rawData);
 
-    await Model.deleteMany({ stockNo, year });
-
-    let entity = {
-      stockNo,
-      year,
-      data: [...processedData],
-      updateDate: today(),
-    };
-
-    let result = await new Model(entity).save();
-    // console.log(`save day history success`, result);
-    return result;
+  let entity = {
+    stockNo,
+    year,
+    data: [...processedData],
+    updateDate: today(),
   };
+
+  return entity;
 }
 
 //把raw data 轉換成 mongo schema

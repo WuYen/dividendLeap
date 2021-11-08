@@ -22,7 +22,9 @@ const Model = mongoose.model(
 async function getData(query = {}) {
   let data = await Model.find(query).exec();
   if (data.length == 0 && query.sourceType !== "manual") {
-    data = await provider.getData(Model)();
+    let entity = await provider.getData();
+    await Model.deleteMany({ sourceType: "twse" });
+    data = await Model.insertMany(entity);
   }
   return data;
 }

@@ -28,7 +28,13 @@ const Model = mongoose.model(
 async function getData(query) {
   let data = await Model.findOne(query).exec();
   if (!data) {
-    data = await provider.getData(Model)(query);
+    let entity = await provider.getData(query);
+
+    await Model.deleteMany({ stockNo, year });
+
+    await new Model(entity).save();
+
+    return entity;
   }
   return data;
 }
