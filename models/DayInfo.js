@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const provider1 = require("../providers/dayInfo.twse");
 const provider2 = require("../providers/dayInfo.cnyes");
+const provider3 = require("../providers/dayInfo.finMind");
 
 // Model
 const Model = mongoose.model(
@@ -40,3 +41,4 @@ module.exports = Model;
 module.exports.getData = getData;
 module.exports.provider1 = provider1;
 module.exports.provider2 = provider2;
+module.exports.provider3 = provider3;

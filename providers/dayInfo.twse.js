@@ -44,7 +44,7 @@ function processData(source, stockNo) {
       year: date.substr(0, 4), //String, //年度 2020
       month: date.substr(4, 2), //String, //月份 01
       price: tryParseFloat(d[field.close]), //Number, //股價
-      count: parseInt(d[field.transCount].replace(/[^\d+]/g, "")), //Number, //成交筆數
+      count: parseInt(d[field.count].replace(/[^\d+]/g, "")), //Number, //成交筆數
       updateDate: today(), //String,
     };
   });
