@@ -3,7 +3,7 @@ const { today, tryParseFloat, parseChineseDate, getDateFragment, getPureDate } =
 const config = require("../utilities/config");
 
 /**
- * 從 twse 抓每日盤後個股股價
+ * 從 finMind 抓每日盤後個股股價
  * @param {object} {date, stockNo}
  * @returns trade info of that date
  */

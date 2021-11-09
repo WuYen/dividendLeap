@@ -82,12 +82,11 @@ async function getAllDayInfoFixed(speedy = true) {
               stockNo: data2.stockNo,
               date: latestTRDT,
             });
-          let result = await Promise.all([p1, p2]);
+          let throttle = delay(getRandomIntInclusive(800, 2000));
+          let result = await Promise.all([p1, p2, throttle]);
           result[0] && groupData.push(result[0]);
           result[1] && groupData.push(result[1]);
           console.log(`get ${data ? data.stockNo : ""} ${data2 ? data2.stockNo : ""} data at ${new Date()}`);
-
-          await delay(getRandomIntInclusive(800, 2000));
         } catch (e) {
           console.log("getAllDayInfo error", e);
         }

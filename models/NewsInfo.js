@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const provider = require("../providers/NewsInfo.finMind");
 
 // Schema
 const Schema = mongoose.Schema;
@@ -7,11 +8,12 @@ const Schema = mongoose.Schema;
 const Model = mongoose.model(
   "NewsInfo", // news by topic and date
   new Schema({
-    category: String, //search key word
     key: String, // unique id generate by source
+    category: String, //search key word or StockNo
     title: String, //news title
     link: String, //href
-    time: String,
+    time: String, //"2021-08-05 18:00:12"
+    source: String, //"Yahoo奇摩股市" "聯合新聞"
     updateDate: String,
   })
 );
@@ -49,3 +51,4 @@ async function saveData(data) {
 module.exports = Model;
 module.exports.getData = getData;
 module.exports.saveData = saveData;
+module.exports.provider = provider;

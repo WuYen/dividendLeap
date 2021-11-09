@@ -66,6 +66,7 @@ async function predict(stockNo = "2451", targetYear) {
       },
       ...pass5Year,
     ],
+    //dividend: [{ year: "2021", date: "20211111" , price:'22.22',yieldRate:'殖利率'}],
   };
 }
 
