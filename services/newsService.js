@@ -91,7 +91,7 @@ async function getByStock(stockNo) {
   const query = { startDate: dt[0], endDate: dt[1], stockNo };
   const news = await NewsInfoModel.provider.getData(query);
 
-  return news;
+  return news.reverse().slice(0, 15);
 }
 
 module.exports = {

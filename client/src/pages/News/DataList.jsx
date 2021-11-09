@@ -49,7 +49,7 @@ export function Container(props) {
 const showLine = 8;
 
 export const DataList = React.memo(function DataList(props) {
-  const { list = [], date, keyWord } = props;
+  const { list = [], date, keyWord = "" } = props;
   const [more, setMore] = useState(false);
   const needShowMore = list.length > showLine;
 
