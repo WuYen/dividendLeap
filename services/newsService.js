@@ -1,6 +1,6 @@
 const NewsInfoModel = require("../models/NewsInfo");
 const puppeteer = require("puppeteer");
-const { today } = require("../utilities/dateTime");
+const { today, getMonthRange } = require("../utilities/dateTime");
 const connectDB = require("../utilities/connectDB");
 const config = require("../utilities/config");
 
@@ -85,7 +85,17 @@ async function getByKeyword(keyWord, custom = false) {
   return data;
 }
 
+async function getByStock(stockNo) {
+  console.log("getByStock", stockNo);
+  let dt = getMonthRange();
+  const query = { startDate: dt[0], endDate: dt[1], stockNo };
+  const news = await NewsInfoModel.provider.getData(query);
+
+  return news.reverse().slice(0, 15);
+}
+
 module.exports = {
   getNews,
   getByKeyword,
+  getByStock,
 };

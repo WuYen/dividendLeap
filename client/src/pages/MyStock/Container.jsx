@@ -21,6 +21,18 @@ export default function Container(props) {
     });
   }, []);
 
+  // reload content after remove
+  // useEffect(() => {
+  //   let index = myList.findIndex((x) => x._id === id);
+  //   if (index == 0) {
+  //     let newStockNo = myList[0] ? myList[0].stockNo : "";
+  //     history.push(`/my/stock/${newStockNo}`);
+  //   }
+  //   if (index > 0) {
+  //     history.push(`/my/stock/${myList[index - 1].stockNo}`);
+  //   }
+  // }, [myList]);
+
   const handleAdd = useCallback((stockNo) => {
     console.log("handle select", stockNo);
     add(stockNo).then((res) => {
@@ -68,14 +80,14 @@ export default function Container(props) {
 }
 
 function fetchList() {
-  return api.get(`/mystock/list`).then((data) => {
+  return api.get(`/my/list`).then((data) => {
     console.log("fetchList result", data);
     return data;
   });
 }
 
 function add(stockNo) {
-  return api.get(`/mystock/add/${stockNo}`).then((data) => {
+  return api.get(`/my/list/add/${stockNo}`).then((data) => {
     console.log("add result", data);
     return data;
   });
@@ -83,20 +95,8 @@ function add(stockNo) {
 
 function remove(id) {
   const payload = JSON.stringify({ id: id });
-  return api.post(`/mystock/remove`, payload).then((data) => {
+  return api.post(`/my/list/remove`, payload).then((data) => {
     console.log("remove result", data);
     return data;
   });
 }
-
-// reload content after remove
-// useEffect(() => {
-//   let index = myList.findIndex((x) => x._id === id);
-//   if (index == 0) {
-//     let newStockNo = myList[0] ? myList[0].stockNo : "";
-//     history.push(`/my/stock/${newStockNo}`);
-//   }
-//   if (index > 0) {
-//     history.push(`/my/stock/${myList[index - 1].stockNo}`);
-//   }
-// }, [myList]);

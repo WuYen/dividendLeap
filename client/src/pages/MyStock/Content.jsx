@@ -5,6 +5,8 @@ import api from "../../utils/api";
 import { formatHelper } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
 import { FundamentalData } from "../../components/TradingViewWidget";
+import InfoPanel from "./InfoPanel";
+import FinMindNews from "../News/FinMindNews";
 
 export default React.memo(function Content(props) {
   const { stockNo } = props;
@@ -39,8 +41,14 @@ function Forecast(props) {
             <ComputeStock key={stockNo} eps={data.eps[0]} />
             目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
           </Box>
-          <br />
+          <InfoPanel data={data.eps} />
           <EpsList data={data.eps} />
+          <br />
+          <FinMindNews stockNo={stockNo}>
+            {(data) => {
+              return <DataList.List list={data.reverse()} keyWord="個股新聞"></DataList.List>;
+            }}
+          </FinMindNews>
         </Box>
         <Box>
           <FundamentalData stockNo={stockNo} />
@@ -74,7 +82,7 @@ function ComputeStock(props) {
         defaultValue={5}
         min={0}
         max={10}
-        step={0.5}
+        step={0.2}
         onChange={(val) => setRatio(val)}
       >
         <SliderTrack>

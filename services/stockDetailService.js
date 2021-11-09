@@ -60,7 +60,7 @@ async function buildData(stockNo, year, latestTradDate) {
   let dayInfo = await DayInfoModel.getData({ stockNo, date: latestTradDate });
 
   if (dInfoTY && dInfoTY.sourceType == "manual") {
-    dayInfo = await DayInfoModel.getDataFromWeb({ stockNo, date: latestTradDate });
+    dayInfo = await DayInfoModel.provider2.getData({ stockNo, date: latestTradDate });
   }
 
   //去年整年每天股價

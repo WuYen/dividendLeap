@@ -6,30 +6,7 @@ const { today, tryParseFloat, parseChineseDate, getDateFragment } = require("../
  * @param {object} {date, stockNo}
  * @returns trade info of that date
  */
-function getData(Model) {
-  return async function (query) {
-    const { date, stockNo = "5522" } = query;
-    let response = await axios.get(
-      `https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=${date}&stockNo=${stockNo}`
-    );
-
-    let rawData = response.data.data;
-    if (rawData && Array.isArray(rawData)) {
-      let processedData = processData(rawData, stockNo);
-
-      const { year, month } = getDateFragment(date);
-      await Model.deleteMany({ stockNo, year, month });
-
-      let result = await Model.insertMany(processedData);
-      // console.log(`save dayInfo success`, result);
-      return result.find((x) => x.date == date);
-    } else {
-      return null;
-    }
-  };
-}
-
-async function getDataSingle(query) {
+async function getData(query) {
   const { date, stockNo = "5522" } = query;
   let response = await axios.get(
     `https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=${date}&stockNo=${stockNo}`
@@ -67,7 +44,7 @@ function processData(source, stockNo) {
       year: date.substr(0, 4), //String, //年度 2020
       month: date.substr(4, 2), //String, //月份 01
       price: tryParseFloat(d[field.close]), //Number, //股價
-      count: parseInt(d[field.transCount].replace(/[^\d+]/g, "")), //Number, //成交筆數
+      count: parseInt(d[field.count].replace(/[^\d+]/g, "")), //Number, //成交筆數
       updateDate: today(), //String,
     };
   });
@@ -75,4 +52,4 @@ function processData(source, stockNo) {
   return result;
 }
 
-module.exports = { getData, getDataSingle };
+module.exports = { getData };

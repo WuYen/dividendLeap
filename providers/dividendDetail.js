@@ -7,24 +7,17 @@ var getUrl = (stockNo) => `https://goodinfo.tw/StockInfo/StockDividendPolicy.asp
  * 從 good info 取歷年除權息資料
  * @param {string}} stockNo
  */
-function getData(Model) {
-  return async function (stockNo) {
-    if (!stockNo) {
-      throw new Error("Dividend detail not given stockNo");
-    }
-    const $ = await helper.getHTML(getUrl(stockNo));
+async function getData(stockNo) {
+  if (!stockNo) {
+    throw new Error("Dividend detail not given stockNo");
+  }
+  const $ = await helper.getHTML(getUrl(stockNo));
 
-    var rawData = parseRawData($);
+  var rawData = parseRawData($);
 
-    let processedData = processData(stockNo, rawData);
+  let processedData = processData(stockNo, rawData);
 
-    await Model.deleteMany({ stockNo });
-
-    let result = await Model.insertMany(processedData);
-
-    console.log(`save dividend detail success`, result);
-    return result;
-  };
+  return processedData;
 }
 
 //get raw data from html document

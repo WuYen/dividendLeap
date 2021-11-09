@@ -37,7 +37,8 @@ async function getData(stockNo, needLatest = false) {
   };
   let data = await Model.findOne(query).exec();
   if (!data) {
-    data = await provider.getData(Model)(stockNo);
+    let entity = await provider.getData(stockNo);
+    data = await new Model(entity).save();
   }
   return data;
 }

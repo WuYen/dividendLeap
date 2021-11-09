@@ -6,29 +6,27 @@ const { today } = require("../utilities/helper");
  * @param {String} stockNo
  * @returns
  */
-function getData(Model) {
-  return async function (stockNo = "") {
-    try {
-      let rawData = await getRawData(stockNo);
+async function getData(stockNo = "") {
+  try {
+    let rawData = await getRawData(stockNo);
 
-      let processedData = processData(rawData);
+    let processedData = processData(rawData);
 
-      let entity = {
-        stockNo: stockNo,
-        data: [...processedData],
-        updateDate: today(),
-      };
+    let entity = {
+      stockNo: stockNo,
+      data: [...processedData],
+      updateDate: today(),
+    };
 
-      let epsInfo = new Model(entity);
+    // let epsInfo = new Model(entity);
 
-      let result = await epsInfo.save();
-      //console.log(`save schedule success`, result);
-      return result;
-    } catch (error) {
-      console.error("EPS source error", error);
-      return null;
-    }
-  };
+    // let result = await epsInfo.save();
+    //console.log(`save schedule success`, result);
+    return entity;
+  } catch (error) {
+    console.error("EPS source error", error);
+    return null;
+  }
 }
 
 // Data format

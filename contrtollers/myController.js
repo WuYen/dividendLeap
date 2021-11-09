@@ -17,7 +17,7 @@ router.get("/list", async function (req, res, next) {
   }
 });
 
-router.get("/add/:stockNo", async function (req, res, next) {
+router.get("/list/add/:stockNo", async function (req, res, next) {
   try {
     const user = req.user;
     let result = await add({
@@ -30,7 +30,7 @@ router.get("/add/:stockNo", async function (req, res, next) {
   }
 });
 
-router.post("/remove", async function (req, res, next) {
+router.post("/list/remove", async function (req, res, next) {
   try {
     const user = req.user;
     const { id } = req.body;

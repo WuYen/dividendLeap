@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 router.use("/schedule", require("./scheduleController"));
-router.use("/mystock", require("./myStockController"));
+router.use("/my", require("./myController"));
 router.use("/news", require("./newsController"));
 router.use("/user", require("./userController"));
 router.use("/tool", require("./toolController"));

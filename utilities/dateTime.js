@@ -45,6 +45,19 @@ function latestTradeDate() {
   return result;
 }
 
+/**
+ * 從 Today 到過去 n 個月 的日期範圍
+ * @param {Number} n 從 Today 到過去 n 個月
+ * @returns [20210101,20211011]
+ */
+function getMonthRange(n = 1) {
+  const end = getTodayWithTZ();
+  const start = getTodayWithTZ();
+  start.setMonth(start.getMonth() - n);
+
+  return [toDateString(start), toDateString(end)];
+}
+
 function toDateString(date) {
   const { year, month, day } = getDateFragment(date);
   return `${year}${month}${day}`;
@@ -82,6 +95,7 @@ module.exports = {
   getPureDate,
   toDateString,
   getTodayWithTZ,
+  getMonthRange,
 };
 
 //return pipe(formatTo("zh-TW"), slice(10), getPureDate)(date);

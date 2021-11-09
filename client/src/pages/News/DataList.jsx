@@ -49,7 +49,7 @@ export function Container(props) {
 const showLine = 8;
 
 export const DataList = React.memo(function DataList(props) {
-  const { list = [], date, keyWord } = props;
+  const { list = [], date, keyWord = "" } = props;
   const [more, setMore] = useState(false);
   const needShowMore = list.length > showLine;
 
@@ -111,12 +111,3 @@ export function Loading(params) {
 }
 
 export default { Loading, List: DataList, Container };
-
-{
-  /* <Image
-            objectFit="cover"
-            //src="https://cdn.dribbble.com/users/95510/screenshots/1694572/no-chat_gif.gif"
-            //src="https://cdn.dribbble.com/users/3925584/screenshots/15796673/media/09e702c5c59ea914be62962d0180e1ae.gif"
-            alt="Empty"
-          /> */
-}

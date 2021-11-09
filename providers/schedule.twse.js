@@ -5,20 +5,14 @@ const { tryParseFloat, today, parseChineseDate, getDateFragment } = require("../
  * 取歷年除權息資料 from twse exchangeReport
  * @param {string}} stockNo
  */
-function getData(Model) {
-  return async function () {
-    let response = await request.get(`https://www.twse.com.tw/exchangeReport/TWT48U?response=json`);
+async function getData() {
+  let response = await request.get(`https://www.twse.com.tw/exchangeReport/TWT48U?response=json`);
 
-    let rawData = response.data;
+  let rawData = response.data;
 
-    let processedData = processData(rawData, today());
+  let processedData = processData(rawData, today());
 
-    await Model.deleteMany({ sourceType: "twse" });
-
-    let result = await Model.insertMany(processedData);
-
-    return result;
-  };
+  return processedData;
 }
 
 //field index for RawData
