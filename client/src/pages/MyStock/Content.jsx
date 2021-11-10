@@ -6,7 +6,7 @@ import { formatHelper } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
 import { FundamentalData } from "../../components/TradingViewWidget";
 import InfoPanel from "./InfoPanel";
-import FinMindNews from "../News/FinMindNews";
+import FinMindNews, { FinMindNews2, useFinMindData } from "../News/FinMindNews";
 
 export default React.memo(function Content(props) {
   const { stockNo } = props;
@@ -44,11 +44,11 @@ function Forecast(props) {
           <InfoPanel data={data.eps} />
           <EpsList data={data.eps} />
           <br />
-          <FinMindNews stockNo={stockNo}>
-            {(data) => {
-              return <DataList.List list={data.reverse()} keyWord="個股新聞"></DataList.List>;
-            }}
-          </FinMindNews>
+          <FinMindNews2
+            fetchData={{ useFetch: useFinMindData, params: stockNo }}
+            loading={DataList.Loading}
+            list={DataList.List}
+          />
         </Box>
         <Box>
           <FundamentalData stockNo={stockNo} />
