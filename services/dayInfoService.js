@@ -63,7 +63,6 @@ async function getAllDayInfoFixed(speedy = true) {
     for (let g = 0; g < Math.ceil(totalCount / 20); g++) {
       let groupData = [];
       for (let index = g * 20; index < (g + 1) * 20; index += 2) {
-        console.log(`${index} start get data`);
         const data = filtedData[index];
         const data2 = filtedData[index + 1];
         if (!data && !data2) {
@@ -84,16 +83,21 @@ async function getAllDayInfoFixed(speedy = true) {
             });
           let throttle = delay(getRandomIntInclusive(800, 2000));
           let result = await Promise.all([p1, p2, throttle]);
-          result[0] && groupData.push(result[0]);
-          result[1] && groupData.push(result[1]);
-          console.log(`get ${data ? data.stockNo : ""} ${data2 ? data2.stockNo : ""} data at ${new Date()}`);
+          if (result[0]) {
+            groupData.push(result[0]);
+            console.log(`${index} get ${data.stockNo} data at ${new Date()}`);
+          }
+          if (result[1]) {
+            groupData.push(result[1]);
+            console.log(`${index + 1} get ${data2.stockNo} data at ${new Date()}`);
+          }
         } catch (e) {
           console.log("getAllDayInfo error", e);
         }
       }
       successCount += groupData.length;
       groupData.length > 0 && (await DayInfoModel.insertMany(groupData));
-      console.log("save", groupData.length);
+
       await delay(getRandomIntInclusive(2000, 4000));
     }
   } else {

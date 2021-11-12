@@ -25,9 +25,9 @@ export default function InfoPanel(props) {
 
   return (
     <Box display="flex" m="2">
-      {displayData.map((item) => {
+      {displayData.map((item, index) => {
         return (
-          <Box alignItems="center" p="2" borderRight="1px solid #e0e4e9" _last={{ borderRight: "none" }}>
+          <Box key={index} alignItems="center" p="2" borderRight="1px solid #e0e4e9" _last={{ borderRight: "none" }}>
             <Box textAlign="center" mb="4px" display="block" fontWeight="700" fontSize="16px">
               {item.value}
             </Box>
