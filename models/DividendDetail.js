@@ -46,7 +46,6 @@ async function getByRange(query) {
   if (result.length == 0) {
     let data = await getData(stockNo);
     result = data.filter((x) => parseInt(x.year) >= start && parseInt(x.year) <= end);
-    console.log("data", data, result);
   }
 
   return result;
