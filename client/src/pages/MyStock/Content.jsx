@@ -128,8 +128,7 @@ function EpsList(props) {
   return (
     <>
       <HStack spacing={3}>
-        <div>發放年度</div>
-        {/*  要能做切換 <div>獲利年度</div> */}
+        <div>年度</div>
         <HStack>
           <div style={{ width: "50px", textAlign: "right" }}>Q1</div>
           <div style={{ width: "50px", textAlign: "right" }}>Q2</div>
