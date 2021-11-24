@@ -7,6 +7,7 @@ export default function KeyWord(props) {
     <Badge
       px={3}
       py={2}
+      mr={2}
       fontWeight={"800"}
       fontSize={"medium"}
       color={active ? "teal.600" : "gray.400"}

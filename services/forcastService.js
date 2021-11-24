@@ -1,7 +1,9 @@
 const EpsModel = require("../models/Eps");
 const DividendDetailModel = require("../models/DividendDetail");
+const DividendInfoModel = require("../models/DividendInfo");
 const DayInfoModel = require("../models/DayInfo");
 const StockListModel = require("../models/StockList");
+const YearHistoryModel = require("../models/YearHistory");
 const helper = require("../utilities/helper");
 
 function accumulateEps(data) {
@@ -66,25 +68,72 @@ async function predict(stockNo = "2451", targetYear) {
       },
       ...pass5Year,
     ],
-    //dividend: [{ year: "2021", date: "20211111" , price:'22.22',yieldRate:'殖利率'}],
   };
 }
 
-/*
-  baseInfo: [ '2881', '富邦金', '富邦金融控股股份有限公司', ',0_17,2_2821,3_C428,4_A210,' ],
-  dayInfo: {
-    _id: 617d56fb553a152bc43ff78b,
-    stockNo: '2881',
-    date: '20211029',
-    year: '2021',
-    month: '10',
-    price: 73.6,
-    count: 33197,
-    updateDate: '20211030',
-    __v: 0
-  },
- */
+async function predictV2(stockNo = "2451", targetYear) {
+  let [epsData, dividendDetailData, dayInfoData, dividendInfoData, yearHistoryData] = await Promise.all([
+    EpsModel.getData(stockNo), //eps 資料全撈
+    DividendDetailModel.getByRange({
+      stockNo,
+      start: `${targetYear - 5}`,
+      end: `${targetYear - 1}`,
+    }), //先抓過去五年的DividendDetail
+    DayInfoModel.getData({ stockNo, date: helper.latestTradeDate() }),
+    DividendInfoModel.getData(stockNo),
+    YearHistoryModel.getData({ stockNo }),
+  ]);
+  if (!yearHistoryData) {
+    yearHistoryData = { data: [] };
+  }
+  let pass5Year = [];
+  //for each DividendDetail 去filter eps
+  dividendDetailData.forEach((dividend) => {
+    let epsYear = parseInt(dividend.year) - 1; //2021
+    let dInfo = dividendInfoData.data.find((x) => x.year == dividend.year) || {};
+    let yInfo = yearHistoryData.data.find((x) => x.year == dividend.year) || {};
+    pass5Year.push({
+      year: dividend.year,
+      totalEps: dividend.eps,
+      cashDividend: dividend.cashDividen,
+      estimateDividend: null,
+      q: epsData.data.filter((x) => x.year == epsYear), //各Q EPS
+      rate: dividend.payoutRatio, //分配率
+      dDate: dInfo.date || "", //除息日
+      dPrice: dInfo.value || "", //除權息前股價
+      yieldRate: dInfo.yieldRateCash || "", //現金殖利率
+      yearAvg: yInfo.avg, //年均價
+    });
+  });
+
+  //targetYear的eps
+  let epsYear = targetYear - 1; //2021
+  let eps = epsData.data.filter((x) => x.year == epsYear);
+  let totalEps = accumulateEps(eps); //計算該年度累積eps
+
+  //預測先直接沿用去年的payout rate
+  let prevPayoutRate = dividendDetailData[0].payoutRatio;
+  let estimateDividend = (totalEps * prevPayoutRate).toFixed(2);
+
+  let baseInfo = StockListModel.getNameByNo(stockNo);
+  return {
+    stockNo: stockNo,
+    baseInfo: baseInfo,
+    dayInfo: dayInfoData,
+    eps: [
+      {
+        year: `${targetYear}`,
+        totalEps: helper.tryParseFloat(totalEps.toFixed(2)),
+        cashDividend: null,
+        estimateDividend: helper.tryParseFloat(estimateDividend),
+        q: eps,
+        rate: prevPayoutRate,
+      },
+      ...pass5Year,
+    ],
+  };
+}
 
 module.exports = {
-  predict,
+  predict: predictV2,
 };

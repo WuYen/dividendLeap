@@ -6,7 +6,7 @@ import { formatHelper } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
 import { FundamentalData } from "../../components/TradingViewWidget";
 import InfoPanel from "./InfoPanel";
-import FinMindNews from "../News/FinMindNews";
+import FinMindNews, { FinMindNews2, useFinMindData } from "../News/FinMindNews";
 
 export default React.memo(function Content(props) {
   const { stockNo } = props;
@@ -44,11 +44,11 @@ function Forecast(props) {
           <InfoPanel data={data.eps} />
           <EpsList data={data.eps} />
           <br />
-          <FinMindNews stockNo={stockNo}>
-            {(data) => {
-              return <DataList.List list={data.reverse()} keyWord="個股新聞"></DataList.List>;
-            }}
-          </FinMindNews>
+          <FinMindNews2
+            fetchData={{ useFetch: useFinMindData, params: stockNo }}
+            loading={DataList.Loading}
+            list={DataList.List}
+          />
         </Box>
         <Box>
           <FundamentalData stockNo={stockNo} />
@@ -128,7 +128,7 @@ function EpsList(props) {
   return (
     <>
       <HStack spacing={3}>
-        <div>年度</div>
+        <div style={{ width: "80px" }}>發放年度</div>
         <HStack>
           <div style={{ width: "50px", textAlign: "right" }}>Q1</div>
           <div style={{ width: "50px", textAlign: "right" }}>Q2</div>
@@ -138,22 +138,30 @@ function EpsList(props) {
         </HStack>
         <div style={{ width: "80px", textAlign: "right" }}>預估股利</div>
         <div style={{ width: "80px", textAlign: "right" }}>分配率</div>
+        <div style={{ width: "100px", textAlign: "right" }}></div>
+        <div style={{ width: "80px", textAlign: "right" }}></div>
+        <div style={{ width: "80px", textAlign: "right" }}></div>
+        <div style={{ width: "80px", textAlign: "right" }}></div>
       </HStack>
       {data.map((d, index) => {
-        const { cashDividend, estimateDividend, q, rate, totalEps, year } = d;
+        const { cashDividend, estimateDividend, q, rate, totalEps, year, dDate, dPrice, yieldRate, yearAvg } = d;
         return (
           <Fragment key={index}>
             <HStack spacing={3}>
-              <div>{year}</div>
+              <div style={{ width: "80px" }}>{year}</div>
               <EPS eps={totalEps} quarter={q} />
               <div style={{ width: "80px", textAlign: "right" }}>{cashDividend ? cashDividend : estimateDividend}</div>
               <div style={{ width: "80px", textAlign: "right" }}>{rate}</div>
+              <div style={{ width: "100px", textAlign: "right" }}>{formatHelper.formatDate(dDate)}</div>
+              <div style={{ width: "80px", textAlign: "right" }}>{dPrice}</div>
+              <div style={{ width: "80px", textAlign: "right" }}>{yieldRate}</div>
+              <div style={{ width: "80px", textAlign: "right" }}>{yearAvg}</div>
             </HStack>
             {index == 0 && (
               <>
                 <br />
                 <HStack spacing={3}>
-                  <div>年度</div>
+                  <div style={{ width: "80px" }}>發放年度</div>
                   <HStack>
                     <div style={{ width: "50px", textAlign: "right" }}>Q1</div>
                     <div style={{ width: "50px", textAlign: "right" }}>Q2</div>
@@ -163,6 +171,10 @@ function EpsList(props) {
                   </HStack>
                   <div style={{ width: "80px", textAlign: "right" }}>現金股利</div>
                   <div style={{ width: "80px", textAlign: "right" }}>分配率</div>
+                  <div style={{ width: "100px", textAlign: "right" }}>除息日</div>
+                  <div style={{ width: "80px", textAlign: "right" }}>除息股價</div>
+                  <div style={{ width: "80px", textAlign: "right" }}>殖利率</div>
+                  <div style={{ width: "80px", textAlign: "right" }}>年均價</div>
                 </HStack>
               </>
             )}

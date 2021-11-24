@@ -8,18 +8,22 @@ const config = require("../utilities/config");
  * @returns trade info of that date
  */
 async function getData(query) {
-  const { date, stockNo = "5522" } = query;
-  const { year, month, day } = getDateFragment(date);
-  const dt = year + "-" + month + "-" + day;
-  let response = await axios.get(
-    `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=${stockNo}&start_date=${dt}&end_date=${dt}&token=${config.FINMIND_TOKEN}`
-  );
-  let rawData = response.data.data;
-  if (rawData && Array.isArray(rawData)) {
-    let processedData = processData(rawData, stockNo);
-    return processedData[0];
+  try {
+    const { date, stockNo = "5522" } = query;
+    const { year, month, day } = getDateFragment(date);
+    const dt = year + "-" + month + "-" + day;
+    let response = await axios.get(
+      `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=${stockNo}&start_date=${dt}&end_date=${dt}&token=${config.FINMIND_TOKEN}`
+    );
+    let rawData = response.data.data;
+    if (rawData && Array.isArray(rawData)) {
+      let processedData = processData(rawData, stockNo);
+      return processedData[0];
+    }
+  } catch (error) {
+    console.log("finMind dayInfo error", error);
+    return null;
   }
-  return null;
 }
 
 //把raw data 轉換成 mongo schema
