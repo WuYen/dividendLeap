@@ -315,7 +315,7 @@ const MobileNavItem = ({ label, children, href }) => {
 
 const NAV_ITEMS = [
   {
-    label: "除權息列表",
+    label: "列表",
     href: "/schedule",
   },
   // {

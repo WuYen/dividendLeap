@@ -18,7 +18,7 @@ import auth from "../../utils/auth";
 
 import MoreButton from "./MoreButton";
 import DataList from "./DataList";
-import KeyWord from "./KeyWord";
+import KeyWord from "../../components/KeyWord";
 
 const keyWords = ["現金股利", "增資", "合併", "訂單", "設廠", "利多消息"];
 
@@ -47,10 +47,11 @@ export default function News(props) {
   return (
     <Box p="4" width="100%">
       <Flex>
-        <Box paddingRight="8px">
+        <Box>
           {keyWords.map((text) => {
             return (
               <KeyWord
+                key={text}
                 text={text}
                 active={text == keyWord}
                 onClick={() => {
@@ -66,26 +67,14 @@ export default function News(props) {
 
       <SimpleGrid columns={over768px ? 4 : 1} spacing={10} paddingTop={"12px"}>
         {isCustomSearch ? (
-          <DataList.Container
-            key={keyWord}
-            keyWord={keyWord}
-            search={true}
-            loading={0}
-            list={1}
-          >
+          <DataList.Container key={keyWord} keyWord={keyWord} search={true} loading={0} list={1}>
             <DataList.Loading />
             <DataList.List />
           </DataList.Container>
         ) : (
           queryDate.map((d, i) => {
             return (
-              <DataList.Container
-                key={`${keyWord}-${d}`}
-                keyWord={keyWord}
-                date={d}
-                loading={0}
-                list={1}
-              >
+              <DataList.Container key={`${keyWord}-${d}`} keyWord={keyWord} date={d} loading={0} list={1}>
                 <DataList.Loading />
                 <DataList.List />
               </DataList.Container>
@@ -95,9 +84,7 @@ export default function News(props) {
       </SimpleGrid>
       <Divider paddingTop="4" />
       <Center paddingTop="4">
-        {!isCustomSearch && (
-          <MoreButton width="100%" showMore={true} onClick={loadMore} />
-        )}
+        {!isCustomSearch && <MoreButton width="100%" showMore={true} onClick={loadMore} />}
       </Center>
     </Box>
   );
@@ -120,11 +107,7 @@ function Search(props) {
           e.which === 13 && handleSetKeyWord();
         }}
       />
-      <InputRightElement
-        width="4.5rem"
-        paddingRight="6px"
-        justifyContent="flex-end"
-      >
+      <InputRightElement width="4.5rem" paddingRight="6px" justifyContent="flex-end">
         <IconButton
           onClick={handleSetKeyWord}
           size="sm"

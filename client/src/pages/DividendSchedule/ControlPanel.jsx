@@ -4,23 +4,54 @@ import { RepeatIcon } from "@chakra-ui/icons";
 import api from "../../utils/api";
 import auth from "../../utils/auth";
 import useRouter from "../../hooks/useRouter";
+import KeyWord from "../../components/KeyWord";
 
 export default function ControlPanel(props) {
-  const { filter, toggleFilter, getScheduleSuccess, count } = props;
+  const [{ type }, history] = useRouter();
+  const { typeList, filter, toggleFilter, getScheduleSuccess, count, onSetLoading } = props;
+  const [selected, setSelected] = useState(type || typeList[0].label);
 
   return (
-    <Flex alignItems="center" p={4}>
-      <Switch id="filter" colorScheme="teal" isChecked={filter} onChange={toggleFilter} />
-      <FormLabel htmlFor="filter" mb="0">
-        殖利率大於 5%
-      </FormLabel>
-      <SwitchButton getScheduleSuccess={getScheduleSuccess} enable={true} />
-      <RefreshButton getScheduleSuccess={getScheduleSuccess} enable={false} />
-      <Spacer />
-      <Text>筆數: {count}</Text>
-    </Flex>
+    <>
+      <Flex alignItems="center" p={4}>
+        {typeList.map((item) => {
+          const { label, url } = item;
+          const isActive = label == selected;
+          return (
+            <KeyWord
+              key={label}
+              text={label}
+              active={isActive}
+              onClick={() => {
+                setSelected(label);
+                onSetLoading(true);
+                !isActive &&
+                  api.get("/schedule" + url).then((res) => {
+                    console.log("result", res);
+                    history.push(`/schedule?type=${label}`);
+                    getScheduleSuccess(res.data);
+                  });
+              }}
+            />
+          );
+        })}
+        <Spacer />
+        <Text>筆數: {count}</Text>
+      </Flex>
+      <Flex alignItems="center" px={4}>
+        {selected == typeList[0] && (
+          <>
+            <Switch id="filter" colorScheme="teal" isChecked={filter} onChange={toggleFilter} />
+            <FormLabel htmlFor="filter" mb="0">
+              殖利率大於 5%
+            </FormLabel>
+          </>
+        )}
+      </Flex>
+    </>
   );
 }
+
 function SwitchButton(props) {
   const [, history] = useRouter();
   const [loading, setLoading] = useState(false);
@@ -91,4 +122,10 @@ function RefreshButton(props) {
       </Button>
     )
   );
+}
+
+{
+  /* 
+      <SwitchButton getScheduleSuccess={getScheduleSuccess} enable={true} />
+      <RefreshButton getScheduleSuccess={getScheduleSuccess} enable={false} /> */
 }
