@@ -21,15 +21,24 @@ export function toDateString(date) {
 }
 
 export function getDateFragment(date) {
-  return {
-    year: date.getFullYear().toString(),
-    month: `${("0" + (date.getMonth() + 1)).slice(-2)}`,
-    day: `${("0" + date.getDate()).slice(-2)}`,
-  };
+  if (typeof date == "string") {
+    return {
+      year: date.substr(0, 4),
+      month: date.substr(4, 2),
+      day: date.substr(6, 2),
+    };
+  } else {
+    return {
+      year: date.getFullYear().toString(),
+      month: `${("0" + (date.getMonth() + 1)).slice(-2)}`,
+      day: `${("0" + date.getDate()).slice(-2)}`,
+    };
+  }
 }
 
 export default {
   getPureDate,
   formatDate,
   tryParseFloat,
+  getDateFragment,
 };

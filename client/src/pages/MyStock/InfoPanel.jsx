@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Box } from "@chakra-ui/layout";
 
 export default function InfoPanel(props) {
-  const { data } = props;
+  const { data, stockDetail } = props;
   const thisYear = data[0];
   const lastYear = data[1];
   const displayData = [
     { value: "", text: "去年同期EPS" },
     { value: "", text: "去年全年EPS" },
+    { value: stockDetail.rateAvg5, text: "5年平均殖利率" },
+    { value: stockDetail.rateAvg10, text: "10年平均殖利率" },
   ];
 
   let total = [0, 0];

@@ -6,11 +6,13 @@ import { LinkIcon } from "@chakra-ui/icons";
 import { formatHelper } from "../../utils";
 import StockFrame from "./StockFrame";
 import BackButton from "./BackButton";
+import DetailContent from "../../pages/MyStock/Content";
 
 export default function Content(props) {
   const { stockNo, name, data = {} } = props;
   const divRef = useRef();
   const [showFrame, setShowFrame] = useState(false);
+  const [oldView, setOldView] = useState(false);
   const variant = useBreakpointValue({
     base: "sm",
     sm: "sm",
@@ -35,7 +37,22 @@ export default function Content(props) {
     <Box ref={divRef}>
       <Box p="4" d="flex" flexWrap="wrap" alignItems="baseline">
         <BackButton variant={variant} />
+
         <Button
+          loadingText="切換顯示"
+          colorScheme="teal"
+          variant="outline"
+          size="sm"
+          spinnerPlacement="end"
+          _focus={{ outline: "none" }}
+          onClick={() => {
+            setOldView((x) => !x);
+          }}
+        >
+          切換顯示
+        </Button>
+        <Button
+          ml="2"
           loadingText="更多資訊"
           colorScheme="teal"
           variant="outline"
@@ -49,15 +66,21 @@ export default function Content(props) {
           {showFrame ? "隱藏資訊" : "更多資訊"}
         </Button>
       </Box>
-      <Box d="flex" flexWrap="wrap" alignItems="baseline">
-        {info.map((item) => (
-          <Box m="4" color="gray.600">
-            {item.label}:
-            <Divider />
-            {item.content}
-          </Box>
-        ))}
-      </Box>
+      {oldView ? (
+        <Box d="flex" flexWrap="wrap" alignItems="baseline">
+          {info.map((item) => (
+            <Box m="4" color="gray.600">
+              {item.label}:
+              <Divider />
+              {item.content}
+            </Box>
+          ))}
+        </Box>
+      ) : (
+        <Box mx="4" mb="4" color="gray.600">
+          <DetailContent stockNo={stockNo} />
+        </Box>
+      )}
       {showFrame && <StockFrame stockNo={stockNo} divRef={divRef} variant={variant} />}
     </Box>
   );
