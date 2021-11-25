@@ -6,6 +6,7 @@ const StockListModel = require("../models/StockList");
 const YearHistoryModel = require("../models/YearHistory");
 const helper = require("../utilities/helper");
 const stockDetailService = require("./stockDetailService");
+const { getRandomIntInclusive, delay } = require("../utilities/delay");
 
 function accumulateEps(data) {
   return data.reduce((accumulator, currentValue, currentIndex, array) => {
@@ -31,11 +32,15 @@ async function predictV2(stockNo = "2451", targetYear) {
     yearHistoryData = { data: [] };
   }
   let pass5Year = [];
+  let getMonthHighLowPromise = [];
   //for each DividendDetail 去filter eps
-  dividendDetailData.forEach((dividend) => {
+  dividendDetailData.forEach((dividend, index) => {
     let epsYear = parseInt(dividend.year) - 1; //2021
     let dInfo = dividendInfoData.data.find((x) => x.year == dividend.year) || {};
     let yInfo = yearHistoryData.data.find((x) => x.year == dividend.year) || {};
+    getMonthHighLowPromise.push(
+      delay(getRandomIntInclusive(350 * index)).then(() => stockDetailService.getMonthHighLow(stockNo, dividend.year))
+    );
     pass5Year.push({
       year: dividend.year,
       totalEps: dividend.eps,
@@ -50,6 +55,12 @@ async function predictV2(stockNo = "2451", targetYear) {
     });
   });
 
+  let monthHighLow = await Promise.all(getMonthHighLowPromise);
+  pass5Year.forEach((x, index) => {
+    x.lowLY = monthHighLow[index].rankByLow.slice(0, 3); //最低的三個月份
+    x.HighLY = monthHighLow[index].rankByHigh.slice(0, 3); //最高的三個月份
+  });
+
   //targetYear的eps
   let epsYear = targetYear - 1; //2021
   let eps = epsData.data.filter((x) => x.year == epsYear);
@@ -60,7 +71,7 @@ async function predictV2(stockNo = "2451", targetYear) {
   let estimateDividend = (totalEps * prevPayoutRate).toFixed(2);
 
   let baseInfo = StockListModel.getNameByNo(stockNo);
-  console.log("stockDetail", stockDetail);
+
   return {
     stockNo: stockNo,
     baseInfo: baseInfo,

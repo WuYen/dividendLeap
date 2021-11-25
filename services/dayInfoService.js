@@ -2,6 +2,7 @@ const DayInfoModel = require("../models/DayInfo");
 const ScheduleModel = require("../models/Schedule");
 const StockListModel = require("../models/StockList");
 const { latestTradeDate } = require("../utilities/helper");
+const { getRandomIntInclusive, delay } = require("../utilities/delay");
 
 //根據 dividendSchedule 取得 清單上的個股每天盤後\
 const chunkSize = 10;
@@ -150,20 +151,6 @@ function byTime(a, b) {
     return 1;
   }
   return 0;
-}
-
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
-}
-
-function delay(time) {
-  return new Promise(function (resolve, reject) {
-    setTimeout(function () {
-      resolve("continue");
-    }, time);
-  });
 }
 
 module.exports = {

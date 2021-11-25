@@ -55,7 +55,7 @@ function Forecast(props) {
       <Box>
         {data.baseInfo[0]} {data.baseInfo[1]}
       </Box>
-      <Grid templateColumns="auto 480px" gap={4}>
+      <Grid templateColumns="auto 460px" gap={4}>
         <Box>
           <Box>
             <ComputeStock key={stockNo} eps={data.eps[0]} />
