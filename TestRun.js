@@ -2,12 +2,12 @@ const { mongooseQuickSetup, latestTradeDate, today } = require("./utilities/help
 
 const provider = require("./providers/yearHistory.twse");
 //const Model = require("./models/DividendDetail");
-const service = require("./services/forcastService");
+const service = require("./services/dayInfoService");
 
 const stockNo = "2451"; //創見
 
 mongooseQuickSetup(async () => {
-  let data = await service.predictV2("5309", 2022);
+  let data = await service.getAllDayInfoFixed();
   // let data = await service.getAllDayInfoFixed();
   console.log("result", data);
 });

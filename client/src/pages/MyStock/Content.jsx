@@ -61,10 +61,10 @@ function Forecast(props) {
             <ComputeStock key={stockNo} eps={data.eps[0]} />
             目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
           </Box>
-          <InfoPanel data={data.eps} />
+          <InfoPanel data={data.eps} stockDetail={data.stockDetail} />
           <EpsList data={[data.eps[0]]} />
           <br />
-          <EpsList data={data.eps.slice(1)} extend={true} />
+          <EpsList data={data.eps.slice(1)} isHistory={true} />
           <br />
           <FinMindNews2
             fetchData={{ useFetch: useFinMindData, params: stockNo }}

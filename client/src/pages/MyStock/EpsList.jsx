@@ -3,7 +3,7 @@ import { HStack } from "@chakra-ui/react";
 import { formatHelper } from "../../utils";
 
 export default function EpsList(props) {
-  const { data, extend = false } = props;
+  const { data, isHistory = false } = props;
 
   return (
     <>
@@ -16,12 +16,12 @@ export default function EpsList(props) {
           <div style={{ width: "50px", textAlign: "right" }}>Q4</div>
           <div style={{ width: "50px", textAlign: "right" }}>EPS</div>
         </HStack>
-        <div style={{ width: "80px", textAlign: "right" }}>預估股利</div>
+        <div style={{ width: "80px", textAlign: "right" }}>{isHistory ? "現金股利" : "預估股利"}</div>
         <div style={{ width: "80px", textAlign: "right" }}>分配率</div>
-        <div style={{ width: "100px", textAlign: "right" }}>{extend ? "除息日" : ""}</div>
-        <div style={{ width: "80px", textAlign: "right" }}>{extend ? "除息股價" : ""}</div>
-        <div style={{ width: "80px", textAlign: "right" }}>{extend ? "殖利率" : ""}</div>
-        <div style={{ width: "80px", textAlign: "right" }}>{extend ? "年均價" : ""}</div>
+        <div style={{ width: "100px", textAlign: "right" }}>{isHistory ? "除息日" : ""}</div>
+        <div style={{ width: "80px", textAlign: "right" }}>{isHistory ? "除息股價" : ""}</div>
+        <div style={{ width: "80px", textAlign: "right" }}>{isHistory ? "殖利率" : ""}</div>
+        <div style={{ width: "80px", textAlign: "right" }}>{isHistory ? "年均價" : ""}</div>
       </HStack>
       {data.map((d, index) => {
         const { cashDividend, estimateDividend, q, rate, totalEps, year, dDate, dPrice, yieldRate, yearAvg } = d;
