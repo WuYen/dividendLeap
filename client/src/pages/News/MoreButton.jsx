@@ -9,10 +9,13 @@ export default function MoreButton({ showMore, showText = true, ...rest }) {
 
   return (
     <Button
+      h={showText ? "10" : "6"}
+      mt="3"
       display="flex"
       variant="unstyled"
       flexDirection="column"
       _focus={{ outline: "none" }}
+      _hover={{ backgroundColor: "gray.300" }}
       {...rest}
     >
       {showText && <Text>{text}</Text>}
