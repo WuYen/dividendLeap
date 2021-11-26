@@ -39,7 +39,7 @@ export default function ControlPanel(props) {
         <Text>筆數: {count}</Text>
       </Flex>
       <Flex alignItems="center" px={4}>
-        {selected == typeList[0] && (
+        {selected == typeList[0].label && (
           <>
             <Switch id="filter" colorScheme="teal" isChecked={filter} onChange={toggleFilter} />
             <FormLabel htmlFor="filter" mb="0">
