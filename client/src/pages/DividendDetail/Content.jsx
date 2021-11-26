@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box, Link, Divider, useBreakpointValue, Button } from "@chakra-ui/react";
-
+import { Box, Divider, useBreakpointValue } from "@chakra-ui/react";
+import api from "../../utils/api";
 import { formatHelper } from "../../utils";
-import StockFrame from "./StockFrame";
-import BackButton from "./BackButton";
 import * as MyStock from "../../pages/MyStock/Content";
+import Loading from "../../components/Loading";
+import StockFrame from "./StockFrame";
+import ControlPanel from "./ControlPanel";
 
 const breakPoints = {
   base: "sm",
@@ -12,8 +13,55 @@ const breakPoints = {
   md: "md",
 };
 
+export function usePageInfo(props) {
+  const { stockNo, name } = props;
+  const [pageInfo, setPageInfo] = useState({
+    isLoading: true,
+    hasError: false,
+    data: null,
+    stockNo,
+    name,
+  });
+
+  useEffect(() => {
+    api.get(`/schedule/detail/${stockNo}`).then((data) => {
+      console.log("data", data);
+      if (data.success) {
+        setPageInfo({
+          stockNo,
+          name,
+          isLoading: false,
+          data: data.data,
+        });
+      } else {
+        setPageInfo({
+          stockNo,
+          name,
+          isLoading: false,
+          data: null,
+          hasError: true,
+        });
+      }
+    });
+  }, [stockNo]);
+
+  return [pageInfo, setPageInfo];
+}
+
 export default function Content(props) {
-  const { stockNo } = props;
+  const { name, stockNo, data, hasError, isLoading } = props;
+
+  return isLoading ? (
+    <Loading />
+  ) : hasError ? (
+    <div>Data not available</div>
+  ) : (
+    <Detail stockNo={stockNo} name={name} data={data} />
+  );
+}
+
+export function Detail(props) {
+  const { stockNo, name, data } = props;
   const divRef = useRef();
   const [showFrame, setShowFrame] = useState(false);
   const [oldView, setOldView] = useState(false);
@@ -27,7 +75,7 @@ export default function Content(props) {
       </Box>
       {oldView ? (
         <Box d="flex" flexWrap="wrap" alignItems="baseline">
-          <Display {...props} />
+          <Display stockNo={stockNo} name={name} data={data} />
         </Box>
       ) : (
         <Box mx="4" mb="4" color="gray.600">
@@ -36,42 +84,6 @@ export default function Content(props) {
       )}
       {showFrame && <StockFrame stockNo={stockNo} divRef={divRef} variant={variant} />}
     </Box>
-  );
-}
-
-function ControlPanel(props) {
-  const { variant, setOldView, showFrame, setShowFrame } = props;
-  return (
-    <>
-      <BackButton variant={variant} />
-      <Button
-        loadingText="切換顯示"
-        colorScheme="teal"
-        variant="outline"
-        size="sm"
-        spinnerPlacement="end"
-        _focus={{ outline: "none" }}
-        onClick={() => {
-          setOldView((x) => !x);
-        }}
-      >
-        切換顯示
-      </Button>
-      <Button
-        ml="2"
-        loadingText="更多資訊"
-        colorScheme="teal"
-        variant="outline"
-        size="sm"
-        spinnerPlacement="end"
-        _focus={{ outline: "none" }}
-        onClick={() => {
-          setShowFrame((x) => !x);
-        }}
-      >
-        {showFrame ? "隱藏資訊" : "更多資訊"}
-      </Button>
-    </>
   );
 }
 

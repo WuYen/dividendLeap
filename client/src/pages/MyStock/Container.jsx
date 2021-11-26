@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Box, useMediaQuery, Grid, VStack, StackDivider, Text } from "@chakra-ui/react";
 import api from "../../utils/api";
 import useRouter from "../../hooks/useRouter";

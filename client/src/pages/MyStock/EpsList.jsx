@@ -24,7 +24,7 @@ export default function EpsList(props) {
         <EPS isHeader={true} />
         <div style={colStyle[1]}>{isHistory ? "現金股利" : "預估股利"}</div>
         <div style={colStyle[2]}>分配率</div>
-        <div style={colStyle[3]}>{isHistory ? "除息日" : ""}</div>
+        <div style={colStyle[3]}>{"除息日"}</div>
         <div style={colStyle[4]}>{isHistory ? "除息股價" : ""}</div>
         <div style={colStyle[5]}>{isHistory ? "殖利率" : ""}</div>
         <div style={colStyle[6]}>{isHistory ? "年均價" : ""}</div>
