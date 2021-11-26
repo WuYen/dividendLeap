@@ -27,11 +27,17 @@ export function getDateFragment(date) {
       month: date.substr(4, 2),
       day: date.substr(6, 2),
     };
-  } else {
+  } else if (date && date.getFullYear) {
     return {
       year: date.getFullYear().toString(),
       month: `${("0" + (date.getMonth() + 1)).slice(-2)}`,
       day: `${("0" + date.getDate()).slice(-2)}`,
+    };
+  } else {
+    return {
+      year: "",
+      month: "",
+      day: "",
     };
   }
 }

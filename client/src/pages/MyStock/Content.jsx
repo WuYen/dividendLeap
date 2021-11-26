@@ -9,10 +9,8 @@ import InfoPanel from "./InfoPanel";
 import EpsList from "./EpsList";
 import ComputeStock from "./ComputeStock";
 
-export default React.memo(function Content(props) {
-  const { stockNo } = props;
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+export function useFetchData(stockNo) {
+  const [page, setPage] = useState({ list: [], loading: true });
   const isMount = useRef();
 
   useEffect(() => {
@@ -23,16 +21,30 @@ export default React.memo(function Content(props) {
   }, []);
 
   useEffect(() => {
-    isMount.current && setLoading(true);
-    api.get(`/forcast/${stockNo}`).then((response) => {
+    isMount.current && setPage((x) => ({ ...x, loading: true }));
+    api.get(`/forecast/${stockNo}`).then((response) => {
       if (response.success) {
-        setData(response.data);
-        setTimeout(() => {
-          isMount.current && setLoading(false);
-        }, 300);
+        isMount.current && setPage({ list: response.data, isLoaded: false });
       }
     });
   }, [stockNo]);
+
+  return [page.list, page.loading];
+}
+
+export function Container(props) {
+  const { stockNo } = props;
+  const [data, loading] = useFetchData(stockNo);
+
+  return React.cloneElement(props.children, {
+    stockNo,
+    data,
+    loading,
+  });
+}
+
+export function Content(props) {
+  const { stockNo, data, loading } = props;
 
   return (
     <Box h="100%">
@@ -45,7 +57,9 @@ export default React.memo(function Content(props) {
       )}
     </Box>
   );
-});
+}
+
+export default React.memo(Content);
 
 function Forecast(props) {
   const { data, stockNo } = props;
@@ -63,9 +77,9 @@ function Forecast(props) {
           </Box>
           <InfoPanel data={data.eps} stockDetail={data.stockDetail} />
           <EpsList data={[data.eps[0]]} />
-          <br />
+          <Box h="2" />
           <EpsList data={data.eps.slice(1)} isHistory={true} />
-          <br />
+          <Box h="2" />
           <FinMindNews2
             fetchData={{ useFetch: useFinMindData, params: stockNo }}
             loading={DataList.Loading}

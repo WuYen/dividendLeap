@@ -1,23 +1,82 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import { Box, Link, Divider, useBreakpointValue, Button } from "@chakra-ui/react";
-import { LinkIcon } from "@chakra-ui/icons";
 
 import { formatHelper } from "../../utils";
 import StockFrame from "./StockFrame";
 import BackButton from "./BackButton";
-import DetailContent from "../../pages/MyStock/Content";
+import * as MyStock from "../../pages/MyStock/Content";
+
+const breakPoints = {
+  base: "sm",
+  sm: "sm",
+  md: "md",
+};
 
 export default function Content(props) {
-  const { stockNo, name, data = {} } = props;
+  const { stockNo } = props;
   const divRef = useRef();
   const [showFrame, setShowFrame] = useState(false);
   const [oldView, setOldView] = useState(false);
-  const variant = useBreakpointValue({
-    base: "sm",
-    sm: "sm",
-    md: "md",
-  });
+  const variant = useBreakpointValue(breakPoints);
+  const [myData, myLoading] = MyStock.useFetchData(stockNo);
+
+  return (
+    <Box ref={divRef}>
+      <Box p="4" d="flex" flexWrap="wrap" alignItems="baseline">
+        <ControlPanel variant={variant} showFrame={showFrame} setShowFrame={setShowFrame} setOldView={setOldView} />
+      </Box>
+      {oldView ? (
+        <Box d="flex" flexWrap="wrap" alignItems="baseline">
+          <Display {...props} />
+        </Box>
+      ) : (
+        <Box mx="4" mb="4" color="gray.600">
+          <MyStock.Content stockNo={stockNo} data={myData} loading={myLoading} />
+        </Box>
+      )}
+      {showFrame && <StockFrame stockNo={stockNo} divRef={divRef} variant={variant} />}
+    </Box>
+  );
+}
+
+function ControlPanel(props) {
+  const { variant, setOldView, showFrame, setShowFrame } = props;
+  return (
+    <>
+      <BackButton variant={variant} />
+      <Button
+        loadingText="切換顯示"
+        colorScheme="teal"
+        variant="outline"
+        size="sm"
+        spinnerPlacement="end"
+        _focus={{ outline: "none" }}
+        onClick={() => {
+          setOldView((x) => !x);
+        }}
+      >
+        切換顯示
+      </Button>
+      <Button
+        ml="2"
+        loadingText="更多資訊"
+        colorScheme="teal"
+        variant="outline"
+        size="sm"
+        spinnerPlacement="end"
+        _focus={{ outline: "none" }}
+        onClick={() => {
+          setShowFrame((x) => !x);
+        }}
+      >
+        {showFrame ? "隱藏資訊" : "更多資訊"}
+      </Button>
+    </>
+  );
+}
+
+function Display(props) {
+  const { stockNo, name, data = {} } = props;
   const info = [
     { label: "名稱", content: `${name} (${stockNo})` },
     { label: "除息日", content: formatHelper.formatDate(data.dDate) },
@@ -33,57 +92,13 @@ export default function Content(props) {
     { label: "去年低點", content: <HistoryPrice data={data.lowLY} /> },
     { label: "去年高點", content: <HistoryPrice data={data.HighLY} /> },
   ];
-  return (
-    <Box ref={divRef}>
-      <Box p="4" d="flex" flexWrap="wrap" alignItems="baseline">
-        <BackButton variant={variant} />
-
-        <Button
-          loadingText="切換顯示"
-          colorScheme="teal"
-          variant="outline"
-          size="sm"
-          spinnerPlacement="end"
-          _focus={{ outline: "none" }}
-          onClick={() => {
-            setOldView((x) => !x);
-          }}
-        >
-          切換顯示
-        </Button>
-        <Button
-          ml="2"
-          loadingText="更多資訊"
-          colorScheme="teal"
-          variant="outline"
-          size="sm"
-          spinnerPlacement="end"
-          _focus={{ outline: "none" }}
-          onClick={() => {
-            setShowFrame((x) => !x);
-          }}
-        >
-          {showFrame ? "隱藏資訊" : "更多資訊"}
-        </Button>
-      </Box>
-      {oldView ? (
-        <Box d="flex" flexWrap="wrap" alignItems="baseline">
-          {info.map((item) => (
-            <Box m="4" color="gray.600">
-              {item.label}:
-              <Divider />
-              {item.content}
-            </Box>
-          ))}
-        </Box>
-      ) : (
-        <Box mx="4" mb="4" color="gray.600">
-          <DetailContent stockNo={stockNo} />
-        </Box>
-      )}
-      {showFrame && <StockFrame stockNo={stockNo} divRef={divRef} variant={variant} />}
+  return info.map((item) => (
+    <Box m="4" color="gray.600">
+      {item.label}:
+      <Divider />
+      {item.content}
     </Box>
-  );
+  ));
 }
 
 function HistoryPrice(props) {

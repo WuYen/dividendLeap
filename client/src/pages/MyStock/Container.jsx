@@ -3,7 +3,7 @@ import { Box, useMediaQuery, Grid, VStack, StackDivider, Text } from "@chakra-ui
 import api from "../../utils/api";
 import useRouter from "../../hooks/useRouter";
 
-import Content from "./Content";
+import Content, { Container as ContentWrapper } from "./Content";
 import AutoComplete from "./AutoComplete";
 import MyListItem from "./MyListItem";
 
@@ -73,7 +73,13 @@ export default function Container(props) {
             </Box>
           </VStack>
         </Box>
-        <Box>{selectedStockNo && <Content stockNo={selectedStockNo} />}</Box>
+        <Box>
+          {selectedStockNo && (
+            <ContentWrapper stockNo={selectedStockNo}>
+              <Content />
+            </ContentWrapper>
+          )}
+        </Box>
       </Grid>
     </Box>
   );

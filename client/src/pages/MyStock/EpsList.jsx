@@ -5,19 +5,31 @@ import { formatHelper } from "../../utils";
 export default function EpsList(props) {
   const { data, isHistory = false } = props;
 
+  const colStyle = [
+    { width: "70px" },
+    { width: "80px", textAlign: "right" },
+    { width: "60px", textAlign: "right" },
+    { width: "100px", textAlign: "right" },
+    { width: "70px", textAlign: "right" },
+    { width: "60px", textAlign: "right" },
+    { width: "60px", textAlign: "right" },
+    { width: "110px", textAlign: "right" },
+    { width: "110px", textAlign: "right" },
+  ];
+
   return (
     <>
       <HStack spacing={2}>
-        <div style={{ width: "70px" }}>發放年度</div>
+        <div style={colStyle[0]}>發放年度</div>
         <EPS isHeader={true} />
-        <div style={{ width: "80px", textAlign: "right" }}>{isHistory ? "現金股利" : "預估股利"}</div>
-        <div style={{ width: "60px", textAlign: "right" }}>分配率</div>
-        <div style={{ width: "100px", textAlign: "right" }}>{isHistory ? "除息日" : ""}</div>
-        <div style={{ width: "70px", textAlign: "right" }}>{isHistory ? "除息股價" : ""}</div>
-        <div style={{ width: "60px", textAlign: "right" }}>{isHistory ? "殖利率" : ""}</div>
-        <div style={{ width: "60px", textAlign: "right" }}>{isHistory ? "年均價" : ""}</div>
-        <div style={{ width: "110px", textAlign: "right" }}>{isHistory ? "年低點" : ""}</div>
-        <div style={{ width: "110px", textAlign: "right" }}>{isHistory ? "年高點" : ""}</div>
+        <div style={colStyle[1]}>{isHistory ? "現金股利" : "預估股利"}</div>
+        <div style={colStyle[2]}>分配率</div>
+        <div style={colStyle[3]}>{isHistory ? "除息日" : ""}</div>
+        <div style={colStyle[4]}>{isHistory ? "除息股價" : ""}</div>
+        <div style={colStyle[5]}>{isHistory ? "殖利率" : ""}</div>
+        <div style={colStyle[6]}>{isHistory ? "年均價" : ""}</div>
+        <div style={colStyle[7]}>{isHistory ? "年低點" : ""}</div>
+        <div style={colStyle[8]}>{isHistory ? "年高點" : ""}</div>
       </HStack>
       {data.map((d, index) => {
         const {
@@ -34,20 +46,21 @@ export default function EpsList(props) {
           lowLY,
           HighLY,
         } = d;
+        const { month, day } = formatHelper.getDateFragment(dDate);
         return (
           <HStack spacing={2} key={index} alignItems="flex-start" mb={4}>
-            <div style={{ width: "70px" }}>{year}</div>
+            <div style={colStyle[0]}>{year}</div>
             <EPS eps={totalEps} quarter={q} />
-            <div style={{ width: "80px", textAlign: "right" }}>{cashDividend ? cashDividend : estimateDividend}</div>
-            <div style={{ width: "60px", textAlign: "right" }}>{rate}</div>
-            <div style={{ width: "100px", textAlign: "right" }}>{formatHelper.formatDate(dDate)}</div>
-            <div style={{ width: "70px", textAlign: "right" }}>{dPrice}</div>
-            <div style={{ width: "60px", textAlign: "right" }}>{yieldRate}</div>
-            <div style={{ width: "60px", textAlign: "right" }}>{yearAvg}</div>
-            <VStack style={{ width: "110px", textAlign: "right" }}>
+            <div style={colStyle[1]}>{cashDividend ? cashDividend : estimateDividend}</div>
+            <div style={colStyle[2]}>{rate}</div>
+            <div style={colStyle[3]}>{`${month}-${day}`}</div>
+            <div style={colStyle[4]}>{dPrice}</div>
+            <div style={colStyle[5]}>{yieldRate}</div>
+            <div style={colStyle[6]}>{yearAvg}</div>
+            <VStack style={colStyle[7]}>
               <HistoryPrice data={lowLY} />
             </VStack>
-            <VStack style={{ width: "110px", textAlign: "right" }}>
+            <VStack style={colStyle[8]}>
               <HistoryPrice data={HighLY} />
             </VStack>
           </HStack>
