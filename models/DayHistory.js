@@ -30,7 +30,7 @@ async function getData(query) {
   if (!data) {
     let entity = await provider.getData(query);
 
-    await Model.deleteMany({ stockNo, year });
+    await Model.deleteMany(query);
 
     await new Model(entity).save();
 

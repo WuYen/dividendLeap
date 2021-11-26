@@ -63,31 +63,7 @@ async function buildData(stockNo, year, latestTradDate) {
     dayInfo = await DayInfoModel.provider2.getData({ stockNo, date: latestTradDate });
   }
 
-  //去年整年每天股價
-  let dayHistory = await DayHistoryModel.getData({ stockNo, year: lastYear });
-  let dayHistoryByMonth = groupByMonth(dayHistory.data);
-  let rankByHigh = dayHistoryByMonth
-    .map((x) => x.high)
-    .sort((a, b) => {
-      if (a.price < b.price) {
-        return -1;
-      }
-      if (a.price > b.price) {
-        return 1;
-      }
-      return 0;
-    });
-  let rankByLow = dayHistoryByMonth
-    .map((x) => x.low)
-    .sort((a, b) => {
-      if (a.price < b.price) {
-        return -1;
-      }
-      if (a.price > b.price) {
-        return 1;
-      }
-      return 0;
-    });
+  let { rankByLow, rankByHigh } = await getMonthHighLow(stockNo, lastYear);
 
   let result = {
     stockNo: stockNo,
@@ -102,10 +78,34 @@ async function buildData(stockNo, year, latestTradDate) {
     priceLY: dInfoLY.value || "--",
     dDateLY: dInfoLY.date || "--",
     dFDayLY: `${parseDate(dInfoLY.fillDate)}` || "--" + (!isNaN(dInfoLY.fillDay) ? `(${dInfoLY.fillDay}天)` : ""),
-    lowLY: rankByLow.slice(0, 3),
-    HighLY: rankByHigh.slice(rankByHigh.length - 3, rankByHigh.length), //最高的三個月份
+    lowLY: rankByLow.slice(0, 3), //最低的三個月份
+    HighLY: rankByHigh.slice(0, 3), //最高的三個月份
   };
   return result;
+}
+
+/**
+ * 把一年12個月 取出該月裡面最高與最低
+ * @param {String} stockNo
+ * @param {String} year
+ * @returns {Object} {rankByLow: Array[12], rankByHigh: Array[12]}
+ */
+async function getMonthHighLow(stockNo, year) {
+  //去年整年每天股價
+  let dayHistory = await DayHistoryModel.getData({ stockNo, year: year });
+  let dayHistoryByMonth = groupByMonth(dayHistory.data);
+  let rankByHigh = dayHistoryByMonth
+    .map((x) => x.high)
+    .sort((a, b) => {
+      return a.price == b.price ? 0 : a.price > b.price ? -1 : 1;
+    });
+  let rankByLow = dayHistoryByMonth
+    .map((x) => x.low)
+    .sort((a, b) => {
+      return a.price == b.price ? 0 : a.price < b.price ? -1 : 1;
+    });
+
+  return { rankByLow, rankByHigh };
 }
 
 function parseDate(str) {
@@ -137,9 +137,10 @@ function groupByMonth(data) {
     //取出每個月的最高與最低
     let lowInMonth = sortResult[0];
     let highInMonth = sortResult[sortResult.length - 1];
-    result.push({ high: highInMonth, low: lowInMonth });
+
+    lowInMonth && highInMonth && result.push({ high: highInMonth, low: lowInMonth });
   }
   return result; //[{high,low},...]
 }
 
-module.exports = { getDetail, buildData, removeCache };
+module.exports = { getDetail, buildData, removeCache, getMonthHighLow };

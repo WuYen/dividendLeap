@@ -15,7 +15,7 @@ export function FundamentalData(props) {
               "isTransparent": false,
               "largeChartUrl": "",
               "displayMode": "regular",
-              "width": "480",
+              "width": "460",
               "height": 830,
               "locale": "zh_TW"
             }

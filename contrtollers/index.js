@@ -6,7 +6,7 @@ router.use("/api/my", require("./myController"));
 router.use("/api/news", require("./newsController"));
 router.use("/api/user", require("./userController"));
 router.use("/api/tool", require("./toolController"));
-router.use("/api/forcast", require("./forcastController"));
+router.use("/api/forecast", require("./forecastController"));
 
 //error handling middleware
 router.use(function (err, req, res, next) {

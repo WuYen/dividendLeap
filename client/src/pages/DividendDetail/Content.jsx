@@ -1,21 +1,94 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import { Box, Link, Divider, useBreakpointValue, Button } from "@chakra-ui/react";
-import { LinkIcon } from "@chakra-ui/icons";
-
+import { Box, Divider, useBreakpointValue } from "@chakra-ui/react";
+import api from "../../utils/api";
 import { formatHelper } from "../../utils";
+import * as MyStock from "../../pages/MyStock/Content";
+import Loading from "../../components/Loading";
 import StockFrame from "./StockFrame";
-import BackButton from "./BackButton";
+import ControlPanel from "./ControlPanel";
+
+const breakPoints = {
+  base: "sm",
+  sm: "sm",
+  md: "md",
+};
+
+export function usePageInfo(props) {
+  const { stockNo, name } = props;
+  const [pageInfo, setPageInfo] = useState({
+    isLoading: true,
+    hasError: false,
+    data: null,
+    stockNo,
+    name,
+  });
+
+  useEffect(() => {
+    api.get(`/schedule/detail/${stockNo}`).then((data) => {
+      console.log("data", data);
+      if (data.success) {
+        setPageInfo({
+          stockNo,
+          name,
+          isLoading: false,
+          data: data.data,
+        });
+      } else {
+        setPageInfo({
+          stockNo,
+          name,
+          isLoading: false,
+          data: null,
+          hasError: true,
+        });
+      }
+    });
+  }, [stockNo]);
+
+  return [pageInfo, setPageInfo];
+}
 
 export default function Content(props) {
-  const { stockNo, name, data = {} } = props;
+  const { name, stockNo, data, hasError, isLoading } = props;
+
+  return isLoading ? (
+    <Loading />
+  ) : hasError ? (
+    <div>Data not available</div>
+  ) : (
+    <Detail stockNo={stockNo} name={name} data={data} />
+  );
+}
+
+export function Detail(props) {
+  const { stockNo, name, data } = props;
   const divRef = useRef();
   const [showFrame, setShowFrame] = useState(false);
-  const variant = useBreakpointValue({
-    base: "sm",
-    sm: "sm",
-    md: "md",
-  });
+  const [oldView, setOldView] = useState(false);
+  const variant = useBreakpointValue(breakPoints);
+  const [myData, myLoading] = MyStock.useFetchData(stockNo);
+
+  return (
+    <Box ref={divRef}>
+      <Box p="4" d="flex" flexWrap="wrap" alignItems="baseline">
+        <ControlPanel variant={variant} showFrame={showFrame} setShowFrame={setShowFrame} setOldView={setOldView} />
+      </Box>
+      {oldView ? (
+        <Box d="flex" flexWrap="wrap" alignItems="baseline">
+          <Display stockNo={stockNo} name={name} data={data} />
+        </Box>
+      ) : (
+        <Box mx="4" mb="4" color="gray.600">
+          <MyStock.Content stockNo={stockNo} data={myData} loading={myLoading} />
+        </Box>
+      )}
+      {showFrame && <StockFrame stockNo={stockNo} divRef={divRef} variant={variant} />}
+    </Box>
+  );
+}
+
+function Display(props) {
+  const { stockNo, name, data = {} } = props;
   const info = [
     { label: "名稱", content: `${name} (${stockNo})` },
     { label: "除息日", content: formatHelper.formatDate(data.dDate) },
@@ -31,36 +104,13 @@ export default function Content(props) {
     { label: "去年低點", content: <HistoryPrice data={data.lowLY} /> },
     { label: "去年高點", content: <HistoryPrice data={data.HighLY} /> },
   ];
-  return (
-    <Box ref={divRef}>
-      <Box p="4" d="flex" flexWrap="wrap" alignItems="baseline">
-        <BackButton variant={variant} />
-        <Button
-          loadingText="更多資訊"
-          colorScheme="teal"
-          variant="outline"
-          size="sm"
-          spinnerPlacement="end"
-          _focus={{ outline: "none" }}
-          onClick={() => {
-            setShowFrame((x) => !x);
-          }}
-        >
-          {showFrame ? "隱藏資訊" : "更多資訊"}
-        </Button>
-      </Box>
-      <Box d="flex" flexWrap="wrap" alignItems="baseline">
-        {info.map((item) => (
-          <Box m="4" color="gray.600">
-            {item.label}:
-            <Divider />
-            {item.content}
-          </Box>
-        ))}
-      </Box>
-      {showFrame && <StockFrame stockNo={stockNo} divRef={divRef} variant={variant} />}
+  return info.map((item) => (
+    <Box m="4" color="gray.600">
+      {item.label}:
+      <Divider />
+      {item.content}
     </Box>
-  );
+  ));
 }
 
 function HistoryPrice(props) {

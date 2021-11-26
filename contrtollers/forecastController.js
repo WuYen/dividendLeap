@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 //const auth = require("../utilities/auth");
 const { success } = require("../utilities/response");
-const { predict } = require("../services/forcastService");
+const { predict } = require("../services/forecastService");
 
 //router.use(auth.authentication);
 

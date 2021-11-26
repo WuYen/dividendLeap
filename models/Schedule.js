@@ -34,7 +34,9 @@ async function getData(query = {}) {
  * @returns
  */
 async function updateAll() {
-  let data = await provider.getData(Model)();
+  let entity = await provider.getData();
+  await Model.deleteMany({ sourceType: "twse" });
+  let data = await Model.insertMany(entity);
   return data;
 }
 
