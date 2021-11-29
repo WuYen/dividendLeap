@@ -8,6 +8,7 @@ const Model = mongoose.model(
   "MyStock", // user's stock watch list
   new Schema({
     account: String,
+    category: String, //search key word or StockNo
     list: [{ stockNo: String }],
     updateDate: String,
   })

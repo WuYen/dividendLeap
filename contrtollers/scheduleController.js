@@ -2,17 +2,22 @@ const router = require("express").Router();
 const { success } = require("../utilities/response");
 const { getList, insert, update, remove } = require("../services/scheduleEditService");
 const { getDetail } = require("../services/stockDetailService");
-const { getSchedule, getScheduleFixed } = require("../services/scheduleService");
+const { getSchedule, getScheduleFixed, getTypes } = require("../services/scheduleService");
 
 //除權息預告列表
-router.get("/:year?", async function (req, res, next) {
+router.get("/:type?", async function (req, res, next) {
   try {
-    const year = parseInt(req.params.year);
-    if (year) {
-      let result = await getScheduleFixed();
-      return res.send(success(result));
+    let type = req.params.type ? decodeURI(req.params.type) : "twse";
+    let result = { list: [] };
+
+    if (type == "高殖利率") {
+      result.list = await getScheduleFixed();
+    } else {
+      result.list = await getSchedule({ sourceType: type });
     }
-    let result = await getSchedule();
+
+    req.query.menu && (result.menu = await getTypes());
+
     return res.send(success(result));
   } catch (error) {
     next(error);
