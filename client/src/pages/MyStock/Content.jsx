@@ -45,11 +45,11 @@ export function Container(props) {
 }
 
 export function Content(props) {
-  const { stockNo, data, loading, myStock } = props;
+  const { stockNo, data, loading } = props;
 
   return (
     <Box h="100%">
-      {true ? (
+      {loading ? (
         <Box className="loading-container" textAlign="center">
           <LoadingSpinner />
         </Box>
