@@ -6,15 +6,15 @@ export default function EpsList(props) {
   const { data, isHistory = false } = props;
 
   const colStyle = [
-    { width: "70px" },
-    { width: "80px", textAlign: "right" },
-    { width: "60px", textAlign: "right" },
-    { width: "100px", textAlign: "right" },
-    { width: "70px", textAlign: "right" },
-    { width: "60px", textAlign: "right" },
-    { width: "60px", textAlign: "right" },
-    { width: "110px", textAlign: "right" },
-    { width: "110px", textAlign: "right" },
+    { width: "70px" }, //0
+    { width: "80px", textAlign: "right" }, //1
+    { width: "70px", textAlign: "right" }, //2
+    { width: "70px", textAlign: "right" }, //3
+    { width: "80px", textAlign: "right" }, //4
+    { width: "60px", textAlign: "right" }, //5
+    { width: "60px", textAlign: "right" }, //6
+    { width: "110px", textAlign: "right" }, //7
+    { width: "110px", textAlign: "right" }, //8
   ];
 
   return (
@@ -24,7 +24,7 @@ export default function EpsList(props) {
         <EPS isHeader={true} />
         <div style={colStyle[1]}>{isHistory ? "現金股利" : "預估股利"}</div>
         <div style={colStyle[2]}>分配率</div>
-        <div style={colStyle[3]}>{"除息日"}</div>
+        <div style={colStyle[3]}>除息日</div>
         <div style={colStyle[4]}>{isHistory ? "除息股價" : ""}</div>
         <div style={colStyle[5]}>{isHistory ? "殖利率" : ""}</div>
         <div style={colStyle[6]}>{isHistory ? "年均價" : ""}</div>

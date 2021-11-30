@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, SlideFade } from "@chakra-ui/react";
 import { CheckIcon, AddIcon } from "@chakra-ui/icons";
-import useMyStock from "../hooks/useMyStock";
+import { useMyStock } from "../hooks/useMyStock";
 
 export default function MyStockButton(props) {
   const { stockNo } = props;
