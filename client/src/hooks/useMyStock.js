@@ -9,25 +9,25 @@ const compare = (next, prev) => next === prev;
 //     1-1 => true/false
 // 加進 myStock
 // 移除 myStock
-export default function useMyStock(props) {
-  const isMine = useSelector((member) => {
-    return member.myStock.find((x) => x.stockNo == props.stockNo);
+export default function useMyStock(stockNo) {
+  const myStock = useSelector(({ member }) => {
+    return member.myStock.find((x) => x.stockNo == stockNo);
   }, compare);
 
   const dispatch = useDispatch();
-  const handleAdd = useCallback((stockNo) => {
-    add(stockNo).then(() => {
-      dispatch(addMyStockSuccess(stockNo));
+  const handleAdd = useCallback(() => {
+    add(stockNo).then((res) => {
+      res.success && dispatch(addMyStockSuccess(res.data));
     });
-  }, []);
+  }, [stockNo]);
 
-  const handleRemove = useCallback((stockNo) => {
-    remove(stockNo).then(() => {
-      dispatch(removeMyStockSuccess(stockNo));
+  const handleRemove = useCallback(() => {
+    remove(myStock._id).then((res) => {
+      res.success && dispatch(removeMyStockSuccess(res.data));
     });
-  }, []);
+  }, [myStock]);
 
-  return [isMine, handleAdd, handleRemove];
+  return { myStock, handleAdd, handleRemove };
 }
 
 function fetch() {

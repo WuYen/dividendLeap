@@ -8,6 +8,7 @@ import DataList from "../News/DataList";
 import InfoPanel from "./InfoPanel";
 import EpsList from "./EpsList";
 import ComputeStock from "./ComputeStock";
+import MyStockButton from "../../components/MyStockButton";
 
 export function useFetchData(stockNo) {
   const [page, setPage] = useState({ list: [], loading: true });
@@ -44,7 +45,7 @@ export function Container(props) {
 }
 
 export function Content(props) {
-  const { stockNo, data, loading } = props;
+  const { stockNo, data, loading, myStock } = props;
 
   return (
     <Box h="100%">
@@ -68,6 +69,7 @@ function Forecast(props) {
     <Box>
       <Box>
         {data.baseInfo[0]} {data.baseInfo[1]}
+        <MyStockButton stockNo={stockNo} />
       </Box>
       <Grid templateColumns="auto 460px" gap={4}>
         <Box>

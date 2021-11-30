@@ -1,12 +1,16 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React from "react";
 import { Box, useMediaQuery } from "@chakra-ui/react";
-import api from "../utils/api";
-import { useSelector, useDispatch } from "react-redux";
+import useMyStock from "../hooks/useMyStock";
 
-// import { getScheduleSuccess, toggleFilter } from "../../store/Dividend/action";
-
-function MyStockButton(props) {
+export default function MyStockButton(props) {
   const { stockNo } = props;
+  const { myStock, handleAdd, handleRemove } = useMyStock(stockNo);
 
-  return <div></div>;
+  if (myStock) {
+    //teal background
+    return <div onClick={handleRemove}>追蹤中</div>;
+  } else {
+    //white background、teal font
+    return <div onClick={handleAdd}>+追蹤</div>;
+  }
 }
