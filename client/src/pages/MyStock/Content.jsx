@@ -49,9 +49,9 @@ export function Content(props) {
 
   return (
     <Box h="100%">
-      {loading ? (
-        <Box h="100vh" className="loading-container" textAlign="center">
-          <LoadingSpinner mb="50%" />
+      {true ? (
+        <Box className="loading-container" textAlign="center">
+          <LoadingSpinner />
         </Box>
       ) : (
         <Forecast key={stockNo} stockNo={stockNo} data={data} />

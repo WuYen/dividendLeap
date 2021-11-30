@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import api from "../utils/api";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { addMyStockSuccess, removeMyStockSuccess, fetchMyStockSuccess } from "../store/Member/action";
 
 const compare = (next, prev) => next === prev;
@@ -9,7 +9,21 @@ const compare = (next, prev) => next === prev;
 //     1-1 => true/false
 // 加進 myStock
 // 移除 myStock
-export default function useMyStock(stockNo) {
+export { useMyStock, useMyStocks };
+
+export const MyStockAPI = {
+  fetch,
+  add,
+  remove,
+};
+
+export const MyStockAction = {
+  addMyStockSuccess,
+  removeMyStockSuccess,
+  fetchMyStockSuccess,
+};
+
+function useMyStock(stockNo) {
   const myStock = useSelector(({ member }) => {
     return member.myStock.find((x) => x.stockNo == stockNo);
   }, compare);
@@ -28,6 +42,30 @@ export default function useMyStock(stockNo) {
   }, [myStock]);
 
   return { myStock, handleAdd, handleRemove };
+}
+
+function useMyStocks() {
+  const dispatch = useDispatch();
+  const myStock = useSelector(({ member }) => member.myStock, shallowEqual);
+
+  const handleAdd = useCallback(
+    (stockNo) => {
+      if (myStock.find((x) => x.stockNo == stockNo) == null) {
+        add(stockNo).then((res) => {
+          res.success && dispatch(addMyStockSuccess(res.data));
+        });
+      }
+    },
+    [myStock]
+  );
+
+  const handleRemove = useCallback((id) => {
+    remove(id).then((res) => {
+      res.success && dispatch(MyStockAction.removeMyStockSuccess(res.data));
+    });
+  }, []);
+
+  return [myStock, handleAdd, handleRemove];
 }
 
 function fetch() {
@@ -51,15 +89,3 @@ function remove(id) {
     return data;
   });
 }
-
-export const MyStockAPI = {
-  fetch,
-  add,
-  remove,
-};
-
-export const MyStockAction = {
-  addMyStockSuccess,
-  removeMyStockSuccess,
-  fetchMyStockSuccess,
-};
