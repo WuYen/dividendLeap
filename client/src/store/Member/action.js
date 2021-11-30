@@ -7,15 +7,23 @@ export function loginSuccess(payload) {
   };
 }
 
-export function addMyStockSuccess(payload) {
+export function fetchMyStockSuccess(list) {
   return {
-    type: ACTION_TYPES.ADD_MY_STOCK_SUCCESS,
-    payload,
+    type: ACTION_TYPES.FETCH_MY_STOCK_SUCCESS,
+    payload: list,
   };
 }
 
-export function removeMyStockSuccess() {
+export function addMyStockSuccess(payload) {
+  return {
+    type: ACTION_TYPES.ADD_MY_STOCK_SUCCESS,
+    payload: payload,
+  };
+}
+
+export function removeMyStockSuccess(payload) {
   return {
     type: ACTION_TYPES.REMOVE_MY_STOCK_SUCCESS,
+    payload: payload,
   };
 }
