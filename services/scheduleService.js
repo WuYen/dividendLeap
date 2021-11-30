@@ -4,7 +4,7 @@ const { stock_dividend } = require("../providers/stockList");
 
 const { today, latestTradeDate } = require("../utilities/helper");
 
-async function getSchedule() {
+async function getSchedule(query) {
   function afterDate(date) {
     return (item) => item.date > date;
   }
@@ -19,9 +19,10 @@ async function getSchedule() {
     return 0;
   }
 
-  const schedule = await ScheduleModel.getData();
+  const schedule = await ScheduleModel.getData(query);
   const afterToday = afterDate(today());
-  const filtedData = schedule.filter(afterToday).sort(byTime);
+
+  const filtedData = query.sourceType == "twse" ? schedule.filter(afterToday).sort(byTime) : schedule.sort(byTime);
   const dayInfoCollection = await DayInfoModel.getData({
     date: latestTradeDate(),
   });
@@ -74,4 +75,9 @@ async function update() {
   return result;
 }
 
-module.exports = { getSchedule, getScheduleFixed, update };
+async function getTypes() {
+  let result = await ScheduleModel.getTypes();
+  return result;
+}
+
+module.exports = { getSchedule, getScheduleFixed, update, getTypes };

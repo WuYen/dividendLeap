@@ -22,21 +22,21 @@ async function getList(query) {
 async function add(query) {
   const { account, stockNo } = query;
   let data = await MyStockModel.getProfile(query);
+  let payload = { stockNo };
   if (data) {
     //user has profile, add to exist list
-    data.list.push({ stockNo });
-    let result = await data.save();
-    return result;
+    data.list.push(payload);
+    saveResult = await data.save();
   } else {
     //create new profile
     let myStock = new MyStockModel({
       account: account,
-      list: [{ stockNo }],
+      list: [payload],
       updateDate: today(),
     });
-    let result = await myStock.save();
-    return result;
+    saveResult = await myStock.save();
   }
+  return saveResult.list.find((x) => x.stockNo == stockNo);
 }
 
 /**
@@ -46,9 +46,9 @@ async function add(query) {
  */
 async function remove(query) {
   let data = await MyStockModel.getProfile(query);
-  await data.list.id(query.id).remove();
-  let result = await data.save();
-  return result;
+  let item = await data.list.id(query.id).remove();
+  let result = await data.save(); //will be whole doc
+  return item;
 }
 
 module.exports = { getList, add, remove };

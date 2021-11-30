@@ -3,12 +3,12 @@ import { Grid, Text } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
 
 export default function MyListItem(props) {
-  const { item, selectedStockNo, onSelect, onRemove } = props;
+  const { item, active, onSelect, onRemove } = props;
   const name = `${item.stockNo} ${stockList.find((x) => x[0] == item.stockNo)[1]}`;
   return (
     <Grid templateColumns="1fr auto" gap={2} alignItems="center">
       <Text
-        color={selectedStockNo == item.stockNo ? "teal.500" : "grey.500"}
+        color={active ? "teal.500" : "grey.500"}
         onClick={() => {
           onSelect(item.stockNo);
         }}

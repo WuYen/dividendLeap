@@ -1,49 +1,36 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, useMediaQuery, Grid, VStack, StackDivider, Text } from "@chakra-ui/react";
-import api from "../../utils/api";
+import { Box, Grid, VStack, StackDivider } from "@chakra-ui/react";
 import useRouter from "../../hooks/useRouter";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 import Content, { Container as ContentWrapper } from "./Content";
 import AutoComplete from "./AutoComplete";
 import MyListItem from "./MyListItem";
+import { MyStockAPI, MyStockAction } from "../../hooks/useMyStock";
 
 export default function Container(props) {
-  // const [over768px] = useMediaQuery("(min-width: 768px)");
-  const [myList, setMyList] = useState([]);
   const [{ stockNo: selectedStockNo }, history] = useRouter();
+  const myStock = useSelector((state) => state.member.myStock, shallowEqual);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchList().then((res) => {
-      if (res.success) {
-        setMyList(res.data.list);
-        !selectedStockNo && res.data.list.length && history.push(`/my/stock/${res.data.list[0].stockNo}`);
+    !selectedStockNo && myStock.length && history.push(`/my/stock/${myStock[0].stockNo}`);
+  }, []);
+
+  const handleAdd = useCallback(
+    (stockNo) => {
+      if (myStock.find((x) => x.stockNo == stockNo) == null) {
+        MyStockAPI.add(stockNo).then((res) => {
+          res.success && dispatch(MyStockAction.addMyStockSuccess(res.data));
+        });
       }
-    });
-  }, []);
-
-  // reload content after remove
-  // useEffect(() => {
-  //   let index = myList.findIndex((x) => x._id === id);
-  //   if (index == 0) {
-  //     let newStockNo = myList[0] ? myList[0].stockNo : "";
-  //     history.push(`/my/stock/${newStockNo}`);
-  //   }
-  //   if (index > 0) {
-  //     history.push(`/my/stock/${myList[index - 1].stockNo}`);
-  //   }
-  // }, [myList]);
-
-  const handleAdd = useCallback((stockNo) => {
-    console.log("handle select", stockNo);
-    add(stockNo).then((res) => {
-      setMyList(res.data.list);
-    });
-  }, []);
+    },
+    [myStock]
+  );
 
   const handleRemove = useCallback((id) => {
-    console.log("handle remove", id);
-    remove(id).then((res) => {
-      setMyList(res.data.list);
+    MyStockAPI.remove(id).then((res) => {
+      res.success && dispatch(MyStockAction.removeMyStockSuccess(res.data));
     });
   }, []);
 
@@ -58,11 +45,11 @@ export default function Container(props) {
           <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
             <Box>
               我的清單
-              {myList.map((item) => (
+              {myStock?.map((item) => (
                 <MyListItem
                   key={item._id}
                   item={item}
-                  selectedStockNo={selectedStockNo}
+                  active={selectedStockNo == item.stockNo}
                   onSelect={handleSelect}
                   onRemove={handleRemove}
                 />
@@ -83,26 +70,4 @@ export default function Container(props) {
       </Grid>
     </Box>
   );
-}
-
-function fetchList() {
-  return api.get(`/my/list`).then((data) => {
-    console.log("fetchList result", data);
-    return data;
-  });
-}
-
-function add(stockNo) {
-  return api.get(`/my/list/add/${stockNo}`).then((data) => {
-    console.log("add result", data);
-    return data;
-  });
-}
-
-function remove(id) {
-  const payload = JSON.stringify({ id: id });
-  return api.post(`/my/list/remove`, payload).then((data) => {
-    console.log("remove result", data);
-    return data;
-  });
 }

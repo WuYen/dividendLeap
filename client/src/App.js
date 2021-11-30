@@ -7,17 +7,19 @@ import store from "./store/store";
 
 import Header from "./components/Header";
 import Routes from "./components/Routing/Routes";
-
 import ModalDialog from "./components/General/ModalDialog";
+import LandingContainer from "./components/LandingContainer";
 
 export default function App() {
   return (
     <Provider store={store}>
       <ChakraProvider>
-        <Router>
-          <Header />
-          <Routes />
-        </Router>
+        <LandingContainer>
+          <Router>
+            <Header />
+            <Routes />
+          </Router>
+        </LandingContainer>
         <ModalDialog />
       </ChakraProvider>
     </Provider>

@@ -112,7 +112,7 @@ export default function Header() {
               <Menu isLazy>
                 <MenuButton>
                   <Flex p={2}>
-                    <Avatar size="xs" />
+                    <Avatar size="xs" src={`https://avatars.dicebear.com/api/bottts/${auth.context.account}.svg`} />
                     <Box ml="3">
                       <Text fontWeight="bold">{auth.context.account}</Text>
                     </Box>

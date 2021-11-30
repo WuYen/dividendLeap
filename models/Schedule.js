@@ -15,13 +15,13 @@ const Model = mongoose.model(
     date: String, //除息日期 20190701
     cashDividen: Number, //現金股利0.4
     updateDate: String,
-    sourceType: String, //twse、manual、wearn
+    sourceType: String, //twse、manual、wearn and any other list topic
   })
 );
 
 async function getData(query = {}) {
   let data = await Model.find(query).exec();
-  if (data.length == 0 && query.sourceType !== "manual") {
+  if (data.length == 0 && query.sourceType == "twse") {
     let entity = await provider.getData();
     await Model.deleteMany({ sourceType: "twse" });
     data = await Model.insertMany(entity);
@@ -45,7 +45,13 @@ async function getByStockNo(stockNo) {
   return data;
 }
 
+async function getTypes(stockNo) {
+  let data = await Model.distinct("sourceType");
+  return data;
+}
+
 module.exports = Model;
 module.exports.getData = getData;
 module.exports.updateAll = updateAll;
 module.exports.getByStockNo = getByStockNo;
+module.exports.getTypes = getTypes;

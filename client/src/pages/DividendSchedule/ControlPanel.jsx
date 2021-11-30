@@ -28,8 +28,11 @@ export default function ControlPanel(props) {
                 !isActive &&
                   api.get("/schedule" + url).then((res) => {
                     console.log("result", res);
-                    history.push(`/schedule?type=${label}`);
-                    getScheduleSuccess(res.data);
+                    const { success, data } = res;
+                    if (success) {
+                      history.push(`/schedule?type=${label}`);
+                      getScheduleSuccess(data.list);
+                    }
                   });
               }}
             />
@@ -73,7 +76,6 @@ function SwitchButton(props) {
           api
             .get("/schedule" + (toggle.current ? "/2021" : ""))
             .then((res) => {
-              console.log("result", res);
               props.getScheduleSuccess(res.data);
               setLoading(false);
             })
