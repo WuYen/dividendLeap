@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, useMediaQuery } from "@chakra-ui/react";
+import { Button, SlideFade } from "@chakra-ui/react";
+import { CheckIcon, AddIcon } from "@chakra-ui/icons";
 import useMyStock from "../hooks/useMyStock";
 
 export default function MyStockButton(props) {
@@ -7,10 +8,38 @@ export default function MyStockButton(props) {
   const { myStock, handleAdd, handleRemove } = useMyStock(stockNo);
 
   if (myStock) {
-    //teal background
-    return <div onClick={handleRemove}>追蹤中</div>;
+    return (
+      <Button
+        colorScheme="teal"
+        variant="solid"
+        rounded="100"
+        size="sm"
+        fontSize="sm"
+        leftIcon={
+          <SlideFade in={true} offsetY="20px">
+            <CheckIcon />
+          </SlideFade>
+        }
+        _focus={{ outline: "none" }}
+        onClick={handleRemove}
+      >
+        追蹤中
+      </Button>
+    );
   } else {
-    //white background、teal font
-    return <div onClick={handleAdd}>+追蹤</div>;
+    return (
+      <Button
+        colorScheme="teal"
+        variant="outline"
+        rounded="100"
+        size="sm"
+        fontSize="sm"
+        leftIcon={<AddIcon />}
+        _focus={{ outline: "none" }}
+        onClick={handleAdd}
+      >
+        追蹤
+      </Button>
+    );
   }
 }

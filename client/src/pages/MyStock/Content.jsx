@@ -67,8 +67,11 @@ function Forecast(props) {
 
   return (
     <Box>
-      <Box>
-        {data.baseInfo[0]} {data.baseInfo[1]}
+      <Box display="flex" alignItems="center">
+        <Box>
+          {data.baseInfo[0]} {data.baseInfo[1]}
+        </Box>
+        <Box w="2" />
         <MyStockButton stockNo={stockNo} />
       </Box>
       <Grid templateColumns="auto 460px" gap={4}>
