@@ -5,7 +5,7 @@ import { useMyStock } from "../hooks/useMyStock";
 
 export default function MyStockButton(props) {
   const { stockNo } = props;
-  const { myStock, handleAdd, handleRemove } = useMyStock(stockNo);
+  const [myStock, onAdd, onRemove] = useMyStock(stockNo);
 
   if (myStock) {
     return (
@@ -21,7 +21,7 @@ export default function MyStockButton(props) {
           </SlideFade>
         }
         _focus={{ outline: "none" }}
-        onClick={handleRemove}
+        onClick={onRemove}
       >
         追蹤中
       </Button>
@@ -36,7 +36,7 @@ export default function MyStockButton(props) {
         fontSize="sm"
         leftIcon={<AddIcon />}
         _focus={{ outline: "none" }}
-        onClick={handleAdd}
+        onClick={onAdd}
       >
         追蹤
       </Button>
