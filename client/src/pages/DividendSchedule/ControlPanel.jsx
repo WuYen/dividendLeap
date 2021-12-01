@@ -23,9 +23,9 @@ export default function ControlPanel(props) {
               text={label}
               active={isActive}
               onClick={() => {
-                setSelected(label);
-                onSetLoading(true);
-                !isActive &&
+                if (!isActive) {
+                  setSelected(label);
+                  onSetLoading(true);
                   api.get("/schedule" + url).then((res) => {
                     console.log("result", res);
                     const { success, data } = res;
@@ -34,6 +34,7 @@ export default function ControlPanel(props) {
                       getScheduleSuccess(data.list);
                     }
                   });
+                }
               }}
             />
           );
