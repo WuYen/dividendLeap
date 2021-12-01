@@ -1,22 +1,24 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
 import { Box, ButtonGroup, Center, useToast } from "@chakra-ui/react";
 
-import { auth, api } from "../../utils";
+import useAuth from "../../hooks/useAuth";
+import useRouter from "../../hooks/useRouter";
 import { loginStatus } from "../../constants/status";
 import AlertComponent from "../../components/General/Alert";
 
 export default function Login(props) {
-  //TODO: toggle
-  const [state, setstate] = useState({});
+  const auth = useAuth();
+  const isLogin = useRef(auth.isLogin);
+
   return (
     <Box p="4" width="100%">
-      {auth.isLogin ? (
-        <AlertComponent status="info" open={true} description={`Already login as ${auth.context.account}`} />
+      {isLogin.current ? (
+        <AlertComponent status="info" open={true} description={`Already login as ${auth.account}`} />
       ) : (
-        <Form />
+        <FormWrapper auth={auth}>{(formProps) => <Form {...formProps} />}</FormWrapper>
       )}
     </Box>
   );
@@ -32,40 +34,40 @@ const validationSchema = Yup.object({
   password: Yup.string().required("必填欄位"),
 });
 
-const handleLogin = async (values, actions) => {
-  const payload = JSON.stringify(values);
-  const response = await api.post(`/user/login`, payload);
-  actions.setSubmitting(false);
-  if (response && response.result.code == loginStatus.Success.code) {
-    auth.token = response.token;
-  }
-  return response;
-};
-
-function Form(props) {
+function FormWrapper(props) {
+  const { auth } = props;
   const [alertInfo, setAlertInfo] = useState({});
   const toast = useToast();
+  const [, history] = useRouter();
   const formProps = {
     initialValues: initialValues,
     validationSchema,
-    onSubmit: (values, actions) =>
-      handleLogin(values, actions).then((res) => {
-        console.log("ouSubmit result", res);
-        if (res.result.code == loginStatus.Success.code) {
+    onSubmit: async (values, actions) => {
+      auth.onLogin(values).then((response) => {
+        if (response.result.code == loginStatus.Success.code) {
           toast({
             title: "Login Success!",
             status: "success",
             isClosable: true,
             duration: 1000,
           });
-          window.location = "/";
+          history.push("/schedule");
+        } else {
+          //登入失敗
+          actions.setSubmitting(false);
+          setAlertInfo(response.result);
         }
-        setAlertInfo(res.result);
-      }),
+      });
+    },
     enableReinitialize: true,
     alertInfo: alertInfo,
+    setAlertInfo,
   };
+  return props.children(formProps);
+}
 
+function Form(props) {
+  const { setAlertInfo, ...formProps } = props;
   return (
     <Formik {...formProps}>
       {({ handleSubmit, values, errors, ...rest }) => (

@@ -7,6 +7,13 @@ export function loginSuccess(payload) {
   };
 }
 
+export function logoutSuccess(payload) {
+  return {
+    type: ACTION_TYPES.LOGOUT_SUCCESS,
+    payload,
+  };
+}
+
 export function fetchMyStockSuccess(list) {
   return {
     type: ACTION_TYPES.FETCH_MY_STOCK_SUCCESS,
