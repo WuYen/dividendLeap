@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Switch, FormLabel, Button, Text, Flex, Spacer } from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
 import api from "../../utils/api";
@@ -8,8 +8,14 @@ import KeyWord from "../../components/KeyWord";
 
 export default function ControlPanel(props) {
   const [{ type }, history] = useRouter();
-  const { typeList, filter, toggleFilter, getScheduleSuccess, count, onSetLoading } = props;
+  const { typeList, filter, toggleFilter, count, onSetLoading } = props;
   const [selected, setSelected] = useState(type || typeList[0].label);
+
+  useEffect(() => {
+    if (type !== selected) {
+      setSelected(type || typeList[0].label);
+    }
+  }, [type]);
 
   return (
     <>
@@ -26,14 +32,7 @@ export default function ControlPanel(props) {
                 if (!isActive) {
                   setSelected(label);
                   onSetLoading(true);
-                  api.get("/schedule" + url).then((res) => {
-                    console.log("result", res);
-                    const { success, data } = res;
-                    if (success) {
-                      history.push(`/schedule?type=${label}`);
-                      getScheduleSuccess(data.list);
-                    }
-                  });
+                  history.push(`/schedule?type=${label}`);
                 }
               }}
             />
@@ -53,43 +52,6 @@ export default function ControlPanel(props) {
         )}
       </Flex>
     </>
-  );
-}
-
-function SwitchButton(props) {
-  const [, history] = useRouter();
-  const [loading, setLoading] = useState(false);
-  const toggle = useRef(true);
-  return (
-    props.enable &&
-    auth.isLogin && (
-      <Button
-        isLoading={loading}
-        loadingText="切換列表"
-        colorScheme="teal"
-        variant="outline"
-        size="sm"
-        spinnerPlacement="end"
-        rightIcon={<RepeatIcon />}
-        _focus={{ outline: "none" }}
-        onClick={() => {
-          setLoading(true);
-          api
-            .get("/schedule" + (toggle.current ? "/2021" : ""))
-            .then((res) => {
-              props.getScheduleSuccess(res.data);
-              setLoading(false);
-            })
-            .then((x) => {
-              let newPath = toggle.current ? "/schedule?history=true" : "/schedule";
-              history.push(newPath);
-              toggle.current = !toggle.current;
-            });
-        }}
-      >
-        切換列表
-      </Button>
-    )
   );
 }
 
@@ -125,10 +87,4 @@ function RefreshButton(props) {
       </Button>
     )
   );
-}
-
-{
-  /* 
-      <SwitchButton getScheduleSuccess={getScheduleSuccess} enable={true} />
-      <RefreshButton getScheduleSuccess={getScheduleSuccess} enable={false} /> */
 }

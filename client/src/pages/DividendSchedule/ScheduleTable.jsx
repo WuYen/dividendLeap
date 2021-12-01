@@ -1,9 +1,16 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Link, Divider } from "@chakra-ui/react";
+import { Link, Divider, useMediaQuery } from "@chakra-ui/react";
 import { formatDate } from "../../utils/formatHelper";
 import { LinkIcon } from "@chakra-ui/icons";
 import { TableContainer } from "../../components/Table";
+
+export default function ScheduleTable(props) {
+  const { filtedData } = props;
+  const [over768px] = useMediaQuery("(min-width: 768px)");
+  const type = over768px ? 0 : 1;
+  return <TableContainer data={filtedData} headers={headers[type]} RowTemplate={rowTemplates[type]} />;
+}
 
 const headers = [
   [
@@ -110,9 +117,3 @@ const rowTemplates = [
     );
   },
 ];
-
-export default function ScheduleTable(props) {
-  const { filtedData } = props;
-  let type = props.variant === "md" ? 0 : 1;
-  return <TableContainer data={filtedData} headers={headers[type]} RowTemplate={rowTemplates[type]} />;
-}
