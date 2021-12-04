@@ -1,5 +1,6 @@
 const DayInfoModel = require("../models/DayInfo");
 const ScheduleModel = require("../models/Schedule");
+const highYield = require("../providers/highYield");
 const { stock_dividend } = require("../providers/stockList");
 
 const { today, latestTradeDate } = require("../utilities/helper");
@@ -44,22 +45,26 @@ async function getSchedule(query) {
   return result;
 }
 
-async function getScheduleFixed() {
-  const schedule = stock_dividend;
+async function getScheduleFixed(type) {
+  const schedule = type == "排行榜" ? highYield.data : stock_dividend;
   const dayInfoCollection = await DayInfoModel.getData({
     date: latestTradeDate(),
   });
 
   const result = schedule.map((x) => {
-    let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
-    if (dayInfo && dayInfo.price > 0) {
-      return {
-        ...x,
-        price: dayInfo.price, // "當前股價"
-        priceDate: dayInfo.date, // "當前股價 取樣日期"
-      };
+    if (Array.isArray(x)) {
+      const [stockNo] = x[0].split(" ");
+      let dayInfo = dayInfoCollection.find((y) => y.stockNo == stockNo);
+      return !!dayInfo ? [...x, dayInfo.price, dayInfo.date] : x;
     } else {
-      return x;
+      let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
+      return !!dayInfo
+        ? {
+            ...x,
+            price: dayInfo.price, // "當前股價"
+            priceDate: dayInfo.date, // "當前股價 取樣日期"
+          }
+        : x;
     }
   });
 

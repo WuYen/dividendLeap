@@ -16,6 +16,7 @@ export default function DividendSchedule(props) {
   const [typeList, setTypeList] = useState([
     { label: "除權息預告", url: "" },
     { label: "高殖利率", url: "/高殖利率" },
+    { label: "排行榜", url: "/排行榜" },
   ]);
   const dispatch = useDispatch();
 
@@ -68,7 +69,7 @@ export default function DividendSchedule(props) {
         getScheduleSuccess={handleGetScheduleSuccess}
         onSetLoading={setLoading}
       />
-      {loading ? <Loading /> : <ScheduleTable filtedData={filtedData} filter={filter} />}
+      {loading ? <Loading /> : <ScheduleTable filtedData={filtedData} filter={filter} type={type} />}
     </Box>
   );
 }
