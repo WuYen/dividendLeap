@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Box } from "@chakra-ui/react";
 import { tryParseFloat } from "../../utils/formatHelper";
@@ -18,6 +18,7 @@ export default function DividendSchedule(props) {
     { label: "高殖利率", url: "/高殖利率" },
     { label: "排行榜", url: "/排行榜" },
   ]);
+  const isFirst = useRef(true);
   const dispatch = useDispatch();
 
   const handleGetScheduleSuccess = useCallback(
@@ -47,13 +48,14 @@ export default function DividendSchedule(props) {
   );
 
   useEffect(() => {
-    const search = typeList.length == 2 ? "?menu=true" : "";
+    const search = isFirst.current ? "?menu=true" : "";
     const url = (typeList.find((x) => x.label == type)?.url || "") + search;
     api.get("/schedule" + url).then(({ success, data }) => {
       console.log("schedule data", success, data);
       if (success) {
         handleGetScheduleSuccess(data.list);
         data.menu && handleSetTypeList(data.menu);
+        isFirst.current = false;
       }
     });
   }, [type]);

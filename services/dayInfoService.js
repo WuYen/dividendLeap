@@ -48,12 +48,13 @@ async function getAllDayInfo() {
 }
 
 //取得固定列表歷史資料
-async function getAllDayInfoFixed(speedy = true) {
+async function getAllDayInfoFixed(payload, speedy = true) {
   const latestTRDT = latestTradeDate();
   const dayInfoCollection = await DayInfoModel.getData({
     date: latestTRDT,
   });
-  const filtedData = StockListModel.stock_dividend.filter((e) => {
+  let source = payload || StockListModel.stock_dividend;
+  const filtedData = source.filter((e) => {
     return !dayInfoCollection.find((x) => x.stockNo == e.stockNo);
   });
   const totalCount = filtedData.length;
@@ -124,7 +125,7 @@ async function getAllDayInfoFixed(speedy = true) {
           groupData.push(temp);
           console.log(`get ${data.stockNo} data at ${new Date()}`);
           successCount++;
-          await delay(getRandomIntInclusive(800, 2400));
+          await delay(getRandomIntInclusive(800, 1500));
         } catch (e) {
           console.log("getAllDayInfo error", e);
         }
@@ -132,7 +133,7 @@ async function getAllDayInfoFixed(speedy = true) {
         //batch save
         groupData.length > 0 && DayInfoModel.insertMany(groupData);
       }
-      await delay(getRandomIntInclusive(3000, 6000));
+      await delay(getRandomIntInclusive(2000, 5000));
     }
   }
 
