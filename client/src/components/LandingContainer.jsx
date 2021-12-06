@@ -1,15 +1,22 @@
-import React, { useEffect } from "react";
-import { MyStockAPI, MyStockAction } from "../hooks/useMyStock";
+import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { MyStockAPI } from "../hooks/useMyStock";
+import useAuth from "../hooks/useAuth";
+import useRouter from "../hooks/useRouter";
 
 export default function LandingContainer(props) {
   const dispatch = useDispatch();
+  const auth = useAuth();
+  const isMount = useRef(false);
+  const [, history] = useRouter();
 
   useEffect(() => {
-    MyStockAPI.fetch().then((response) => {
-      response.success && dispatch(MyStockAction.fetchMyStockSuccess(response.data.list));
-    });
-  }, []);
+    auth.isLogin && MyStockAPI.handleFetch(dispatch)();
+    if (isMount.current && !auth.isLogin) {
+      history.push("/schedule"); //登出
+    }
+    isMount.current = true;
+  }, [auth.isLogin]);
 
-  return props.children;
+  return null;
 }

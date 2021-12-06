@@ -10,8 +10,8 @@ router.get("/:type?", async function (req, res, next) {
     let type = req.params.type ? decodeURI(req.params.type) : "twse";
     let result = { list: [] };
 
-    if (type == "高殖利率") {
-      result.list = await getScheduleFixed();
+    if (type == "高殖利率" || type == "排行榜") {
+      result.list = await getScheduleFixed(type);
     } else {
       result.list = await getSchedule({ sourceType: type });
     }

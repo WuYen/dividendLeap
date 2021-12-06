@@ -1,9 +1,10 @@
 import * as ACTION_TYPES from "./actionType";
+import auth from "../../utils/auth";
 
 export const initialState = {
-  account: "",
-  isLogin: false,
-  myStock: [], //{_id,stockNo}
+  account: auth.context.account,
+  isLogin: auth.isLogin,
+  myStock: [], // {_id,stockNo}
 };
 
 //https://dev.to/askharley/build-a-react-redux-shopping-list-app-43l
@@ -12,10 +13,9 @@ export const initialState = {
 export default function ScheduleReducer(state = initialState, { type, payload }) {
   switch (type) {
     case ACTION_TYPES.LOGIN_SUCCESS:
-      return {
-        account: payload,
-        isLogin: true,
-      };
+      return { ...state, account: payload, isLogin: true };
+    case ACTION_TYPES.LOGOUT_SUCCESS:
+      return { account: "", isLogin: false, myStock: [] };
     case ACTION_TYPES.FETCH_MY_STOCK_SUCCESS: {
       return {
         ...state,

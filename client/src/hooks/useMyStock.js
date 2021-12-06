@@ -5,87 +5,89 @@ import { addMyStockSuccess, removeMyStockSuccess, fetchMyStockSuccess } from "..
 
 const compare = (next, prev) => next === prev;
 
-// 判斷目前 stock No 是不是 Favor
-//     1-1 => true/false
-// 加進 myStock
-// 移除 myStock
-export { useMyStock, useMyStocks };
-
-export const MyStockAPI = {
-  fetch,
-  add,
-  remove,
-};
-
-export const MyStockAction = {
-  addMyStockSuccess,
-  removeMyStockSuccess,
-  fetchMyStockSuccess,
-};
-
+// 判斷目前 stock No 是不是 myStock and handleAdd、handleRemove
 function useMyStock(stockNo) {
   const myStock = useSelector(({ member }) => {
     return member.myStock.find((x) => x.stockNo == stockNo);
   }, compare);
 
   const dispatch = useDispatch();
-  const handleAdd = useCallback(() => {
-    add(stockNo).then((res) => {
-      res.success && dispatch(addMyStockSuccess(res.data));
-    });
+
+  const onAdd = useCallback(() => {
+    handleAdd(dispatch)(stockNo);
   }, [stockNo]);
 
-  const handleRemove = useCallback(() => {
-    remove(myStock._id).then((res) => {
-      res.success && dispatch(removeMyStockSuccess(res.data));
-    });
+  const onRemove = useCallback(() => {
+    handleRemove(dispatch)(myStock._id);
   }, [myStock]);
 
-  return { myStock, handleAdd, handleRemove };
+  return [myStock, onAdd, onRemove];
 }
 
+//拿出整份 myStock and handleAdd、handleRemove
 function useMyStocks() {
   const dispatch = useDispatch();
   const myStock = useSelector(({ member }) => member.myStock, shallowEqual);
 
-  const handleAdd = useCallback(
+  const onAdd = useCallback(
     (stockNo) => {
-      if (myStock.find((x) => x.stockNo == stockNo) == null) {
-        add(stockNo).then((res) => {
-          res.success && dispatch(addMyStockSuccess(res.data));
-        });
-      }
+      myStock.find((x) => x.stockNo == stockNo) == null && handleAdd(dispatch)(stockNo);
     },
     [myStock]
   );
 
-  const handleRemove = useCallback((id) => {
-    remove(id).then((res) => {
-      res.success && dispatch(MyStockAction.removeMyStockSuccess(res.data));
-    });
+  const onRemove = useCallback((id) => {
+    handleRemove(dispatch)(id);
   }, []);
 
-  return [myStock, handleAdd, handleRemove];
+  return [myStock, onAdd, onRemove];
 }
 
-function fetch() {
-  return api.get(`/my/list`).then((data) => {
-    console.log("fetch my result", data);
-    return data;
-  });
+export { useMyStock, useMyStocks };
+
+function handleFetch(dispatch) {
+  return () =>
+    api
+      .get(`/my/list`)
+      .then((data) => {
+        console.log("fetch my result", data);
+        return data;
+      })
+      .then((response) => {
+        response.success && dispatch(fetchMyStockSuccess(response.data.list));
+      });
 }
 
-function add(stockNo) {
-  return api.get(`/my/list/add/${stockNo}`).then((data) => {
-    console.log("add my result", data);
-    return data;
-  });
+function handleAdd(dispatch) {
+  return (stockNo) =>
+    api
+      .get(`/my/list/add/${stockNo}`)
+      .then((data) => {
+        console.log("add my result", data);
+        return data;
+      })
+      .then((res) => {
+        res.success && dispatch(addMyStockSuccess(res.data));
+      });
 }
 
-function remove(id) {
-  const payload = JSON.stringify({ id: id });
-  return api.post(`/my/list/remove`, payload).then((data) => {
-    console.log("remove my result", data);
-    return data;
-  });
+function handleRemove(dispatch) {
+  return (id) => {
+    const payload = JSON.stringify({ id: id });
+    api
+      .post(`/my/list/remove`, payload)
+      .then((data) => {
+        console.log("remove my result", data);
+        return data;
+      })
+      .then((res) => {
+        res.success && dispatch(removeMyStockSuccess(res.data));
+      });
+  };
 }
+
+export const MyStockAPI = {
+  handleFetch,
+  handleAdd,
+  handleRemove,
+};
