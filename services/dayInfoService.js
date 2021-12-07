@@ -48,13 +48,12 @@ async function getAllDayInfo() {
 }
 
 //取得固定列表歷史資料
-async function getAllDayInfoFixed(payload, speedy = true) {
+async function getAllDayInfoFixed(speedy = true) {
   const latestTRDT = latestTradeDate();
   const dayInfoCollection = await DayInfoModel.getData({
     date: latestTRDT,
   });
-  let source = payload || StockListModel.stock_dividend;
-  const filtedData = source.filter((e) => {
+  const filtedData = StockListModel.stock_dividend.filter((e) => {
     return !dayInfoCollection.find((x) => x.stockNo == e.stockNo);
   });
   const totalCount = filtedData.length;
@@ -140,6 +139,65 @@ async function getAllDayInfoFixed(payload, speedy = true) {
   return { DayInfoCount: totalCount, successCount };
 }
 
+async function getAllDayInfoHighYield(speedy = true) {
+  const latestTRDT = latestTradeDate();
+  const dayInfoCollection = await DayInfoModel.getData({
+    date: latestTRDT,
+  });
+
+  const filtedData = StockListModel.highYieldData.filter((e) => {
+    const [stockNo] = e[0].split(" ");
+    return !dayInfoCollection.find((x) => x.stockNo == stockNo);
+  });
+  const totalCount = filtedData.length;
+
+  console.log("getAllDayInfoFixed count:", totalCount);
+  let successCount = 0;
+
+  for (let g = 0; g < Math.ceil(totalCount / 20); g++) {
+    let groupData = [];
+    for (let index = g * 20; index < (g + 1) * 20; index += 2) {
+      const data = filtedData[index];
+      const data2 = filtedData[index + 1];
+      if (!data && !data2) {
+        break;
+      }
+      try {
+        let p1 =
+          data &&
+          DayInfoModel.provider2.getData({
+            stockNo: data[0].split(" ")[0],
+            date: latestTRDT,
+          });
+        let p2 =
+          data2 &&
+          DayInfoModel.provider3.getData({
+            stockNo: data2[0].split(" ")[0],
+            date: latestTRDT,
+          });
+        let throttle = delay(getRandomIntInclusive(800, 2000));
+        let result = await Promise.all([p1, p2, throttle]);
+        if (result[0]) {
+          groupData.push(result[0]);
+          console.log(`${index} get ${data[0].split(" ")[0]} data at ${new Date()}`);
+        }
+        if (result[1]) {
+          groupData.push(result[1]);
+          console.log(`${index + 1} get ${data2[0].split(" ")[0]} data at ${new Date()}`);
+        }
+      } catch (e) {
+        console.log("getAllDayInfo error", e);
+      }
+    }
+    successCount += groupData.length;
+    groupData.length > 0 && (await DayInfoModel.insertMany(groupData));
+
+    await delay(getRandomIntInclusive(2000, 4000));
+  }
+
+  return { DayInfoCount: totalCount, successCount };
+}
+
 function afterDate(date) {
   return (item) => item.date > date;
 }
@@ -157,4 +215,5 @@ function byTime(a, b) {
 module.exports = {
   getAllDayInfo,
   getAllDayInfoFixed,
+  getAllDayInfoHighYield,
 };
