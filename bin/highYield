@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
 const dayInfoService = require("../services/dayInfoService");
-const highYield = require("../providers/highYield");
 const { mongooseQuickSetup } = require("../utilities/helper");
 
 mongooseQuickSetup(async () => {
-  await dayInfoService.getAllDayInfoFixed(highYield.data);
+  await dayInfoService.getAllDayInfoHighYield();
 });

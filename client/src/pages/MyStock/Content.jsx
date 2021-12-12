@@ -9,6 +9,7 @@ import InfoPanel from "./InfoPanel";
 import EpsList from "./EpsList";
 import ComputeStock from "./ComputeStock";
 import MyStockButton from "../../components/MyStockButton";
+import StockFrame from "../DividendDetail/StockFrame";
 
 export function useFetchData(stockNo) {
   const [page, setPage] = useState({ list: [], loading: true });
@@ -90,6 +91,8 @@ function Forecast(props) {
             loading={DataList.Loading}
             list={DataList.List}
           />
+          <Box h="2" />
+          <StockFrame stockNo={stockNo} />
         </Box>
         <Box>
           <FundamentalData stockNo={stockNo} />

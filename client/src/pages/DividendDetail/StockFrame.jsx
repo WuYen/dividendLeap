@@ -5,7 +5,7 @@ export default function StockFrame(props) {
   const [height, setHeight] = useState(0);
 
   useEffect(() => {
-    if (variant !== "sm") {
+    if (variant !== "sm" && divRef && divRef.current) {
       const height = divRef.current.clientHeight;
       setHeight(window.innerHeight - 100 > height ? height : 10);
     } else {
@@ -19,7 +19,7 @@ export default function StockFrame(props) {
         src={`https://www.cmoney.tw/finance/technicalanalysis.aspx?s=${stockNo}`}
         width="100%"
         style={{
-          height: variant == "sm" ? `${height}px` : `calc(100vh - 60px - ${height}px)`,
+          height: window.innerHeight,
         }}
       ></iframe>
     )
