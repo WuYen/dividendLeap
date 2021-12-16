@@ -1,9 +1,9 @@
 const { mongooseQuickSetup, latestTradeDate, today } = require("./utilities/helper");
 
-const provider = require("./providers/yearHistory.twse");
-const DayInfoModel = require("./models/DayInfo");
+const provider = require("./providers/kd.goodinfo");
+//const DayInfoModel = require("./models/DayInfo");
 //const forecastService = require("./services/forecastService");
-const dayInfoService = require("./services/dayInfoService");
+//const dayInfoService = require("./services/dayInfoService");
 
 const stockNo = "2451"; //創見
 
@@ -14,8 +14,8 @@ mongooseQuickSetup(async () => {
   //   stockNo: stockNo,
   //   date: latestTradeDate(),
   // });
-  let data = await dayInfoService.getAllDayInfoHighYield();
-  console.log("result", data);
+  let data = await provider.getData(0);
+  console.log("result", data.length);
 });
 
 //node .\TestRun.js
