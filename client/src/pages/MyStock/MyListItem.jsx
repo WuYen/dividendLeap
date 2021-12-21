@@ -3,9 +3,10 @@ import { Grid, Text } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
 
 export default function MyListItem(props) {
-  const { item, active, onSelect, onRemove } = props;
+  const { item, active, onSelect, onRemove, kd } = props;
   const info = stockList.find((x) => x[0] == item.stockNo);
   const name = `${item.stockNo} ${info[1]}`;
+  console.log("MyListItem", item.stockNo, kd);
   return (
     info && (
       <Grid templateColumns="1fr auto" gap={2} alignItems="center">
@@ -20,6 +21,8 @@ export default function MyListItem(props) {
           paddingY="1"
         >
           {name}
+          {kd && <span style={{ color: kd.k > kd.d ? "red" : "balck" }}>{`k:${kd.k}`}</span>}
+          {kd && <span style={{ color: kd.d > kd.k ? "red" : "balck" }}>{`d:${kd.d}`}</span>}
         </Text>
         <Text
           paddingY="1"

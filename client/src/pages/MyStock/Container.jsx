@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Box, Grid, VStack, StackDivider } from "@chakra-ui/react";
 import useRouter from "../../hooks/useRouter";
 
@@ -6,13 +6,18 @@ import Content, { Container as ContentWrapper } from "./Content";
 import AutoComplete from "./AutoComplete";
 import MyListItem from "./MyListItem";
 import { useMyStocks } from "../../hooks/useMyStock";
-
+import api from "../../utils/api";
 export default function Container(props) {
   const [{ stockNo: selectedStockNo }, history] = useRouter();
   const [myStock, handleAdd, handleRemove] = useMyStocks();
-
+  const [kdList, setKDList] = useState([]);
   useEffect(() => {
     !selectedStockNo && myStock.length && history.push(`/my/stock/${myStock[0].stockNo}`);
+    api.get(`/forecast/kd/list`).then((response) => {
+      console.log("fetch kd list result", response);
+      const { data, success } = response;
+      success && setKDList(data);
+    });
   }, []);
 
   const handleSelect = useCallback((stockNo) => {
@@ -31,6 +36,7 @@ export default function Container(props) {
                   key={item._id}
                   item={item}
                   active={selectedStockNo == item.stockNo}
+                  kd={kdList.find((x) => x.stockNo == `${item.stockNo}`)}
                   onSelect={handleSelect}
                   onRemove={handleRemove}
                 />
