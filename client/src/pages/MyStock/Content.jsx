@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Grid } from "@chakra-ui/react";
+import { Box, Grid, Button } from "@chakra-ui/react";
 import { api, formatHelper } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
 import { FundamentalData } from "../../components/TradingViewWidget";
@@ -65,7 +65,7 @@ export default React.memo(Content);
 
 function Forecast(props) {
   const { data, stockNo } = props;
-
+  const [showStockFrame, setShowStockFrame] = useState(false);
   return (
     <Box>
       <Box display="flex" alignItems="center">
@@ -74,8 +74,23 @@ function Forecast(props) {
         </Box>
         <Box w="2" />
         <MyStockButton stockNo={stockNo} />
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          rounded="100"
+          size="sm"
+          fontSize="sm"
+          ml="2"
+          _focus={{ outline: "none" }}
+          onClick={() => {
+            setShowStockFrame((x) => !x);
+          }}
+        >
+          顯示切換
+        </Button>
       </Box>
-      <Grid templateColumns="auto 460px" gap={4}>
+      {/* <Grid templateColumns="auto 460px" gap={4}> */}
+      {!showStockFrame && (
         <Box>
           <Box>
             <ComputeStock key={stockNo} eps={data.eps[0]} />
@@ -93,11 +108,14 @@ function Forecast(props) {
           />
           <Box h="2" />
         </Box>
-        <Box>
+      )}
+      {/* <Box>
           <FundamentalData stockNo={stockNo} />
         </Box>
-      </Grid>
-      <StockFrame stockNo={stockNo} />
+      </Grid> */}
+      <Box visibility={showStockFrame ? "visible" : "hidden"}>
+        <StockFrame stockNo={stockNo} />
+      </Box>
     </Box>
   );
 }

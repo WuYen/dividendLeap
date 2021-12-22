@@ -26,7 +26,7 @@ export default function Container(props) {
 
   return (
     <Box p="4" width="100%">
-      <Grid templateColumns="280px 4fr" gap={4}>
+      <Grid templateColumns="200px 4fr" gap={2}>
         <Box>
           <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
             <Box>
