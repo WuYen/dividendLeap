@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Text } from "@chakra-ui/react";
+import { Box, Grid, Text } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
 
 export default function MyListItem(props) {
@@ -10,7 +10,7 @@ export default function MyListItem(props) {
   return (
     info && (
       <Grid templateColumns="1fr auto" gap={2} alignItems="center">
-        <Text
+        <Box
           color={active ? "teal.500" : "grey.500"}
           onClick={() => {
             onSelect(item.stockNo);
@@ -20,10 +20,12 @@ export default function MyListItem(props) {
           _hover={{ backgroundColor: "gray.100" }}
           paddingY="1"
         >
-          {name}
-          {kd && <span style={{ color: kd.k > kd.d ? "red" : "balck" }}>{`k:${kd.k}`}</span>}
-          {kd && <span style={{ color: kd.d > kd.k ? "red" : "balck" }}>{`d:${kd.d}`}</span>}
-        </Text>
+          <Text>{name}</Text>
+          <Box display="flex" justifyContent="space-between">
+            {kd && <Box style={{ color: kd.k > kd.d ? "red" : "balck", width: "50px" }}>{`K:${kd.k}`}</Box>}
+            {kd && <Box style={{ color: kd.d > kd.k ? "red" : "balck", width: "50px" }}>{`D:${kd.d}`}</Box>}
+          </Box>
+        </Box>
         <Text
           paddingY="1"
           cursor="pointer"
