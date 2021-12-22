@@ -107,7 +107,6 @@ function Forecast(props) {
             list={DataList.List}
           />
           <Box h="2" />
-          <StockFrame stockNo={stockNo} />
         </Box>
       )}
       {/* <Box>
