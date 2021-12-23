@@ -89,30 +89,30 @@ function Forecast(props) {
           顯示切換
         </Button>
       </Box>
-      {/* <Grid templateColumns="auto 460px" gap={4}> */}
       {!showStockFrame && (
-        <Box>
+        <Grid visibility={showStockFrame ? "hidden" : "visible"} templateColumns="auto 460px" gap={4}>
           <Box>
-            <ComputeStock key={stockNo} eps={data.eps[0]} />
-            目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
+            <Box>
+              <ComputeStock key={stockNo} eps={data.eps[0]} />
+              目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
+            </Box>
+            <InfoPanel data={data.eps} stockDetail={data.stockDetail} />
+            <EpsList data={[data.eps[0]]} />
+            <Box h="2" />
+            <EpsList data={data.eps.slice(1)} isHistory={true} />
+            <Box h="2" />
+            <FinMindNews2
+              fetchData={{ useFetch: useFinMindData, params: stockNo }}
+              loading={DataList.Loading}
+              list={DataList.List}
+            />
+            <Box h="2" />
           </Box>
-          <InfoPanel data={data.eps} stockDetail={data.stockDetail} />
-          <EpsList data={[data.eps[0]]} />
-          <Box h="2" />
-          <EpsList data={data.eps.slice(1)} isHistory={true} />
-          <Box h="2" />
-          <FinMindNews2
-            fetchData={{ useFetch: useFinMindData, params: stockNo }}
-            loading={DataList.Loading}
-            list={DataList.List}
-          />
-          <Box h="2" />
-        </Box>
+          <Box>
+            <FundamentalData stockNo={stockNo} />
+          </Box>
+        </Grid>
       )}
-      {/* <Box>
-          <FundamentalData stockNo={stockNo} />
-        </Box>
-      </Grid> */}
       <Box visibility={showStockFrame ? "visible" : "hidden"}>
         <StockFrame stockNo={stockNo} />
       </Box>
