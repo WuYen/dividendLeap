@@ -68,19 +68,19 @@ function Forecast(props) {
   const [showStockFrame, setShowStockFrame] = useState(false);
   return (
     <Box>
-      <Box display="flex" alignItems="center">
+      <Box display="flex" alignItems="center" position="relative" top="-4px">
         <Box>
           {data.baseInfo[0]} {data.baseInfo[1]}
         </Box>
         <Box w="2" />
         <MyStockButton stockNo={stockNo} />
+        <Box w="2" />
         <Button
           colorScheme="teal"
           variant="outline"
           rounded="100"
           size="sm"
           fontSize="sm"
-          ml="2"
           _focus={{ outline: "none" }}
           onClick={() => {
             setShowStockFrame((x) => !x);
