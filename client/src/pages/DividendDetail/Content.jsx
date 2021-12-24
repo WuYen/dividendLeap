@@ -63,7 +63,6 @@ export default function Content(props) {
 export function Detail(props) {
   const { stockNo, name, data } = props;
   const divRef = useRef();
-  const [showFrame, setShowFrame] = useState(false);
   const [oldView, setOldView] = useState(false);
   const variant = useBreakpointValue(breakPoints);
   const [myData, myLoading] = MyStock.useFetchData(stockNo);
@@ -71,7 +70,7 @@ export function Detail(props) {
   return (
     <Box ref={divRef}>
       <Box p="4" d="flex" flexWrap="wrap" alignItems="baseline">
-        <ControlPanel variant={variant} showFrame={showFrame} setShowFrame={setShowFrame} setOldView={setOldView} />
+        <ControlPanel variant={variant} setOldView={setOldView} />
       </Box>
       {oldView ? (
         <Box d="flex" flexWrap="wrap" alignItems="baseline">
@@ -82,7 +81,6 @@ export function Detail(props) {
           <MyStock.Content stockNo={stockNo} data={myData} loading={myLoading} />
         </Box>
       )}
-      {showFrame && <StockFrame stockNo={stockNo} divRef={divRef} variant={variant} />}
     </Box>
   );
 }
