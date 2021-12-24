@@ -3,7 +3,7 @@ import { Button } from "@chakra-ui/react";
 import BackButton from "./BackButton";
 
 export default function ControlPanel(props) {
-  const { variant, setOldView, showFrame, setShowFrame } = props;
+  const { variant, setOldView } = props;
   return (
     <>
       <BackButton variant={variant} />
@@ -19,20 +19,6 @@ export default function ControlPanel(props) {
         }}
       >
         切換顯示
-      </Button>
-      <Button
-        ml="2"
-        loadingText="更多資訊"
-        colorScheme="teal"
-        variant="outline"
-        size="sm"
-        spinnerPlacement="end"
-        _focus={{ outline: "none" }}
-        onClick={() => {
-          setShowFrame((x) => !x);
-        }}
-      >
-        {showFrame ? "隱藏資訊" : "更多資訊"}
       </Button>
     </>
   );

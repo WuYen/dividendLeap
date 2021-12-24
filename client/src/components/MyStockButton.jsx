@@ -4,7 +4,7 @@ import { CheckIcon, AddIcon } from "@chakra-ui/icons";
 import { useMyStock } from "../hooks/useMyStock";
 
 export default function MyStockButton(props) {
-  const { stockNo } = props;
+  const { stockNo, ...rest } = props;
   const [myStock, onAdd, onRemove] = useMyStock(stockNo);
 
   if (myStock) {
@@ -22,6 +22,7 @@ export default function MyStockButton(props) {
         }
         _focus={{ outline: "none" }}
         onClick={onRemove}
+        {...rest}
       >
         追蹤中
       </Button>
@@ -37,6 +38,7 @@ export default function MyStockButton(props) {
         leftIcon={<AddIcon />}
         _focus={{ outline: "none" }}
         onClick={onAdd}
+        {...rest}
       >
         追蹤
       </Button>

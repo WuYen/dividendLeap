@@ -1,9 +1,10 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Link, Divider, useMediaQuery } from "@chakra-ui/react";
+import { Link, Divider, useMediaQuery, Box } from "@chakra-ui/react";
 import { formatDate } from "../../utils/formatHelper";
 import { LinkIcon } from "@chakra-ui/icons";
 import { TableContainer } from "../../components/Table";
+import MyStockButton from "../../components/MyStockButton";
 
 export default function ScheduleTable(props) {
   const { filtedData, type } = props;
@@ -56,8 +57,8 @@ const rowTemplates = [
             }}
           >
             {`${item.stockName}(${item.stockNo})`}
-            <LinkIcon mx="4px" viewBox="0 0 30 30" />
           </Link>
+          <MyStockButton ml="2" stockNo={item.stockNo} />
         </Td>
         <Td p={4}>{formatDate(item.date)}</Td>
         <Td p={4} isNumeric>
@@ -99,7 +100,7 @@ const rowTemplates = [
             }}
           >
             {`${item.stockName}(${item.stockNo})`}
-            <LinkIcon mx="4px" viewBox="0 0 30 30" />
+            <MyStockButton ml="2" stockNo={item.stockNo} />
           </Link>
           <Divider />
           {formatDate(item.date)}
@@ -145,7 +146,7 @@ const rowTemplates = [
             }}
           >
             {`${item[0]}`}
-            <LinkIcon mx="4px" viewBox="0 0 30 30" />
+            <MyStockButton ml="2" stockNo={item.stockNo} />
           </Link>
         </Td>
         <Td p={4}>{item[9]}</Td>
@@ -159,7 +160,6 @@ const rowTemplates = [
           {item[3]}
         </Td>
         <Td p={4} isNumeric>
-          {}
           {item[12] ? (
             <div>
               <div
