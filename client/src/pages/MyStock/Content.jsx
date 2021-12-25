@@ -10,6 +10,7 @@ import EpsList from "./EpsList";
 import ComputeStock from "./ComputeStock";
 import MyStockButton from "../../components/MyStockButton";
 import StockFrame from "../DividendDetail/StockFrame";
+import Chart from "./Chart";
 
 export function useFetchData(stockNo) {
   const [page, setPage] = useState({ list: [], loading: true });
@@ -91,6 +92,8 @@ function Forecast(props) {
       </Box>
       {/* {!showStockFrame && (    )} */}
       <Box display={showStockFrame ? "none" : ""}>
+        <Box h="2" />
+        <Chart />
         <Grid templateColumns="auto 460px" gap={4}>
           <Box>
             <Box>
@@ -99,6 +102,7 @@ function Forecast(props) {
             </Box>
             <InfoPanel data={data.eps} stockDetail={data.stockDetail} />
             <EpsList data={[data.eps[0]]} />
+
             <Box h="2" />
             <EpsList data={data.eps.slice(1)} isHistory={true} />
             <Box h="2" />
@@ -107,7 +111,6 @@ function Forecast(props) {
               loading={DataList.Loading}
               list={DataList.List}
             />
-            <Box h="2" />
           </Box>
           <Box>
             <FundamentalData stockNo={stockNo} />

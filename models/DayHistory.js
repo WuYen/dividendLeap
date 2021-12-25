@@ -39,5 +39,11 @@ async function getData(query) {
   return data;
 }
 
+async function getMany(query) {
+  let data = await Model.find(query).exec();
+  return data;
+}
+
 module.exports = Model;
 module.exports.getData = getData;
+module.exports.getMany = getMany;
