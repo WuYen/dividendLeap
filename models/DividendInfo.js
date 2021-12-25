@@ -43,5 +43,12 @@ async function getData(stockNo, needLatest = false) {
   return data;
 }
 
+async function reset(stockNo) {
+  await Model.deleteMany({ stockNo });
+  let entity = await provider.getData(stockNo);
+  data = await new Model(entity).save();
+}
+
 module.exports = Model;
 module.exports.getData = getData;
+module.exports.reset = reset;

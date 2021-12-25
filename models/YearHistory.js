@@ -33,5 +33,12 @@ async function getData(query) {
   return data;
 }
 
+async function reset(query) {
+  await Model.deleteOne(query);
+  let entity = await provider.getData(query);
+  await new Model(entity).save();
+}
+
 module.exports = Model;
 module.exports.getData = getData;
+module.exports.reset = reset;

@@ -30,7 +30,7 @@ export default function LeftPanel(props) {
         onRemove={onRemove}
       />
     ));
-  }, [myStock, kdList]);
+  }, [myStock, kdList, selectedStockNo]);
 
   return (
     <VStack divider={<StackDivider borderColor="gray.200" />} spacing={2} align="stretch">

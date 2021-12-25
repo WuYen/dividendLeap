@@ -4,7 +4,7 @@ const StockListModel = require("../models/StockList");
 const { latestTradeDate } = require("../utilities/helper");
 const { getRandomIntInclusive, delay } = require("../utilities/delay");
 
-//根據 dividendSchedule 取得 清單上的個股每天盤後\
+//根據 dividendSchedule 取得 清單上的個股每天盤後
 const chunkSize = 10;
 async function getAllDayInfo() {
   const latestTRDT = latestTradeDate();

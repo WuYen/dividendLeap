@@ -89,8 +89,9 @@ function Forecast(props) {
           顯示切換
         </Button>
       </Box>
-      {!showStockFrame && (
-        <Grid visibility={showStockFrame ? "hidden" : "visible"} templateColumns="auto 460px" gap={4}>
+      {/* {!showStockFrame && (    )} */}
+      <Box display={showStockFrame ? "none" : ""}>
+        <Grid templateColumns="auto 460px" gap={4}>
           <Box>
             <Box>
               <ComputeStock key={stockNo} eps={data.eps[0]} />
@@ -112,8 +113,9 @@ function Forecast(props) {
             <FundamentalData stockNo={stockNo} />
           </Box>
         </Grid>
-      )}
-      <Box visibility={showStockFrame ? "visible" : "hidden"}>
+      </Box>
+
+      <Box display={showStockFrame ? "" : "none"}>
         <StockFrame stockNo={stockNo} />
       </Box>
     </Box>

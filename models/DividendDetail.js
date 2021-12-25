@@ -29,6 +29,12 @@ async function getData(stockNo) {
   return data;
 }
 
+async function reset(stockNo) {
+  await Model.deleteMany({ stockNo });
+  let data = await provider.getData(stockNo);
+  await Model.insertMany(data);
+}
+
 /**
  * 取得區間內的Dividend detail by stockNo
  * @param {Object} query { stockNo, start, end }
@@ -54,3 +60,4 @@ async function getByRange(query) {
 module.exports = Model;
 module.exports.getData = getData;
 module.exports.getByRange = getByRange;
+module.exports.reset = reset;

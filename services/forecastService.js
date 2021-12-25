@@ -91,6 +91,19 @@ async function predictV2(stockNo = "2451", targetYear) {
   };
 }
 
+//移除這支股票相關的資料讓他重做
+function resetDataSource(stockNo) {
+  Promise.all([
+    EpsModel.reset(stockNo),
+    DividendDetailModel.reset(stockNo),
+    DividendInfoModel.reset(stockNo),
+    DayInfoModel.reset({ stockNo, date: helper.latestTradeDate() }),
+    YearHistoryModel.reset({ stockNo }),
+  ]);
+  return "success";
+}
+
 module.exports = {
   predict: predictV2,
+  resetDataSource: resetDataSource,
 };
