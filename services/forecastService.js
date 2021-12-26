@@ -4,6 +4,7 @@ const DividendInfoModel = require("../models/DividendInfo");
 const DayInfoModel = require("../models/DayInfo");
 const StockListModel = require("../models/StockList");
 const YearHistoryModel = require("../models/YearHistory");
+const DayHistoryModel = require("../models/DayHistory");
 const helper = require("../utilities/helper");
 const stockDetailService = require("./stockDetailService");
 const { getRandomIntInclusive, delay } = require("../utilities/delay");
@@ -99,6 +100,7 @@ function resetDataSource(stockNo) {
     DividendInfoModel.reset(stockNo),
     DayInfoModel.reset({ stockNo, date: helper.latestTradeDate() }),
     YearHistoryModel.reset({ stockNo }),
+    DayHistoryModel.reset({ stockNo, year: new Date().getFullYear().toString() }),
   ]);
   return "success";
 }
