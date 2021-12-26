@@ -4,6 +4,7 @@ const { today, latestTradeDate } = require("../utilities/dateTime");
 const { getAllDayInfo, getAllDayInfoFixed } = require("../services/dayInfoService");
 const { update } = require("../services/scheduleService");
 const { removeCache } = require("../services/stockDetailService");
+const forecastService = require("../services/forecastService");
 
 //取得server上的時區
 router.get("/datetime", async function (req, res, next) {
@@ -21,7 +22,7 @@ router.get("/datetime", async function (req, res, next) {
   }
 });
 
-//個股除權息資料
+//取得 dividendSchedule 清單上的個股每天盤後
 router.get("/getAllDayInfo", async function (req, res, next) {
   try {
     let result = await getAllDayInfo();
@@ -31,7 +32,7 @@ router.get("/getAllDayInfo", async function (req, res, next) {
   }
 });
 
-//個股除權息資料
+//取得 固定列表歷史資料 清單上的個股每天盤後
 router.get("/getAllDayInfoFixed", async function (req, res, next) {
   try {
     let result = await getAllDayInfoFixed();
@@ -51,7 +52,7 @@ router.get("/getNewSchedule", async function (req, res, next) {
   }
 });
 
-//從twse拉新的schedule下來
+//建立新的StockDetail
 router.get("/removeCache/:stockNo", async function (req, res, next) {
   try {
     if (req.params.stockNo) {
@@ -59,6 +60,19 @@ router.get("/removeCache/:stockNo", async function (req, res, next) {
       return res.send(success(result));
     }
     throw new Error("removeCache fail");
+  } catch (error) {
+    next(error);
+  }
+});
+
+//移除這支股票相關的資料讓他重做
+router.get("/reset/:stockNo", async function (req, res, next) {
+  try {
+    if (req.params.stockNo) {
+      let result = await forecastService.resetDataSource(req.params.stockNo);
+      return res.send(success(result));
+    }
+    throw new Error("reset fail");
   } catch (error) {
     next(error);
   }

@@ -36,9 +36,15 @@ async function getData(query) {
     return await Model.find(query).exec();
   }
 }
+async function reset(query) {
+  await Model.deleteOne(query);
+  let entity = await provider3.getData(query);
+  data = await new Model(entity).save();
+}
 
 module.exports = Model;
 module.exports.getData = getData;
+module.exports.reset = reset;
 module.exports.provider1 = provider1;
 module.exports.provider2 = provider2;
 module.exports.provider3 = provider3;
