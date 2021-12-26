@@ -41,7 +41,9 @@ async function getData(query) {
 
 async function getMany(query) {
   let data = await Model.find(query).exec();
-  return data;
+  return data.sort((a, b) => {
+    return a.year == b.year ? 0 : a.year > b.year ? -1 : 1;
+  });
 }
 
 module.exports = Model;
