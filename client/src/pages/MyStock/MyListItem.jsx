@@ -6,7 +6,6 @@ export default function MyListItem(props) {
   const { item, active, onSelect, onRemove, kd } = props;
   const info = stockList.find((x) => x[0] == item.stockNo);
   const name = `${item.stockNo} ${info[1]}`;
-  console.log("MyListItem", item.stockNo, kd);
   return (
     info && (
       <Grid templateColumns="1fr auto" gap={2} alignItems="center">

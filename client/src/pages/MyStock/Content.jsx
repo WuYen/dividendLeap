@@ -10,6 +10,7 @@ import EpsList from "./EpsList";
 import ComputeStock from "./ComputeStock";
 import MyStockButton from "../../components/MyStockButton";
 import StockFrame from "../DividendDetail/StockFrame";
+import Chart from "./Chart";
 
 export function useFetchData(stockNo) {
   const [page, setPage] = useState({ list: [], loading: true });
@@ -93,6 +94,8 @@ function Forecast(props) {
       <Box display={showStockFrame ? "none" : ""}>
         <Grid templateColumns="auto 460px" gap={4}>
           <Box>
+            <Chart stockNo={stockNo} />
+            <Box h="2" />
             <Box>
               <ComputeStock key={stockNo} eps={data.eps[0]} />
               目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
@@ -107,7 +110,6 @@ function Forecast(props) {
               loading={DataList.Loading}
               list={DataList.List}
             />
-            <Box h="2" />
           </Box>
           <Box>
             <FundamentalData stockNo={stockNo} />
