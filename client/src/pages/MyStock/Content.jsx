@@ -92,17 +92,16 @@ function Forecast(props) {
       </Box>
       {/* {!showStockFrame && (    )} */}
       <Box display={showStockFrame ? "none" : ""}>
-        <Box h="2" />
-        <Chart />
         <Grid templateColumns="auto 460px" gap={4}>
           <Box>
+            <Chart stockNo={stockNo} />
+            <Box h="2" />
             <Box>
               <ComputeStock key={stockNo} eps={data.eps[0]} />
               目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
             </Box>
             <InfoPanel data={data.eps} stockDetail={data.stockDetail} />
             <EpsList data={[data.eps[0]]} />
-
             <Box h="2" />
             <EpsList data={data.eps.slice(1)} isHistory={true} />
             <Box h="2" />
