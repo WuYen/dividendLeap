@@ -100,8 +100,9 @@ function resetDataSource(stockNo) {
     DividendInfoModel.reset(stockNo),
     DayInfoModel.reset({ stockNo, date: helper.latestTradeDate() }),
     YearHistoryModel.reset({ stockNo }),
-    DayHistoryModel.reset({ stockNo, year: new Date().getFullYear().toString() }),
+    DayHistoryModel.reset({ stockNo, year: (new Date().getFullYear() - 1).toString() }),
   ]);
+  //DayHistoryModel.reset({ stockNo, year: new Date().getFullYear().toString() }),
   return "success";
 }
 

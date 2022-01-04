@@ -14,13 +14,16 @@ mongooseQuickSetup(async () => {
   //   stockNo: stockNo,
   //   date: latestTradeDate(),
   // });
-  // await job(0);
-  // await job(1);
-  // await job(2);
-  // await job(3);
-  // await job(4);
+  await KDModel.deleteMany({});
   let l = await KDModel.find().exec();
-  console.log("total", l.length);
+  console.log("total 1", l.length);
+  await job(0);
+  await job(1);
+  await job(2);
+  await job(3);
+  await job(4);
+  l = await KDModel.find().exec();
+  console.log("total 2", l.length);
 });
 
 async function job(idx) {
