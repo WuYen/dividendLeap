@@ -4,6 +4,7 @@ const DividendInfoModel = require("../models/DividendInfo");
 const DayInfoModel = require("../models/DayInfo");
 const StockListModel = require("../models/StockList");
 const YearHistoryModel = require("../models/YearHistory");
+const DayHistoryModel = require("../models/DayHistory");
 const helper = require("../utilities/helper");
 const stockDetailService = require("./stockDetailService");
 const { getRandomIntInclusive, delay } = require("../utilities/delay");

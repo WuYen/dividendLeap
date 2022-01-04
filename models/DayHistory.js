@@ -48,6 +48,13 @@ async function getMany(query) {
     .slice(0, 5);
 }
 
+async function reset(query) {
+  await Model.deleteOne(query);
+  let entity = await provider.getData(query);
+  await new Model(entity).save();
+}
+
 module.exports = Model;
 module.exports.getData = getData;
 module.exports.getMany = getMany;
+module.exports.reset = reset;
