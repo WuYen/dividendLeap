@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Input, Text, Box, Grid, VStack, StackDivider } from "@chakra-ui/react";
+import { Input, Text, Box, Grid, VStack, StackDivider, Button, Flex } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
+import MyStockButton from "../../components/MyStockButton";
 import MyListItem from "./MyListItem";
 import { useMemo } from "react";
 
@@ -42,7 +43,7 @@ export default function LeftPanel(props) {
             isAdding && setText("");
           }}
         >
-          {isAdding ? "完成" : "新增"}
+          {isAdding ? "完成" : "搜尋"}
         </button>
       </Box>
       {isAdding ? (
@@ -50,7 +51,7 @@ export default function LeftPanel(props) {
           <Input placeholder="查詢" type="search" size="md" onChange={(e) => setText(e.target.value)} />
           <div style={{ overflowY: "auto", marginTop: "16px" }}>
             {options.map((item) => {
-              return <ListItem key={item[0]} item={item} onAdd={onAdd} />;
+              return <ListItem key={item[0]} item={item} onSelect={onSelect} />;
             })}
           </div>
         </>
@@ -62,19 +63,24 @@ export default function LeftPanel(props) {
 }
 
 function ListItem(props) {
-  const { item, onAdd } = props;
+  const { item, onSelect } = props;
+
   return (
-    <Text
-      onClick={() => {
-        onAdd(item[0]);
-      }}
-      width="100%"
-      cursor="pointer"
-      _hover={{ backgroundColor: "gray.100" }}
-      paddingY="1"
-    >
-      {item[0]} {item[1]}
-    </Text>
+    <Flex justifyContent={"space-between"} alignItems={"center"} py={2}>
+      <Box
+        onClick={() => {
+          onSelect(item[0]);
+        }}
+        width="100%"
+        cursor="pointer"
+        _hover={{ backgroundColor: "gray.100" }}
+      >
+        {item[0]} {item[1]}
+      </Box>
+      <Box>
+        <MyStockButton stockNo={item[0]} withText={false} />
+      </Box>
+    </Flex>
   );
 }
 

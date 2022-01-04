@@ -1,14 +1,14 @@
 import React from "react";
-import { Button, SlideFade } from "@chakra-ui/react";
+import { Button, SlideFade, IconButton } from "@chakra-ui/react";
 import { CheckIcon, AddIcon } from "@chakra-ui/icons";
 import { useMyStock } from "../hooks/useMyStock";
 
 export default function MyStockButton(props) {
-  const { stockNo, ...rest } = props;
+  const { stockNo, withText = true, ...rest } = props;
   const [myStock, onAdd, onRemove] = useMyStock(stockNo);
 
   if (myStock) {
-    return (
+    return withText ? (
       <Button
         colorScheme="teal"
         variant="solid"
@@ -26,9 +26,11 @@ export default function MyStockButton(props) {
       >
         追蹤中
       </Button>
+    ) : (
+      <IconButton colorScheme="teal" rounded="100" onClick={onRemove} size="xs" icon={<CheckIcon />} />
     );
   } else {
-    return (
+    return withText ? (
       <Button
         colorScheme="teal"
         variant="outline"
@@ -40,8 +42,10 @@ export default function MyStockButton(props) {
         onClick={onAdd}
         {...rest}
       >
-        追蹤
+        {withText && "追蹤"}
       </Button>
+    ) : (
+      <IconButton colorScheme="teal" rounded="100" onClick={onAdd} size="xs" icon={<AddIcon />} />
     );
   }
 }
