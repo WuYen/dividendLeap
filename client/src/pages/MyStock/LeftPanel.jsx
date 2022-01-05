@@ -4,21 +4,12 @@ import stockList from "../../utils/stockList";
 import MyStockButton from "../../components/MyStockButton";
 import MyListItem from "./MyListItem";
 import { useMemo } from "react";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 export default function LeftPanel(props) {
-  const { onAdd, onRemove, onSelect, myStock, kdList, selectedStockNo } = props;
-  const [text, setText] = useState("");
+  const { onRemove, onSelect, myStock, kdList, selectedStockNo } = props;
   const [isAdding, setIsAdding] = useState(false);
-
-  const options = stockList.filter((x) => {
-    if (!text) {
-      return true;
-    } else if (isPureNumber(text)) {
-      return x[0].includes(text);
-    } else {
-      return x[1].includes(text);
-    }
-  });
 
   const myStockList = useMemo(() => {
     return myStock?.map((item) => (
@@ -40,29 +31,55 @@ export default function LeftPanel(props) {
         <button
           onClick={() => {
             setIsAdding((x) => !x);
-            isAdding && setText("");
           }}
         >
           {isAdding ? "完成" : "搜尋"}
         </button>
       </Box>
-      {isAdding ? (
-        <>
-          <Input placeholder="查詢" type="search" size="md" onChange={(e) => setText(e.target.value)} />
-          <div style={{ overflowY: "auto", marginTop: "16px" }}>
-            {options.map((item) => {
-              return <ListItem key={item[0]} item={item} onSelect={onSelect} />;
-            })}
-          </div>
-        </>
-      ) : (
-        myStockList
-      )}
+      {isAdding ? <SearchList onSelect={onSelect} /> : myStockList}
     </VStack>
   );
 }
 
-function ListItem(props) {
+function SearchList(props) {
+  const { onSelect } = props;
+  const [text, setText] = useState("");
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    const options = stockList.filter((x) => {
+      if (text) {
+        return isPureNumber(text) ? x[0].includes(text) : x[1].includes(text);
+      } else {
+        return true;
+      }
+    });
+
+    let id = setInterval(() => {
+      setList((x) => [...x, ...options.splice(0, 80)]);
+      if (options.length < 80) {
+        clearInterval(id);
+        setList((x) => [...x, ...options]);
+      }
+    }, 100);
+
+    return () => {
+      clearInterval(id);
+    };
+  }, [text]);
+
+  return (
+    <>
+      <Input placeholder="查詢" type="search" size="md" onChange={(e) => setText(e.target.value)} />
+      <div style={{ overflowY: "auto", marginTop: "16px" }}>
+        {list.map((item) => {
+          return <ListItem key={item[0]} item={item} onSelect={onSelect} />;
+        })}
+      </div>
+    </>
+  );
+}
+const ListItem = React.memo((props) => {
   const { item, onSelect } = props;
 
   return (
@@ -82,7 +99,7 @@ function ListItem(props) {
       </Box>
     </Flex>
   );
-}
+});
 
 function isPureNumber(value) {
   return value.replace(/\D/g, "").length > 0;
