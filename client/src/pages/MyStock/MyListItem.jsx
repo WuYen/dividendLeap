@@ -5,9 +5,11 @@ import stockList from "../../utils/stockList";
 export default function MyListItem(props) {
   const { item, active, onSelect, onRemove, kd } = props;
   const info = stockList.find((x) => x[0] == item.stockNo);
-  const name = `${item.stockNo} ${info[1]}`;
-  return (
-    info && (
+  if (!info) {
+    return null;
+  } else {
+    const name = `${item.stockNo} ${info[1]}`;
+    return (
       <Grid templateColumns="1fr auto" gap={2} alignItems="center">
         <Box
           color={active ? "teal.500" : "grey.500"}
@@ -37,6 +39,6 @@ export default function MyListItem(props) {
           刪除
         </Text>
       </Grid>
-    )
-  );
+    );
+  }
 }

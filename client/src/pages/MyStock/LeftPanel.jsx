@@ -1,28 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Text, Box, Grid, VStack, StackDivider, Button, Flex } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
 import MyStockButton from "../../components/MyStockButton";
 import MyListItem from "./MyListItem";
-import { useMemo } from "react";
-import { useEffect } from "react";
-import { useRef } from "react";
+
+const batchSize = 50;
 
 export default function LeftPanel(props) {
-  const { onRemove, onSelect, myStock, kdList, selectedStockNo } = props;
+  const { onSelect } = props;
   const [isAdding, setIsAdding] = useState(false);
-
-  const myStockList = useMemo(() => {
-    return myStock?.map((item) => (
-      <MyListItem
-        key={item._id}
-        item={item}
-        active={selectedStockNo == item.stockNo}
-        kd={kdList.find((x) => x.stockNo == `${item.stockNo}`)}
-        onSelect={onSelect}
-        onRemove={onRemove}
-      />
-    ));
-  }, [myStock, kdList, selectedStockNo]);
 
   return (
     <VStack divider={<StackDivider borderColor="gray.200" />} spacing={2} align="stretch">
@@ -33,35 +19,56 @@ export default function LeftPanel(props) {
             setIsAdding((x) => !x);
           }}
         >
-          {isAdding ? "完成" : "搜尋"}
+          {isAdding ? "返回" : "搜尋"}
         </button>
       </Box>
-      {isAdding ? <SearchList onSelect={onSelect} /> : myStockList}
+      {isAdding ? <SearchList onSelect={onSelect} /> : <MyList {...props} />}
     </VStack>
   );
 }
 
+const MyList = React.memo((props) => {
+  const { myStock = [], kdList = [], selectedStockNo, onSelect, onRemove } = props;
+
+  return myStock.map((item) => (
+    <MyListItem
+      key={item._id}
+      item={item}
+      active={selectedStockNo == item.stockNo}
+      kd={kdList.find((x) => x.stockNo == `${item.stockNo}`)}
+      onSelect={onSelect}
+      onRemove={onRemove}
+    />
+  ));
+});
+
 function SearchList(props) {
   const { onSelect } = props;
   const [text, setText] = useState("");
-  const [list, setList] = useState([]);
+  const [group, setGroup] = useState([]);
 
   useEffect(() => {
-    const options = stockList.filter((x) => {
-      if (text) {
-        return isPureNumber(text) ? x[0].includes(text) : x[1].includes(text);
-      } else {
-        return true;
-      }
-    });
+    let options = `${text}`
+      ? stockList.filter((x) => {
+          return isPureNumber(text) ? x[0].includes(text) : x[1].includes(text);
+        })
+      : [...stockList];
 
-    let id = setInterval(() => {
-      setList((x) => [...x, ...options.splice(0, 80)]);
-      if (options.length < 80) {
-        clearInterval(id);
-        setList((x) => [...x, ...options]);
-      }
-    }, 100);
+    let id = null;
+    if (options.length) {
+      let needInit = true;
+      id = setInterval(() => {
+        let spliceSize = batchSize;
+        if (options.length < batchSize) {
+          spliceSize = options.length;
+          clearInterval(id);
+        }
+        setGroup((x) => {
+          return needInit ? [options.splice(0, spliceSize)] : [...x, options.splice(0, spliceSize)];
+        });
+        needInit = false;
+      }, 100);
+    }
 
     return () => {
       clearInterval(id);
@@ -72,13 +79,22 @@ function SearchList(props) {
     <>
       <Input placeholder="查詢" type="search" size="md" onChange={(e) => setText(e.target.value)} />
       <div style={{ overflowY: "auto", marginTop: "16px" }}>
-        {list.map((item) => {
-          return <ListItem key={item[0]} item={item} onSelect={onSelect} />;
+        {group.map((list, index) => {
+          return <ListGroup key={index} list={list} onSelect={onSelect} />;
         })}
       </div>
     </>
   );
 }
+
+const ListGroup = React.memo((props) => {
+  const { list, onSelect } = props;
+
+  return list.map((item) => {
+    return <ListItem key={item[0]} item={item} onSelect={onSelect} />;
+  });
+});
+
 const ListItem = React.memo((props) => {
   const { item, onSelect } = props;
 
