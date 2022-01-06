@@ -3,9 +3,8 @@ import Chart from "chart.js/auto";
 import { api } from "../../utils";
 import { formatDate, toDateString } from "../../utils/formatHelper";
 import "chartjs-adapter-moment";
-//https://www.omnisci.com/blog/12-color-palettes-for-telling-better-stories-with-your-data
-//const colors = ["#fd7f6f", "#7eb0d5", "#b2e061", "#bd7ebe", "#ffb55a", "#ffee65", "#beb9db", "#fdcce5", "#8bd3c7"];
-const colors = ["#319795", "#4A5568", "#718096", "#A0AEC0", "#CBD5E0"];
+
+const colors = ["#319795", "#9A9A96", "#AFAEAC", "#C3C3C1", "#D8D8D6"];
 
 export default function ChartContainer(props) {
   const { stockNo } = props;

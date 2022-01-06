@@ -45,7 +45,7 @@ export default function MyStockButton(props) {
         {withText && "追蹤"}
       </Button>
     ) : (
-      <IconButton colorScheme="teal" rounded="100" onClick={onAdd} size="xs" icon={<AddIcon />} />
+      <IconButton colorScheme="teal" variant="outline" rounded="100" onClick={onAdd} size="xs" icon={<AddIcon />} />
     );
   }
 }

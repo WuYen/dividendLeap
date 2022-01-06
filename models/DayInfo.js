@@ -45,6 +45,6 @@ async function reset(query) {
 module.exports = Model;
 module.exports.getData = getData;
 module.exports.reset = reset;
-module.exports.provider1 = provider1;
-module.exports.provider2 = provider2;
-module.exports.provider3 = provider3;
+module.exports.provider1 = provider1; //twse
+module.exports.provider2 = provider2; //cnyes
+module.exports.provider3 = provider3; //finMind
