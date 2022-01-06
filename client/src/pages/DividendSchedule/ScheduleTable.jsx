@@ -16,6 +16,7 @@ export default function ScheduleTable(props) {
 
 const headers = [
   [
+    { label: "", field: "", style: { fontSize: "md", width: "130px" } },
     { label: "股票", field: "stockNo", style: { fontSize: "md" } },
     { label: "除息日", field: "date", style: { fontSize: "md" } },
     { label: "現金股利", field: "cashDividen", style: { isNumeric: true, fontSize: "md" } },
@@ -23,11 +24,13 @@ const headers = [
     { label: "殖利率", field: "rate", style: { isNumeric: true, fontSize: "md" } },
   ],
   [
+    { label: "", field: "", style: { fontSize: "md", width: "130px" } },
     { label: "除息日", field: "date", style: { fontSize: "sm", p: "12px" } },
     { label: "股價", field: "price", style: { isNumeric: true, fontSize: "sm", p: "12px", w: "110px" } },
     { label: "殖利率", field: "rate", style: { isNumeric: true, fontSize: "sm", p: "12px", w: "94px" } },
   ],
   [
+    { label: "", field: "", style: { fontSize: "md", width: "130px" } },
     { label: "股票", field: "0", style: { fontSize: "md" } },
     { label: "除息日", field: "9", style: { fontSize: "md" } },
     { label: "殖利率", field: "1", style: { isNumeric: true, fontSize: "md" } },
@@ -45,6 +48,9 @@ const rowTemplates = [
     return (
       <Tr _hover={{ bg: "gray.50" }}>
         <Td p={4}>
+          <MyStockButton ml="2" stockNo={item.stockNo} />
+        </Td>
+        <Td p={4}>
           <Link
             color="teal.500"
             _hover={{
@@ -58,7 +64,6 @@ const rowTemplates = [
           >
             {`${item.stockName}(${item.stockNo})`}
           </Link>
-          <MyStockButton ml="2" stockNo={item.stockNo} />
         </Td>
         <Td p={4}>{formatDate(item.date)}</Td>
         <Td p={4} isNumeric>
@@ -92,6 +97,9 @@ const rowTemplates = [
     return (
       <Tr _hover={{ bg: "gray.50" }}>
         <Td p="12px">
+          <MyStockButton ml="2" stockNo={item.stockNo} />
+        </Td>
+        <Td p="12px">
           <Link
             color="teal.500"
             as={RouterLink}
@@ -100,7 +108,6 @@ const rowTemplates = [
             }}
           >
             {`${item.stockName}(${item.stockNo})`}
-            <MyStockButton ml="2" stockNo={item.stockNo} />
           </Link>
           <Divider />
           {formatDate(item.date)}
@@ -134,6 +141,9 @@ const rowTemplates = [
     return (
       <Tr _hover={{ bg: "gray.50" }}>
         <Td p={4}>
+          <MyStockButton ml="2" stockNo={stockNo} />
+        </Td>
+        <Td p={4}>
           <Link
             color="teal.500"
             _hover={{
@@ -146,7 +156,6 @@ const rowTemplates = [
             }}
           >
             {`${item[0]}`}
-            <MyStockButton ml="2" stockNo={item.stockNo} />
           </Link>
         </Td>
         <Td p={4}>{item[9]}</Td>
