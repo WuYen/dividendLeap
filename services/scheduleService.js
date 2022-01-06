@@ -82,7 +82,7 @@ async function update() {
 
 async function getTypes() {
   let result = await ScheduleModel.getTypes();
-  return result;
+  return ["除權息預告", "高殖利率", "排行榜", ...result];
 }
 
 module.exports = { getSchedule, getScheduleFixed, update, getTypes };

@@ -13,11 +13,10 @@ export default function DividendSchedule(props) {
   const [{ type }] = useRouter();
   const { schedule, filter } = useSelector(({ schedule }) => schedule);
   const [loading, setLoading] = useState(true);
-  const [typeList, setTypeList] = useState([
-    { label: "除權息預告", url: "" },
-    { label: "高殖利率", url: "/高殖利率" },
-    { label: "排行榜", url: "/排行榜" },
-  ]);
+  const [typeList, setTypeList] = useState([]);
+  // { label: "除權息預告", url: "" },
+  // { label: "高殖利率", url: "/高殖利率" },
+  // { label: "排行榜", url: "/排行榜" },
   const isFirst = useRef(true);
   const dispatch = useDispatch();
 
@@ -37,8 +36,11 @@ export default function DividendSchedule(props) {
     (data) => {
       setTypeList((x) => {
         let temp = data
-          .filter((x) => x !== "twse")
+          .filter((y) => y !== "twse")
           .map((d) => {
+            if (d === "除權息預告") {
+              return { label: d, url: "" };
+            }
             return { label: d, url: "/" + d };
           });
         return [...x, ...temp];
@@ -63,15 +65,21 @@ export default function DividendSchedule(props) {
   const filtedData = filter && type == "除權息預告" ? schedule.filter((x) => tryParseFloat(x.rate) > 5) : schedule;
   return (
     <Box w="100%">
-      <ControlPanel
-        filter={filter}
-        count={filtedData.length}
-        typeList={typeList}
-        toggleFilter={handleToggleFilter}
-        getScheduleSuccess={handleGetScheduleSuccess}
-        onSetLoading={setLoading}
-      />
-      {loading ? <Loading /> : <ScheduleTable filtedData={filtedData} filter={filter} type={type} />}
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <ControlPanel
+            filter={filter}
+            count={filtedData.length}
+            typeList={typeList}
+            toggleFilter={handleToggleFilter}
+            getScheduleSuccess={handleGetScheduleSuccess}
+            onSetLoading={setLoading}
+          />
+          <ScheduleTable filtedData={filtedData} filter={filter} type={type} />
+        </>
+      )}
     </Box>
   );
 }

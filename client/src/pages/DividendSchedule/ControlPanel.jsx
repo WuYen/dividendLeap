@@ -9,11 +9,11 @@ import KeyWord from "../../components/KeyWord";
 export default function ControlPanel(props) {
   const [{ type }, history] = useRouter();
   const { typeList, filter, toggleFilter, count, onSetLoading } = props;
-  const [selected, setSelected] = useState(type || typeList[0].label);
+  const [selected, setSelected] = useState(type || "除權息預告");
 
   useEffect(() => {
     if (type !== selected) {
-      setSelected(type || typeList[0].label);
+      setSelected(type || "除權息預告");
     }
   }, [type]);
 
@@ -42,7 +42,7 @@ export default function ControlPanel(props) {
         <Text>筆數: {count}</Text>
       </Flex>
       <Flex alignItems="center" px={4}>
-        {selected == typeList[0].label && (
+        {selected == "除權息預告" && (
           <>
             <Switch id="filter" colorScheme="teal" isChecked={filter} onChange={toggleFilter} />
             <FormLabel htmlFor="filter" mb="0">
