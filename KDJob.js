@@ -1,19 +1,12 @@
-const { mongooseQuickSetup, latestTradeDate, today } = require("./utilities/helper");
-
+const { mongooseQuickSetup } = require("./utilities/helper");
 const provider = require("./providers/kd.goodinfo");
 const KDModel = require("./models/KD");
-//const forecastService = require("./services/forecastService");
-//const dayInfoService = require("./services/dayInfoService");
-
-const stockNo = "2451"; //創見
 
 mongooseQuickSetup(async () => {
-  // let data = await forecastService.predict(stockNo, 2022);
-  //let data = await dayInfoService.getAllDayInfo();
-  // let data = await DayInfoModel.provider3.getData({
-  //   stockNo: stockNo,
-  //   date: latestTradeDate(),
-  // });
+  await DoWork();
+});
+
+async function DoWork() {
   await KDModel.deleteMany({});
   let l = await KDModel.find().exec();
   console.log("total 1", l.length);
@@ -24,7 +17,7 @@ mongooseQuickSetup(async () => {
   await job(4);
   l = await KDModel.find().exec();
   console.log("total 2", l.length);
-});
+}
 
 async function job(idx) {
   try {
@@ -44,5 +37,7 @@ function delay() {
     }, 1800);
   });
 }
+
+module.exports = { DoWork };
 
 //node .\TestRun.js

@@ -4,6 +4,17 @@ const { getList, insert, update, remove } = require("../services/scheduleEditSer
 const { getDetail } = require("../services/stockDetailService");
 const { getSchedule, getScheduleFixed, getTypes } = require("../services/scheduleService");
 
+//取得所有schedule type
+router.get("/menu", async function (req, res, next) {
+  try {
+    let result = await getTypes();
+    console.log("menu", result);
+    return res.send(success(result));
+  } catch (error) {
+    next(error);
+  }
+});
+
 //除權息預告列表
 router.get("/:type?", async function (req, res, next) {
   try {
