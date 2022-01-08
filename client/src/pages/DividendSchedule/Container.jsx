@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Box } from "@chakra-ui/react";
 import { tryParseFloat } from "../../utils/formatHelper";
 import Loading from "../../components/Loading";
@@ -9,57 +9,39 @@ import ScheduleTable from "./ScheduleTable";
 import ControlPanel from "./ControlPanel";
 import useRouter from "../../hooks/useRouter";
 
-export default function DividendSchedule(props) {
-  const [{ type }] = useRouter();
-  const { schedule, filter } = useSelector(({ schedule }) => schedule);
+function DividendSchedule(props) {
+  const { getScheduleSuccess, toggleFilter, schedule, filter } = props;
+  const [{ type }, history] = useRouter();
   const [loading, setLoading] = useState(true);
   const [typeList, setTypeList] = useState([]);
-  // { label: "除權息預告", url: "" },
-  // { label: "高殖利率", url: "/高殖利率" },
-  // { label: "排行榜", url: "/排行榜" },
-  const isFirst = useRef(true);
-  const dispatch = useDispatch();
+  const typeRef = useRef("");
 
-  const handleGetScheduleSuccess = useCallback(
-    (data) => {
-      dispatch(getScheduleSuccess(data));
-      setLoading(false);
+  const handleGetScheduleSuccess = useCallback((data) => {
+    getScheduleSuccess(data);
+    setLoading(false);
+  }, []);
+
+  const handleUpdatePath = useCallback(
+    (label) => {
+      history.push(`/schedule?type=${label}`);
     },
-    [dispatch]
-  );
-
-  const handleToggleFilter = useCallback(() => {
-    dispatch(toggleFilter());
-  }, [dispatch]);
-
-  const handleSetTypeList = useCallback(
-    (data) => {
-      setTypeList((x) => {
-        let temp = data
-          .filter((y) => y !== "twse")
-          .map((d) => {
-            if (d === "除權息預告") {
-              return { label: d, url: "" };
-            }
-            return { label: d, url: "/" + d };
-          });
-        return [...x, ...temp];
-      });
-    },
-    [setTypeList]
+    [history]
   );
 
   useEffect(() => {
-    const search = isFirst.current ? "?menu=true" : "";
+    const search = typeList.length == 0 ? "?menu=true" : "";
     const url = (typeList.find((x) => x.label == type)?.url || "") + search;
-    api.get("/schedule" + url).then(({ success, data }) => {
-      console.log("schedule data", success, data);
-      if (success) {
-        handleGetScheduleSuccess(data.list);
-        data.menu && handleSetTypeList(data.menu);
-        isFirst.current = false;
-      }
-    });
+    if (type != typeRef.current) {
+      api.get("/schedule" + url).then(({ success, data }) => {
+        console.log("schedule data", success, data);
+        if (success) {
+          handleGetScheduleSuccess(data.list);
+          data.menu && setTypeList(data.menu.map((d) => ({ label: d, url: "/" + d })));
+          typeRef.current == "" && handleUpdatePath(data.type);
+          typeRef.current = data.type;
+        }
+      });
+    }
   }, [type]);
 
   const filtedData = filter && type == "除權息預告" ? schedule.filter((x) => tryParseFloat(x.rate) > 5) : schedule;
@@ -72,10 +54,12 @@ export default function DividendSchedule(props) {
           <ControlPanel
             filter={filter}
             count={filtedData.length}
+            type={type}
             typeList={typeList}
-            toggleFilter={handleToggleFilter}
-            getScheduleSuccess={handleGetScheduleSuccess}
             onSetLoading={setLoading}
+            onToggleFilter={toggleFilter}
+            onUpdatePath={handleUpdatePath}
+            getScheduleSuccess={handleGetScheduleSuccess}
           />
           <ScheduleTable filtedData={filtedData} filter={filter} type={type} />
         </>
@@ -83,3 +67,7 @@ export default function DividendSchedule(props) {
     </Box>
   );
 }
+
+const mapStateToProps = ({ schedule }) => ({ ...schedule });
+const mapActionToProps = { getScheduleSuccess, toggleFilter };
+export default connect(mapStateToProps, mapActionToProps)(DividendSchedule);
