@@ -44,13 +44,19 @@ async function getByStockNo(stockNo) {
   return data;
 }
 
-async function getTypes(stockNo) {
+async function getTypes() {
   let data = await Model.distinct("sourceType");
+  return data;
+}
+
+async function getDistinctNo() {
+  let data = await Model.distinct("stockNo");
   return data;
 }
 
 module.exports = Model;
 module.exports.getData = getData;
+module.exports.getDistinctNo = getDistinctNo;
 module.exports.updateAll = updateAll;
 module.exports.getByStockNo = getByStockNo;
 module.exports.getTypes = getTypes;

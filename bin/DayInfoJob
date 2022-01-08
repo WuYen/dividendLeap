@@ -3,4 +3,4 @@
 const dayInfoService = require("../services/dayInfoService");
 const { mongooseQuickSetup } = require("../utilities/helper");
 
-mongooseQuickSetup(dayInfoService.getAllDayInfoFixed);
+mongooseQuickSetup(dayInfoService.getAllDayInfo);
