@@ -38,6 +38,12 @@ async function reset(stockNo) {
   await new Model(entity).save();
 }
 
+// await EpsModel.deleteMany({
+//   stockNo: {
+//     $in: ["2412"],
+//   },
+// });
+
 module.exports = Model;
 module.exports.getData = getData;
 module.exports.reset = reset;
