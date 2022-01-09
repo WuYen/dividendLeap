@@ -10,6 +10,7 @@ export default function Container(props) {
   const [{ stockNo: selectedStockNo }, history] = useRouter();
   const [myStock, handleAdd, handleRemove] = useMyStocks();
   const [kdList, setKDList] = useState([]);
+  const [typeList, setTypeList] = useState([]);
 
   useEffect(() => {
     !selectedStockNo && myStock.length && history.push(`/my/stock/${myStock[0].stockNo}`);
@@ -17,6 +18,11 @@ export default function Container(props) {
       console.log("fetch kd list result", response);
       const { data, success } = response;
       success && setKDList(data);
+    });
+    api.get(`/schedule/menu`).then((response) => {
+      console.log("fetch schedule menu", response);
+      const { data, success } = response;
+      success && setTypeList(data);
     });
   }, []);
 
@@ -35,6 +41,7 @@ export default function Container(props) {
             myStock={myStock}
             selectedStockNo={selectedStockNo}
             kdList={kdList}
+            typeList={typeList}
           />
         </Box>
         <Box>

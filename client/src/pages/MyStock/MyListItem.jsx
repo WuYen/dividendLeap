@@ -3,7 +3,7 @@ import { Box, Grid, Text } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
 
 export default function MyListItem(props) {
-  const { item, active, onSelect, onRemove, kd } = props;
+  const { item, active, onSelect, onRemove, kd, enableDelete } = props;
   const info = stockList.find((x) => x[0] == item.stockNo);
   if (!info) {
     return null;
@@ -27,17 +27,19 @@ export default function MyListItem(props) {
             {kd && <Box style={{ color: kd.d > kd.k ? "red" : "balck", width: "50px" }}>{`D:${kd.d}`}</Box>}
           </Box>
         </Box>
-        <Text
-          paddingY="1"
-          cursor="pointer"
-          _hover={{ backgroundColor: "red.100" }}
-          onClick={() => {
-            window.confirm("確認刪除: " + name) == true && onRemove(item._id);
-          }}
-          textAlign="end"
-        >
-          刪除
-        </Text>
+        {enableDelete && (
+          <Text
+            paddingY="1"
+            cursor="pointer"
+            _hover={{ backgroundColor: "red.100" }}
+            onClick={() => {
+              window.confirm("確認刪除: " + name) == true && onRemove(item._id);
+            }}
+            textAlign="end"
+          >
+            刪除
+          </Text>
+        )}
       </Grid>
     );
   }

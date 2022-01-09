@@ -69,7 +69,7 @@ function Forecast(props) {
   const [showStockFrame, setShowStockFrame] = useState(false);
   return (
     <Box>
-      <Box display="flex" alignItems="center" position="relative" top="-4px">
+      <Box display="flex" alignItems="center" position="relative">
         <Box>
           {data.baseInfo[0]} {data.baseInfo[1]}
         </Box>
