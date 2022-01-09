@@ -5,91 +5,51 @@ const { latestTradeDate } = require("../utilities/helper");
 const { getRandomIntInclusive, delay } = require("../utilities/delay");
 
 //根據 dividendSchedule 取得 清單上的個股每天盤後
-const chunkSize = 10;
-// async function getAllDayInfo() {
-//   const latestTRDT = latestTradeDate();
-//   const schedule = await ScheduleModel.getData();
-//   const filtedData = schedule.filter(afterDate(latestTRDT)).sort(byTime);
-//   const dayInfoCollection = await DayInfoModel.getData({
-//     date: latestTRDT,
-//   });
-
-//   const groups = filtedData
-//     .map((e, i) => {
-//       return i % chunkSize === 0 ? filtedData.slice(i, i + chunkSize) : null;
-//     })
-//     .filter((e) => {
-//       return e;
-//     });
-
-//   let count = 0;
-//   let successCount = 0;
-//   for (const group of groups) {
-//     for (const data of group) {
-//       if (!dayInfoCollection.find((x) => x.stockNo == data.stockNo)) {
-//         count++;
-//         try {
-//           const action = data.sourceType == "manual" ? DayInfoModel.getData2 : DayInfoModel.getData;
-//           await delay(getRandomIntInclusive(1000, 3500));
-//           await action({
-//             stockNo: data.stockNo,
-//             date: latestTRDT,
-//           });
-//           successCount++;
-//           console.log(`write ${data.stockNo} data at ${new Date()}`);
-//         } catch (e) {
-//           console.log("getAllDayInfo error", e);
-//         }
-//       }
-//     }
-//     await delay(getRandomIntInclusive(8000, 12000));
-//   }
-//   return { DayInfoCount: count, successCount };
-// }
+const chunkSize = 30;
 async function getAllDayInfo() {
   const latestTRDT = latestTradeDate();
   const dayInfoCollection = await DayInfoModel.getData({
     date: latestTRDT,
   });
 
-  const schedule = await ScheduleModel.getData();
+  const schedule = await ScheduleModel.getDistinctNo();
   //把已經有今天股價的從清單過濾掉
-  const filtedData = schedule.filter((data) => !dayInfoCollection.find((x) => x.stockNo == data.stockNo));
+  const filtedData = schedule.filter((stockNo) => !dayInfoCollection.find((x) => x.stockNo == stockNo));
   const totalCount = filtedData.length;
 
-  console.log("getAllDayInfoFixed count:", totalCount);
+  console.log("getAllDayInfo count:", totalCount);
   let successCount = 0;
 
-  for (let g = 0; g < Math.ceil(totalCount / 20); g++) {
+  for (let g = 0; g < Math.ceil(totalCount / chunkSize); g++) {
     let groupData = [];
-    for (let index = g * 20; index < (g + 1) * 20; index += 2) {
-      const data = filtedData[index];
-      const data2 = filtedData[index + 1];
-      if (!data && !data2) {
+    for (let index = g * chunkSize; index < (g + 1) * chunkSize; index += 2) {
+      const stockNo1 = filtedData[index];
+      const stockNo2 = filtedData[index + 1];
+      if (!stockNo1 && !stockNo2) {
         break;
       }
       try {
         let p1 =
-          data &&
+          stockNo1 &&
           DayInfoModel.provider2.getData({
-            stockNo: data.stockNo,
+            stockNo: stockNo1,
             date: latestTRDT,
           });
         let p2 =
-          data2 &&
+          stockNo2 &&
           DayInfoModel.provider3.getData({
-            stockNo: data2.stockNo,
+            stockNo: stockNo2,
             date: latestTRDT,
           });
-        let throttle = delay(getRandomIntInclusive(800, 2000));
+        let throttle = delay(getRandomIntInclusive(700, 1600));
         let result = await Promise.all([p1, p2, throttle]);
         if (result[0]) {
           groupData.push(result[0]);
-          console.log(`${index} get ${data.stockNo} data at ${new Date()}`);
+          console.log(`${index} get ${stockNo1} data at ${new Date()}`);
         }
         if (result[1]) {
           groupData.push(result[1]);
-          console.log(`${index + 1} get ${data2.stockNo} data at ${new Date()}`);
+          console.log(`${index + 1} get ${stockNo2} data at ${new Date()}`);
         }
       } catch (e) {
         console.log("getAllDayInfo error", e);
@@ -118,9 +78,9 @@ async function getAllDayInfoFixed(speedy = true) {
   console.log("getAllDayInfoFixed count:", totalCount);
   let successCount = 0;
   if (speedy) {
-    for (let g = 0; g < Math.ceil(totalCount / 20); g++) {
+    for (let g = 0; g < Math.ceil(totalCount / chunkSize); g++) {
       let groupData = [];
-      for (let index = g * 20; index < (g + 1) * 20; index += 2) {
+      for (let index = g * chunkSize; index < (g + 1) * chunkSize; index += 2) {
         const data = filtedData[index];
         const data2 = filtedData[index + 1];
         if (!data && !data2) {
@@ -196,81 +156,6 @@ async function getAllDayInfoFixed(speedy = true) {
   return { DayInfoCount: totalCount, successCount };
 }
 
-async function getAllDayInfoHighYield(speedy = true) {
-  const latestTRDT = latestTradeDate();
-  const dayInfoCollection = await DayInfoModel.getData({
-    date: latestTRDT,
-  });
-
-  const filtedData = StockListModel.highYieldData.filter((e) => {
-    const [stockNo] = e[0].split(" ");
-    return !dayInfoCollection.find((x) => x.stockNo == stockNo);
-  });
-  const totalCount = filtedData.length;
-
-  console.log("getAllDayInfoFixed count:", totalCount);
-  let successCount = 0;
-
-  for (let g = 0; g < Math.ceil(totalCount / 20); g++) {
-    let groupData = [];
-    for (let index = g * 20; index < (g + 1) * 20; index += 2) {
-      const data = filtedData[index];
-      const data2 = filtedData[index + 1];
-      if (!data && !data2) {
-        break;
-      }
-      try {
-        let p1 =
-          data &&
-          DayInfoModel.provider2.getData({
-            stockNo: data[0].split(" ")[0],
-            date: latestTRDT,
-          });
-        let p2 =
-          data2 &&
-          DayInfoModel.provider3.getData({
-            stockNo: data2[0].split(" ")[0],
-            date: latestTRDT,
-          });
-        let throttle = delay(getRandomIntInclusive(800, 2000));
-        let result = await Promise.all([p1, p2, throttle]);
-        if (result[0]) {
-          groupData.push(result[0]);
-          console.log(`${index} get ${data[0].split(" ")[0]} data at ${new Date()}`);
-        }
-        if (result[1]) {
-          groupData.push(result[1]);
-          console.log(`${index + 1} get ${data2[0].split(" ")[0]} data at ${new Date()}`);
-        }
-      } catch (e) {
-        console.log("getAllDayInfo error", e);
-      }
-    }
-    successCount += groupData.length;
-    groupData.length > 0 && (await DayInfoModel.insertMany(groupData));
-
-    await delay(getRandomIntInclusive(2000, 4000));
-  }
-
-  return { DayInfoCount: totalCount, successCount };
-}
-
-function afterDate(date) {
-  return (item) => item.date > date;
-}
-
-function byTime(a, b) {
-  if (a.date < b.date) {
-    return -1;
-  }
-  if (a.date > b.date) {
-    return 1;
-  }
-  return 0;
-}
-
 module.exports = {
   getAllDayInfo,
-  getAllDayInfoFixed,
-  getAllDayInfoHighYield,
 };

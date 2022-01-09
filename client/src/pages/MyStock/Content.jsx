@@ -11,17 +11,11 @@ import ComputeStock from "./ComputeStock";
 import MyStockButton from "../../components/MyStockButton";
 import StockFrame from "../DividendDetail/StockFrame";
 import Chart from "./Chart";
+import useIsMounted from "../../hooks/useIsMounted";
 
 export function useFetchData(stockNo) {
   const [page, setPage] = useState({ list: [], loading: true });
-  const isMount = useRef();
-
-  useEffect(() => {
-    isMount.current = true;
-    return () => {
-      isMount.current = false;
-    };
-  }, []);
+  const isMount = useIsMounted();
 
   useEffect(() => {
     isMount.current && setPage((x) => ({ ...x, loading: true }));
@@ -52,7 +46,7 @@ export function Content(props) {
   return (
     <Box h="100%">
       {loading ? (
-        <Box className="loading-container" textAlign="center">
+        <Box className="loading-container" textAlign="center" pt="10vh">
           <LoadingSpinner />
         </Box>
       ) : (
@@ -69,8 +63,8 @@ function Forecast(props) {
   const [showStockFrame, setShowStockFrame] = useState(false);
   return (
     <Box>
-      <Box display="flex" alignItems="center" position="relative" top="-4px">
-        <Box>
+      <Box display="flex" alignItems="center" position="relative">
+        <Box color="teal">
           {data.baseInfo[0]} {data.baseInfo[1]}
         </Box>
         <Box w="2" />
@@ -88,6 +82,21 @@ function Forecast(props) {
           }}
         >
           顯示切換
+        </Button>
+        <Box w="2" />
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          rounded="100"
+          size="sm"
+          fontSize="sm"
+          _focus={{ outline: "none" }}
+          onClick={() => {
+            const url = `https://tw.stock.yahoo.com/quote/${stockNo}/revenue`;
+            window.open(url, "_blank").focus();
+          }}
+        >
+          Yahoo
         </Button>
       </Box>
       {/* {!showStockFrame && (    )} */}

@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { success } = require("../utilities/response");
 const { today, latestTradeDate } = require("../utilities/dateTime");
-const { getAllDayInfo, getAllDayInfoFixed } = require("../services/dayInfoService");
+const { getAllDayInfo } = require("../services/dayInfoService");
 const { update } = require("../services/scheduleService");
 const { removeCache } = require("../services/stockDetailService");
 const forecastService = require("../services/forecastService");
@@ -26,16 +26,6 @@ router.get("/datetime", async function (req, res, next) {
 router.get("/getAllDayInfo", async function (req, res, next) {
   try {
     let result = await getAllDayInfo();
-    return res.send(success(result));
-  } catch (error) {
-    next(error);
-  }
-});
-
-//取得 固定列表歷史資料 清單上的個股每天盤後
-router.get("/getAllDayInfoFixed", async function (req, res, next) {
-  try {
-    let result = await getAllDayInfoFixed();
     return res.send(success(result));
   } catch (error) {
     next(error);

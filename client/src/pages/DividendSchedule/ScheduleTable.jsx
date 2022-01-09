@@ -31,14 +31,14 @@ const headers = [
   ],
   [
     { label: "", field: "", style: { fontSize: "md", width: "130px" } },
-    { label: "股票", field: "0", style: { fontSize: "md" } },
-    { label: "除息日", field: "9", style: { fontSize: "md" } },
-    { label: "殖利率", field: "1", style: { isNumeric: true, fontSize: "md" } },
-    { label: "3年平均", field: "2", style: { isNumeric: true, fontSize: "md" } },
-    { label: "5年平均", field: "3", style: { isNumeric: true, fontSize: "md" } },
-    { label: "當前股價", field: "12", style: { isNumeric: true, fontSize: "md" } },
-    { label: "現金股利", field: "5", style: { isNumeric: true, fontSize: "md" } },
-    { label: "30天填息率", field: "8", style: { fontSize: "md" } },
+    { label: "股票", field: "stockNo", style: { fontSize: "md" } },
+    { label: "除息日", field: "date", style: { fontSize: "md" } },
+    { label: "殖利率", field: "yieldRT", style: { isNumeric: true, fontSize: "md" } },
+    { label: "3年平均", field: "yieldRT3", style: { isNumeric: true, fontSize: "md" } },
+    { label: "5年平均", field: "yieldRT5", style: { isNumeric: true, fontSize: "md" } },
+    { label: "當前股價", field: "price", style: { isNumeric: true, fontSize: "md" } },
+    { label: "現金股利", field: "cashDividen", style: { isNumeric: true, fontSize: "md" } },
+    { label: "30天填息率", field: "filledRT", style: { fontSize: "md" } },
   ],
 ];
 
@@ -137,7 +137,7 @@ const rowTemplates = [
   },
   (props) => {
     const { item, Tr, Td } = props;
-    const [stockNo, stockName] = item[0].split(" ");
+    const { stockNo, stockName } = item;
     return (
       <Tr _hover={{ bg: "gray.50" }}>
         <Td p={4}>
@@ -155,39 +155,39 @@ const rowTemplates = [
               pathname: `/detail/${stockNo}/${stockName}`,
             }}
           >
-            {`${item[0]}`}
+            {`${stockName}(${stockNo})`}
           </Link>
         </Td>
-        <Td p={4}>{item[9]}</Td>
+        <Td p={4}>{item.date}</Td>
         <Td p={4} isNumeric>
-          {item[1]}
+          {item.yieldRT}
         </Td>
         <Td p={4} isNumeric>
-          {item[2]}
+          {item.yieldRT3}
         </Td>
         <Td p={4} isNumeric>
-          {item[3]}
+          {item.yieldRT5}
         </Td>
         <Td p={4} isNumeric>
-          {item[12] ? (
+          {item.price ? (
             <div>
               <div
                 style={{
                   display: "inline-block",
                 }}
               >
-                {item[12]}
+                {item.price}
               </div>
-              <div style={{ display: "inline-block" }}>{`(${formatDate(item[13])})`}</div>
+              <div style={{ display: "inline-block" }}>{`(${formatDate(item.priceDate)})`}</div>
             </div>
           ) : (
             "--"
           )}
         </Td>
         <Td p={4} isNumeric>
-          {item[5]}
+          {item.cashDividen}
         </Td>
-        <Td p={4}>{item[8]}</Td>
+        <Td p={4}>{item.filledRT}</Td>
       </Tr>
     );
   },

@@ -68,7 +68,7 @@ async function getRawData(stockNo) {
     return temp;
   });
 
-  console.log("end get data ", data);
+  console.log("end get data [eps histock]", data);
   await browser.close();
 
   return data;

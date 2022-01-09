@@ -1,38 +1,89 @@
 import React, { useState, useEffect } from "react";
-import { Input, Text, Box, Grid, VStack, StackDivider, Button, Flex } from "@chakra-ui/react";
+import { Input, Text, Box, Grid, VStack, StackDivider, Button, Flex, Select } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
 import MyStockButton from "../../components/MyStockButton";
 import MyListItem from "./MyListItem";
+import api from "../../utils/api";
+import { LoadingSpinner } from "../../components/Loading";
 
 const batchSize = 50;
 
 export default function LeftPanel(props) {
-  const { onSelect } = props;
-  const [isAdding, setIsAdding] = useState(false);
+  const { onSelect, typeList } = props;
+  const [pageInfo, setPageInfo] = useState({
+    type: "我的清單",
+    isAdding: false,
+    list: props.myStock,
+    typeLoading: false,
+  });
+  const { isAdding, type, list, typeLoading } = pageInfo;
+
+  useEffect(() => {
+    if (type == "我的清單") {
+      setPageInfo((x) => ({ ...x, list: props.myStock, typeLoading: false }));
+    } else {
+      api.get(`/schedule/${type}`).then((response) => {
+        console.log("fetch schedule", response);
+        const { data, success } = response;
+        success && setPageInfo((x) => ({ ...x, list: data.list, typeLoading: false }));
+      });
+    }
+  }, [type, props.myStock]);
 
   return (
     <VStack divider={<StackDivider borderColor="gray.200" />} spacing={2} align="stretch">
       <Box display="flex" justifyContent="space-between">
-        <Box>我的清單</Box>
+        <Select
+          colorScheme={"teal"}
+          width="160px"
+          size="sm"
+          fontSize="sm"
+          rounded="100"
+          value={type}
+          _focus={{ outline: "none" }}
+          onChange={(e) => {
+            let value = e.target.value;
+            setPageInfo((x) => ({ ...x, type: value, typeLoading: true }));
+          }}
+        >
+          <option value="我的清單">我的清單</option>
+          {typeList.map((type) => {
+            return (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            );
+          })}
+        </Select>
         <button
           onClick={() => {
-            setIsAdding((x) => !x);
+            setPageInfo((x) => ({ ...x, isAdding: !x.isAdding }));
           }}
         >
           {isAdding ? "返回" : "搜尋"}
         </button>
       </Box>
-      {isAdding ? <SearchList onSelect={onSelect} /> : <MyList {...props} />}
+      {isAdding ? (
+        <SearchList onSelect={onSelect} />
+      ) : typeLoading ? (
+        <Flex justifyContent={"center"} pt={"10vh"}>
+          <LoadingSpinner />
+        </Flex>
+      ) : (
+        <MyList {...props} type={type} data={list} />
+      )}
     </VStack>
   );
 }
 
 const MyList = React.memo((props) => {
-  const { myStock = [], kdList = [], selectedStockNo, onSelect, onRemove } = props;
+  const { data = [], kdList = [], selectedStockNo, onSelect, onRemove, type } = props;
 
-  return myStock.map((item) => (
+  return data.map((item) => (
     <MyListItem
       key={item._id}
+      type={type}
+      enableDelete={type == "我的清單"}
       item={item}
       active={selectedStockNo == item.stockNo}
       kd={kdList.find((x) => x.stockNo == `${item.stockNo}`)}
@@ -77,7 +128,7 @@ function SearchList(props) {
 
   return (
     <>
-      <Input placeholder="查詢" type="search" size="md" onChange={(e) => setText(e.target.value)} />
+      <Input placeholder="查詢" type="search" size="sm" onChange={(e) => setText(e.target.value)} />
       <div style={{ overflowY: "auto", marginTop: "16px" }}>
         {group.map((list, index) => {
           return <ListGroup key={index} list={list} onSelect={onSelect} />;

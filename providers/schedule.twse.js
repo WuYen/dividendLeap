@@ -38,7 +38,7 @@ function processData(source, today) {
       date: date, //除息日期 20190701
       cashDividen, //現金股利0.4
       updateDate: today,
-      sourceType: "twse",
+      sourceType: "除權息預告",
     };
   });
 

@@ -5,69 +5,47 @@ const { stock_dividend } = require("../providers/stockList");
 
 const { today, latestTradeDate } = require("../utilities/helper");
 
+function afterDate(date) {
+  return (item) => item.date > date;
+}
+
+function byTime(a, b) {
+  if (a.date < b.date) {
+    return -1;
+  }
+  if (a.date > b.date) {
+    return 1;
+  }
+  return 0;
+}
+
 async function getSchedule(query) {
-  function afterDate(date) {
-    return (item) => item.date > date;
-  }
+  const [schedule, dayInfoCollection] = await Promise.all([
+    ScheduleModel.getData(query),
+    DayInfoModel.getData({
+      date: latestTradeDate(),
+    }),
+  ]);
 
-  function byTime(a, b) {
-    if (a.date < b.date) {
-      return -1;
-    }
-    if (a.date > b.date) {
-      return 1;
-    }
-    return 0;
-  }
-
-  const schedule = await ScheduleModel.getData(query);
-  const afterToday = afterDate(today());
-
-  const filtedData = query.sourceType == "twse" ? schedule.filter(afterToday).sort(byTime) : schedule.sort(byTime);
-  const dayInfoCollection = await DayInfoModel.getData({
-    date: latestTradeDate(),
-  });
+  const filtedData =
+    query.sourceType == "除權息預告" ? schedule.filter(afterDate(today())).sort(byTime) : schedule.sort(byTime);
 
   const result = filtedData.map((x) => {
     let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
-    if (dayInfo && dayInfo.price > 0) {
-      return {
-        ...x.toObject(),
-        rate: ((x.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%"
-        price: dayInfo.price, // "當前股價"
-        priceDate: dayInfo.date, // "當前股價 取樣日期"
-      };
-    } else {
-      return x;
+    let d = x.toObject();
+    if (dayInfo) {
+      d.rate = ((x.cashDividen / dayInfo.price) * 100).toFixed(2); //"今年殖利率%"
+      d.price = dayInfo.price; // "當前股價"
+      d.priceDate = dayInfo.date; // "當前股價 取樣日期"
     }
-  });
-
-  return result;
-}
-
-async function getScheduleFixed(type) {
-  const schedule = type == "排行榜" ? highYield.data : stock_dividend;
-  const dayInfoCollection = await DayInfoModel.getData({
-    date: latestTradeDate(),
-  });
-
-  const result = schedule.map((x) => {
-    if (Array.isArray(x)) {
-      const [stockNo] = x[0].split(" ");
-      let dayInfo = dayInfoCollection.find((y) => y.stockNo == stockNo);
-      return !!dayInfo ? [...x, dayInfo.price, dayInfo.date] : x;
-    } else {
-      let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
-      return !!dayInfo
-        ? {
-            ...x,
-            price: dayInfo.price, // "當前股價"
-            priceDate: dayInfo.date, // "當前股價 取樣日期"
-          }
-        : x;
+    if (d.others && d.others.length > 0) {
+      d.others.forEach((element) => {
+        d[element.key] = element.value;
+      });
+      delete d.others;
     }
+    return d;
   });
-
   return result;
 }
 
@@ -82,7 +60,7 @@ async function update() {
 
 async function getTypes() {
   let result = await ScheduleModel.getTypes();
-  return ["除權息預告", "高殖利率", "排行榜", ...result];
+  return result; //["高殖利率", "排行榜", ...result];
 }
 
-module.exports = { getSchedule, getScheduleFixed, update, getTypes };
+module.exports = { getSchedule, update, getTypes };

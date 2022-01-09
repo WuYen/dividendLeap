@@ -14,6 +14,7 @@ const Model = mongoose.model(
     month: String, //除息月份 01~12
     date: String, //除息日期 20190701
     cashDividen: Number, //現金股利0.4
+    others: Array, //其他不再上面定義的欄位
     updateDate: String,
     sourceType: String, //twse、manual、wearn and any other list topic
   })
@@ -21,21 +22,19 @@ const Model = mongoose.model(
 
 async function getData(query = {}) {
   let data = await Model.find(query).exec();
-  if (data.length == 0 && query.sourceType == "twse") {
-    let entity = await provider.getData();
-    await Model.deleteMany({ sourceType: "twse" });
-    data = await Model.insertMany(entity);
+  if (data.length == 0 && query.sourceType == "除權息預告") {
+    data = await updateAll();
   }
   return data;
 }
 
 /**
- * Update from provider
+ * 從TWSE抓新的除權息預告
  * @returns
  */
 async function updateAll() {
   let entity = await provider.getData();
-  await Model.deleteMany({ sourceType: "twse" });
+  await Model.deleteMany({ sourceType: "除權息預告" });
   let data = await Model.insertMany(entity);
   return data;
 }
@@ -45,13 +44,19 @@ async function getByStockNo(stockNo) {
   return data;
 }
 
-async function getTypes(stockNo) {
+async function getTypes() {
   let data = await Model.distinct("sourceType");
+  return data;
+}
+
+async function getDistinctNo() {
+  let data = await Model.distinct("stockNo");
   return data;
 }
 
 module.exports = Model;
 module.exports.getData = getData;
+module.exports.getDistinctNo = getDistinctNo;
 module.exports.updateAll = updateAll;
 module.exports.getByStockNo = getByStockNo;
 module.exports.getTypes = getTypes;

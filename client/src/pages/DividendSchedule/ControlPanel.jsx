@@ -1,28 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { Switch, FormLabel, Button, Text, Flex, Spacer } from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
 import api from "../../utils/api";
 import auth from "../../utils/auth";
-import useRouter from "../../hooks/useRouter";
 import KeyWord from "../../components/KeyWord";
 
 export default function ControlPanel(props) {
-  const [{ type }, history] = useRouter();
-  const { typeList, filter, toggleFilter, count, onSetLoading } = props;
-  const [selected, setSelected] = useState(type || "除權息預告");
-
-  useEffect(() => {
-    if (type !== selected) {
-      setSelected(type || "除權息預告");
-    }
-  }, [type]);
+  const { typeList, filter, onToggleFilter, count, onSetLoading, type, onUpdatePath } = props;
 
   return (
     <>
       <Flex alignItems="center" p={4}>
         {typeList.map((item) => {
           const { label, url } = item;
-          const isActive = label == selected;
+          const isActive = label == type;
           return (
             <KeyWord
               key={label}
@@ -30,9 +21,8 @@ export default function ControlPanel(props) {
               active={isActive}
               onClick={() => {
                 if (!isActive) {
-                  setSelected(label);
                   onSetLoading(true);
-                  history.push(`/schedule?type=${label}`);
+                  onUpdatePath(label);
                 }
               }}
             />
@@ -42,9 +32,9 @@ export default function ControlPanel(props) {
         <Text>筆數: {count}</Text>
       </Flex>
       <Flex alignItems="center" px={4}>
-        {selected == "除權息預告" && (
+        {type == "除權息預告" && (
           <>
-            <Switch id="filter" colorScheme="teal" isChecked={filter} onChange={toggleFilter} />
+            <Switch id="filter" colorScheme="teal" isChecked={filter} onChange={onToggleFilter} />
             <FormLabel htmlFor="filter" mb="0">
               殖利率大於 5%
             </FormLabel>

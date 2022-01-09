@@ -4,20 +4,24 @@ const { getList, insert, update, remove } = require("../services/scheduleEditSer
 const { getDetail } = require("../services/stockDetailService");
 const { getSchedule, getScheduleFixed, getTypes } = require("../services/scheduleService");
 
+//取得所有schedule type
+router.get("/menu", async function (req, res, next) {
+  try {
+    let result = await getTypes();
+    console.log("menu", result);
+    return res.send(success(result));
+  } catch (error) {
+    next(error);
+  }
+});
+
 //除權息預告列表
 router.get("/:type?", async function (req, res, next) {
   try {
-    let type = req.params.type ? decodeURI(req.params.type) : "twse";
-    let result = { list: [] };
-
-    if (type == "高殖利率" || type == "排行榜") {
-      result.list = await getScheduleFixed(type);
-    } else {
-      result.list = await getSchedule({ sourceType: type });
-    }
-
+    let type = req.params.type ? decodeURI(req.params.type) : "除權息預告";
+    let result = { type, list: [] };
+    result.list = await getSchedule({ sourceType: type });
     req.query.menu && (result.menu = await getTypes());
-
     return res.send(success(result));
   } catch (error) {
     next(error);
