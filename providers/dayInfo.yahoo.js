@@ -75,7 +75,7 @@ async function getRawData(stockNo) {
     let data = window.App.main.context.dispatcher.stores.QuoteFinanceStore.epsTable.data;
     return data;
   });
-  console.log("end get data ", data);
+  console.log("end get data [dayinfo yahoo]", data);
   await browser.close();
 
   return data;

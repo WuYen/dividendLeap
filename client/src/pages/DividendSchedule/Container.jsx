@@ -10,14 +10,17 @@ import ControlPanel from "./ControlPanel";
 import useRouter from "../../hooks/useRouter";
 
 function DividendSchedule(props) {
-  const { getScheduleSuccess, toggleFilter, schedule, filter } = props;
-  const [{ type }, history] = useRouter();
+  const { getScheduleSuccess, toggleFilter, schedule, typeList, filter } = props;
+  const [{ type = "" }, history] = useRouter();
   const [loading, setLoading] = useState(true);
-  const [typeList, setTypeList] = useState([]);
-  const typeRef = useRef("");
+  const typeRef = useRef(null);
 
-  const handleGetScheduleSuccess = useCallback((data) => {
-    getScheduleSuccess(data);
+  const handleGetScheduleSuccess = useCallback(({ list, menu }) => {
+    let payload = {
+      list,
+      ...(menu && { menu: menu.map((d) => ({ label: d, url: "/" + d })) }),
+    };
+    getScheduleSuccess(payload);
     setLoading(false);
   }, []);
 
@@ -29,15 +32,14 @@ function DividendSchedule(props) {
   );
 
   useEffect(() => {
-    const search = typeList.length == 0 ? "?menu=true" : "";
-    const url = (typeList.find((x) => x.label == type)?.url || "") + search;
-    if (type != typeRef.current) {
-      api.get("/schedule" + url).then(({ success, data }) => {
+    if (type != typeRef.current || typeList.length == 0) {
+      const search = typeList.length == 0 ? "?menu=true" : "";
+      const url = (`/schedule/${type}` || "") + search;
+      api.get(url).then(({ success, data }) => {
         console.log("schedule data", success, data);
         if (success) {
-          handleGetScheduleSuccess(data.list);
-          data.menu && setTypeList(data.menu.map((d) => ({ label: d, url: "/" + d })));
-          typeRef.current == "" && handleUpdatePath(data.type);
+          handleGetScheduleSuccess(data);
+          handleUpdatePath(data.type);
           typeRef.current = data.type;
         }
       });

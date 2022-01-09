@@ -2,17 +2,18 @@ import * as ACTION_TYPES from "./actionType";
 
 export const initialState = {
   schedule: [],
-  filter: localStorage.getItem("filter")
-    ? localStorage.getItem("filter") === "true"
-    : true,
+  typeList: [],
+  filter: localStorage.getItem("filter") ? localStorage.getItem("filter") === "true" : true,
 };
 
 export default function ScheduleReducer(state = initialState, action) {
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case ACTION_TYPES.GET_SCHEDULE_SUCCESS:
       return {
         ...state,
-        schedule: action.payload,
+        schedule: payload.list,
+        ...(payload.menu && { typeList: payload.menu }),
       };
     case ACTION_TYPES.GET_SCHEDULE_FAIL:
       return {

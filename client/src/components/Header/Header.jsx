@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   },
 
   {
-    label: "自選列表",
+    label: "清單",
     href: "/my/stock",
     auth: true,
   },

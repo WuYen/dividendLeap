@@ -4,23 +4,28 @@ import stockList from "../../utils/stockList";
 import MyStockButton from "../../components/MyStockButton";
 import MyListItem from "./MyListItem";
 import api from "../../utils/api";
+import { LoadingSpinner } from "../../components/Loading";
 
 const batchSize = 50;
 
 export default function LeftPanel(props) {
   const { onSelect, typeList } = props;
-  const [isAdding, setIsAdding] = useState(false);
-  const [type, setType] = useState("我的清單");
-  const [list, setList] = useState(props.myStock);
+  const [pageInfo, setPageInfo] = useState({
+    type: "我的清單",
+    isAdding: false,
+    list: props.myStock,
+    typeLoading: false,
+  });
+  const { isAdding, type, list, typeLoading } = pageInfo;
 
   useEffect(() => {
     if (type == "我的清單") {
-      setList(props.myStock);
+      setPageInfo((x) => ({ ...x, list: props.myStock, typeLoading: false }));
     } else {
       api.get(`/schedule/${type}`).then((response) => {
         console.log("fetch schedule", response);
         const { data, success } = response;
-        success && setList(data.list);
+        success && setPageInfo((x) => ({ ...x, list: data.list, typeLoading: false }));
       });
     }
   }, [type, props.myStock]);
@@ -37,7 +42,8 @@ export default function LeftPanel(props) {
           value={type}
           _focus={{ outline: "none" }}
           onChange={(e) => {
-            setType(e.target.value);
+            let value = e.target.value;
+            setPageInfo((x) => ({ ...x, type: value, typeLoading: true }));
           }}
         >
           <option value="我的清單">我的清單</option>
@@ -51,13 +57,21 @@ export default function LeftPanel(props) {
         </Select>
         <button
           onClick={() => {
-            setIsAdding((x) => !x);
+            setPageInfo((x) => ({ ...x, isAdding: !x.isAdding }));
           }}
         >
           {isAdding ? "返回" : "搜尋"}
         </button>
       </Box>
-      {isAdding ? <SearchList onSelect={onSelect} /> : <MyList type={type} {...props} data={list} />}
+      {isAdding ? (
+        <SearchList onSelect={onSelect} />
+      ) : typeLoading ? (
+        <Flex justifyContent={"center"} pt={"10vh"}>
+          <LoadingSpinner />
+        </Flex>
+      ) : (
+        <MyList {...props} type={type} data={list} />
+      )}
     </VStack>
   );
 }

@@ -66,7 +66,7 @@ async function getByKeyword(keyWord, custom = false) {
 
     return temp;
   });
-  console.log("end get data " + keyWord, data.length);
+  console.log("end get data [news] " + keyWord, data.length);
   await browser.close();
   if (!custom) {
     await connectDB.toMongo(config.MONGODB_URI);
