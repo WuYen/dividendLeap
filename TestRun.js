@@ -10,9 +10,16 @@ const stockNo = "2451"; //創見
 
 mongooseQuickSetup(async () => {
   //  const schedule = await ScheduleModel.getData();
-  const result = await MyStockModel.find({ account: "josh" }).distinct("list.type");
-
-  console.log("result", result);
 });
 
 //node .\TestRun.js
+
+function updateMyStock(params) {
+  const result = await MyStockModel.findOne({ account: "Yen" }).exec();
+  console.log("result", result);
+  result.list.forEach(function (item) {
+    item.type = "我的清單";
+  });
+  var rr = await result.save();
+  console.log("result", rr);
+}

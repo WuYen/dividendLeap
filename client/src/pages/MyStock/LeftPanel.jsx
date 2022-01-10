@@ -97,6 +97,7 @@ function SearchList(props) {
   const { onSelect } = props;
   const [text, setText] = useState("");
   const [group, setGroup] = useState([]);
+  const [visibleIndex, setVisibleIndex] = useState(0);
 
   useEffect(() => {
     let options = `${text}`
@@ -105,25 +106,13 @@ function SearchList(props) {
         })
       : [...stockList];
 
-    let id = null;
-    if (options.length) {
-      let needInit = true;
-      id = setInterval(() => {
-        let spliceSize = batchSize;
-        if (options.length < batchSize) {
-          spliceSize = options.length;
-          clearInterval(id);
-        }
-        setGroup((x) => {
-          return needInit ? [options.splice(0, spliceSize)] : [...x, options.splice(0, spliceSize)];
-        });
-        needInit = false;
-      }, 100);
+    let groupData = [];
+    while (groupData.length == 0 || options.length > batchSize) {
+      let spliceSize = options.length < batchSize ? options.length : batchSize;
+      groupData.push(options.splice(0, spliceSize));
     }
-
-    return () => {
-      clearInterval(id);
-    };
+    setGroup(groupData);
+    setVisibleIndex(0);
   }, [text]);
 
   return (
@@ -131,9 +120,20 @@ function SearchList(props) {
       <Input placeholder="查詢" type="search" size="sm" onChange={(e) => setText(e.target.value)} />
       <div style={{ overflowY: "auto", marginTop: "16px" }}>
         {group.map((list, index) => {
-          return <ListGroup key={index} list={list} onSelect={onSelect} />;
+          if (index <= visibleIndex) {
+            return <ListGroup key={index} list={list} onSelect={onSelect} />;
+          } else {
+            return null;
+          }
         })}
       </div>
+      <button
+        onClick={() => {
+          setVisibleIndex((x) => ++x);
+        }}
+      >
+        Load more
+      </button>
     </>
   );
 }

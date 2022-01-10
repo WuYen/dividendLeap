@@ -35,7 +35,7 @@ export default function Container(props) {
       <Grid templateColumns="200px 4fr" gap={4}>
         <Box>
           <LeftPanel
-            onAdd={handleAdd}
+            // onAdd={handleAdd}
             onRemove={handleRemove}
             onSelect={handleSelect}
             myStock={myStock}

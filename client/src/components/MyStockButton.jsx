@@ -7,12 +7,12 @@ import useModal from "../hooks/useModal";
 export default function MyStockButton(props) {
   const { stockNo, withText = true, ...rest } = props;
   const [myStock, onAdd, onRemove] = useMyStock(stockNo);
-  const { isOpen, showModal, hideModal } = useModal();
+  const { showModal, hideModal } = useModal();
 
   const handleAdd = () => {
     showModal({
       title: "儲存至...",
-      content: <AddToPanel />,
+      content: <AddToPanel stockNo={stockNo} />,
       // footer: (
       //   <>
       //     <button
@@ -47,7 +47,14 @@ export default function MyStockButton(props) {
         追蹤中
       </Button>
     ) : (
-      <IconButton colorScheme="teal" rounded="100" onClick={onRemove} size="xs" icon={<CheckIcon />} />
+      <IconButton
+        colorScheme="teal"
+        _focus={{ outline: "none" }}
+        rounded="100"
+        onClick={onRemove}
+        size="xs"
+        icon={<CheckIcon />}
+      />
     );
   } else {
     return withText ? (
@@ -65,15 +72,32 @@ export default function MyStockButton(props) {
         {withText && "追蹤"}
       </Button>
     ) : (
-      <IconButton colorScheme="teal" variant="outline" rounded="100" onClick={handleAdd} size="xs" icon={<AddIcon />} />
+      <IconButton
+        colorScheme="teal"
+        _focus={{ outline: "none" }}
+        variant="outline"
+        rounded="100"
+        onClick={handleAdd}
+        size="xs"
+        icon={<AddIcon />}
+      />
     );
   }
 }
 
 function AddToPanel(props) {
+  const [myStock, onAdd, onRemove] = useMyStock(props.stockNo);
   return (
     <Stack>
-      <Checkbox value="我的清單">我的清單</Checkbox>
+      <Checkbox
+        value="我的清單"
+        onChange={(e) => {
+          console.log("onChange", e.target.checked);
+          e.target.checked ? onAdd("我的清單") : onRemove();
+        }}
+      >
+        我的清單
+      </Checkbox>
     </Stack>
   );
 }

@@ -4,9 +4,11 @@ import { showModal, hideModal } from "../store/ModalDialog/action";
 
 export default function useModal(props) {
   const dispatch = useDispatch();
-  const isOpen = useSelector(({ modalDialog }) => {
-    return modalDialog.isOpen;
-  });
+
+  //大量使用有效能問題
+  // const isOpen = useSelector(({ modalDialog }) => {
+  //   return modalDialog.isOpen;
+  // });
 
   const handleShow = useCallback((payload) => {
     dispatch(showModal(payload));
@@ -17,7 +19,6 @@ export default function useModal(props) {
   }, []);
 
   return {
-    isOpen,
     showModal: handleShow,
     hideModal: handleHide,
   };

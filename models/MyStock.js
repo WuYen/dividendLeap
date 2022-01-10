@@ -8,7 +8,7 @@ const Model = mongoose.model(
   "MyStock", // user's stock watch list
   new Schema({
     account: String,
-    list: [{ type: String, stockNo: String }], //type=>清單名稱(支援多清單)
+    list: [{ stockNo: String, type: "" }], //type=>清單名稱(支援多清單)
     updateDate: String,
   })
 );

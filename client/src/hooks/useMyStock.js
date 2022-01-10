@@ -13,9 +13,12 @@ function useMyStock(stockNo) {
 
   const dispatch = useDispatch();
 
-  const onAdd = useCallback(() => {
-    handleAdd(dispatch)(stockNo);
-  }, [stockNo]);
+  const onAdd = useCallback(
+    (type) => {
+      handleAdd(dispatch)(type, stockNo);
+    },
+    [stockNo]
+  );
 
   const onRemove = useCallback(() => {
     handleRemove(dispatch)(myStock._id);
@@ -72,9 +75,9 @@ function handleFetchWithTypes(dispatch) {
 }
 
 function handleAdd(dispatch) {
-  return (stockNo) =>
+  return (type, stockNo) =>
     api
-      .get(`/my/list/add/${stockNo}`)
+      .get(`/my/list/add/${type}/${stockNo}`)
       .then((data) => {
         console.log("add my result", data);
         return data;
