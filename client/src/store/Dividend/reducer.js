@@ -6,7 +6,7 @@ export const initialState = {
   filter: localStorage.getItem("filter") ? localStorage.getItem("filter") === "true" : true,
 };
 
-export default function ScheduleReducer(state = initialState, action) {
+export default function reducer(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case ACTION_TYPES.GET_SCHEDULE_SUCCESS:

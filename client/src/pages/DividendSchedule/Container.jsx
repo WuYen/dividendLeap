@@ -5,13 +5,17 @@ import { tryParseFloat } from "../../utils/formatHelper";
 import Loading from "../../components/Loading";
 import api from "../../utils/api";
 import { getScheduleSuccess, toggleFilter } from "../../store/Dividend/action";
+import * as ModalDialogAction from "../../store/ModalDialog/action";
 import ScheduleTable from "./ScheduleTable";
 import ControlPanel from "./ControlPanel";
 import useRouter from "../../hooks/useRouter";
+import useModal from "../../hooks/useModal";
 
 function DividendSchedule(props) {
   const { getScheduleSuccess, toggleFilter, schedule, typeList, filter } = props;
   const [{ type = "" }, history] = useRouter();
+  const { isOpen, showModal, hideModal } = useModal();
+
   const [loading, setLoading] = useState(true);
   const typeRef = useRef(null);
 
@@ -63,6 +67,25 @@ function DividendSchedule(props) {
             onUpdatePath={handleUpdatePath}
             getScheduleSuccess={handleGetScheduleSuccess}
           />
+          <button
+            onClick={() => {
+              showModal({
+                title: "Test Title",
+                content: <div>Model content</div>,
+                footer: (
+                  <button
+                    onClick={() => {
+                      hideModal();
+                    }}
+                  >
+                    Close
+                  </button>
+                ),
+              });
+            }}
+          >
+            Show Modal
+          </button>
           <ScheduleTable filtedData={filtedData} filter={filter} type={type} />
         </>
       )}
@@ -71,5 +94,8 @@ function DividendSchedule(props) {
 }
 
 const mapStateToProps = ({ schedule }) => ({ ...schedule });
-const mapActionToProps = { getScheduleSuccess, toggleFilter };
+const mapActionToProps = {
+  getScheduleSuccess,
+  toggleFilter,
+};
 export default connect(mapStateToProps, mapActionToProps)(DividendSchedule);

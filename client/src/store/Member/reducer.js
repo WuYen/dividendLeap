@@ -10,7 +10,7 @@ export const initialState = {
 //https://dev.to/askharley/build-a-react-redux-shopping-list-app-43l
 //https://redux.js.org/usage/structuring-reducers/immutable-update-patterns
 
-export default function ScheduleReducer(state = initialState, { type, payload }) {
+export default function reducer(state = initialState, { type, payload }) {
   switch (type) {
     case ACTION_TYPES.LOGIN_SUCCESS:
       return { ...state, account: payload, isLogin: true };

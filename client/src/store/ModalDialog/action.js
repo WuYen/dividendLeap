@@ -13,3 +13,17 @@ export function closeModalDialog(payload) {
     payload,
   };
 }
+
+export function showModal(payload) {
+  return {
+    type: ACTION_TYPES.SHOW_MODAL,
+    payload,
+  };
+}
+
+export function hideModal(payload) {
+  return {
+    type: ACTION_TYPES.HIDE_MODAL,
+    payload,
+  };
+}
