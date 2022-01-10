@@ -21,7 +21,7 @@ router.get("/:type?", async function (req, res, next) {
     let type = req.params.type ? decodeURI(req.params.type) : "除權息預告";
     let result = { type, list: [] };
     result.list = await getSchedule({ sourceType: type });
-    req.query.menu && (result.menu = await getTypes());
+    req.query.types && (result.types = await getTypes());
     return res.send(success(result));
   } catch (error) {
     next(error);

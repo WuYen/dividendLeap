@@ -11,7 +11,7 @@ export default function LandingContainer(props) {
   const [, history] = useRouter();
 
   useEffect(() => {
-    auth.isLogin && MyStockAPI.handleFetch(dispatch)();
+    auth.isLogin && MyStockAPI.handleFetchWithTypes(dispatch)();
     if (isMount.current && !auth.isLogin) {
       history.push("/schedule"); //登出
     }

@@ -54,7 +54,20 @@ function handleFetch(dispatch) {
         return data;
       })
       .then((response) => {
-        response.success && dispatch(fetchMyStockSuccess(response.data.list));
+        response.success && dispatch(fetchMyStockSuccess({ list: response.data.list }));
+      });
+}
+
+function handleFetchWithTypes(dispatch) {
+  return () =>
+    api
+      .get(`/my/list?types=true`)
+      .then((data) => {
+        console.log("fetch my types result", data);
+        return data;
+      })
+      .then((response) => {
+        response.success && dispatch(fetchMyStockSuccess({ list: response.data.list, types: response.data.types }));
       });
 }
 
@@ -90,4 +103,5 @@ export const MyStockAPI = {
   handleFetch,
   handleAdd,
   handleRemove,
+  handleFetchWithTypes,
 };

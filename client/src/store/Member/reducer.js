@@ -4,6 +4,7 @@ import auth from "../../utils/auth";
 export const initialState = {
   account: auth.context.account,
   isLogin: auth.isLogin,
+  myType: [], //user 個人的清單列表
   myStock: [], // {_id,stockNo}
 };
 
@@ -17,9 +18,11 @@ export default function reducer(state = initialState, { type, payload }) {
     case ACTION_TYPES.LOGOUT_SUCCESS:
       return { account: "", isLogin: false, myStock: [] };
     case ACTION_TYPES.FETCH_MY_STOCK_SUCCESS: {
+      const { list, types } = payload;
       return {
         ...state,
-        myStock: payload,
+        myStock: list,
+        ...(types && { myType: types }),
       };
     }
     case ACTION_TYPES.ADD_MY_STOCK_SUCCESS: {

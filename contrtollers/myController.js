@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
 const { success } = require("../utilities/response");
-const { getList, add, remove } = require("../services/myStockService");
+const { getList, add, remove, getListType } = require("../services/myStockService");
 
 const auth = require("../utilities/auth");
 
@@ -11,6 +11,17 @@ router.get("/list", async function (req, res, next) {
   try {
     const user = req.user;
     let result = await getList({ account: user.account });
+    req.query.types && (result.types = await getListType({ account: user.account }));
+    return res.send(success(result));
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/list/types", async function (req, res, next) {
+  try {
+    const user = req.user;
+    let result = await getListType({ account: user.account });
     return res.send(success(result));
   } catch (error) {
     next(error);
