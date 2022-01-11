@@ -26,7 +26,7 @@ async function getListType(query) {
 
 /**
  * Add new stock to user
- * @param {Object} query { account, stockNo }
+ * @param {Object} query { account, stockNo, type }
  * @returns
  */
 async function add(query) {
@@ -46,7 +46,7 @@ async function add(query) {
     });
     saveResult = await myStock.save();
   }
-  return saveResult.list.find((x) => x.stockNo == stockNo);
+  return saveResult.list.find((x) => x.stockNo == stockNo && x.type == type);
 }
 
 /**

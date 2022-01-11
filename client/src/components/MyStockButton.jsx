@@ -1,18 +1,18 @@
 import React from "react";
 import { Button, SlideFade, IconButton, Stack, Checkbox } from "@chakra-ui/react";
 import { CheckIcon, AddIcon } from "@chakra-ui/icons";
-import { useMyStock } from "../hooks/useMyStock";
+import { useMyStock, MyStockAPI } from "../hooks/useMyStock";
 import useModal from "../hooks/useModal";
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
 
 export default function MyStockButton(props) {
   const { stockNo, withText = true, ...rest } = props;
   const [myStock, onAdd, onRemove] = useMyStock(stockNo);
   const { showModal, hideModal } = useModal();
 
-  const handleAdd = () => {
+  const handleEdit = () => {
     showModal({
-      title: "儲存至...",
+      title: "儲存 " + stockNo + " 至...",
       content: <AddToPanel stockNo={stockNo} />,
       // footer: (
       //   <>
@@ -42,7 +42,7 @@ export default function MyStockButton(props) {
           </SlideFade>
         }
         _focus={{ outline: "none" }}
-        onClick={onRemove}
+        onClick={handleEdit}
         {...rest}
       >
         追蹤中
@@ -52,7 +52,7 @@ export default function MyStockButton(props) {
         colorScheme="teal"
         _focus={{ outline: "none" }}
         rounded="100"
-        onClick={onRemove}
+        onClick={handleEdit}
         size="xs"
         icon={<CheckIcon />}
       />
@@ -67,7 +67,7 @@ export default function MyStockButton(props) {
         fontSize="sm"
         leftIcon={<AddIcon />}
         _focus={{ outline: "none" }}
-        onClick={handleAdd}
+        onClick={handleEdit}
         {...rest}
       >
         {withText && "追蹤"}
@@ -78,7 +78,7 @@ export default function MyStockButton(props) {
         _focus={{ outline: "none" }}
         variant="outline"
         rounded="100"
-        onClick={handleAdd}
+        onClick={handleEdit}
         size="xs"
         icon={<AddIcon />}
       />
@@ -87,19 +87,27 @@ export default function MyStockButton(props) {
 }
 
 function AddToPanel(props) {
-  const [, onAdd, onRemove] = useMyStock(props.stockNo);
-  const myType = useSelector(({ member }) => {
-    return member.myType;
+  const { stockNo } = props;
+  const dispatch = useDispatch();
+  const [myStocks, myType] = useSelector(({ member }) => {
+    return [member.myStock.filter((x) => x.stockNo == stockNo), member.myType];
   }, shallowEqual);
+
   return (
     <Stack>
       {myType.map((type) => {
+        let myStock = myStocks.find((x) => x.type == type);
         return (
           <Checkbox
             key={type}
             value={type}
+            isChecked={!!myStock}
             onChange={(e) => {
-              e.target.checked ? onAdd(type) : onRemove();
+              if (e.target.checked) {
+                MyStockAPI.handleAdd(dispatch)(type, stockNo);
+              } else {
+                myStock && MyStockAPI.handleRemove(dispatch)(myStock._id);
+              }
             }}
           >
             {type}

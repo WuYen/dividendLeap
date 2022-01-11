@@ -35,6 +35,7 @@ export default function LeftPanel(props) {
     <VStack divider={<StackDivider borderColor="gray.200" />} spacing={2} align="stretch">
       <Box display="flex" justifyContent="space-between">
         <Select
+          disabled={isAdding}
           colorScheme={"teal"}
           width="160px"
           size="sm"
