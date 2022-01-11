@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, Grid, VStack, StackDivider } from "@chakra-ui/react";
+import { connect } from "react-redux";
 import useRouter from "../../hooks/useRouter";
 import Content, { Container as ContentWrapper } from "./Content";
 import LeftPanel from "./LeftPanel";
 import { useMyStocks } from "../../hooks/useMyStock";
 import api from "../../utils/api";
 
-export default function Container(props) {
+function Container(props) {
+  const { myType } = props;
   const [{ stockNo: selectedStockNo }, history] = useRouter();
   const [myStock, handleAdd, handleRemove] = useMyStocks();
   const [kdList, setKDList] = useState([]);
@@ -35,13 +37,14 @@ export default function Container(props) {
       <Grid templateColumns="200px 4fr" gap={4}>
         <Box>
           <LeftPanel
-            onAdd={handleAdd}
+            // onAdd={handleAdd}
             onRemove={handleRemove}
             onSelect={handleSelect}
             myStock={myStock}
             selectedStockNo={selectedStockNo}
             kdList={kdList}
             typeList={typeList}
+            myType={myType}
           />
         </Box>
         <Box>
@@ -55,3 +58,7 @@ export default function Container(props) {
     </Box>
   );
 }
+
+const mapStateToProps = ({ member }) => ({ myType: member.myType });
+const mapActionToProps = {};
+export default connect(mapStateToProps, mapActionToProps)(Container);

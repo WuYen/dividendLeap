@@ -7,12 +7,12 @@ export const initialState = {
   Footer: null,
 };
 
-export default function ModalDialogReducer(state = initialState, action) {
-  switch (action.type) {
+export default function reducer(state = initialState, { type, payload }) {
+  switch (type) {
     case ACTION_TYPES.OPEN_MODALDIALOG:
-      return action.payload;
+      return payload;
     case ACTION_TYPES.CLOSE_MODALDIALOG:
-      const { isOpen, onOpen, onClose } = action.payload;
+      const { isOpen, onOpen, onClose } = payload;
       return {
         header: null,
         Body: null,
@@ -21,6 +21,10 @@ export default function ModalDialogReducer(state = initialState, action) {
         onOpen: onOpen,
         onClose: onClose,
       };
+    case ACTION_TYPES.SHOW_MODAL:
+      return { ...state, ...payload, isOpen: true };
+    case ACTION_TYPES.HIDE_MODAL:
+      return { ...state, isOpen: false };
     default:
       return state;
   }

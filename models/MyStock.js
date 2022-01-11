@@ -8,8 +8,7 @@ const Model = mongoose.model(
   "MyStock", // user's stock watch list
   new Schema({
     account: String,
-    category: String, //search key word or StockNo
-    list: [{ stockNo: String }],
+    list: [{ stockNo: String, type: "" }], //type=>清單名稱(支援多清單)
     updateDate: String,
   })
 );
@@ -19,5 +18,11 @@ async function getProfile(query) {
   return data;
 }
 
+async function getProfileType(query) {
+  let data = await Model.find({ account: query.account }).distinct("list.type");
+  return data;
+}
+
 module.exports = Model;
 module.exports.getProfile = getProfile;
+module.exports.getProfileType = getProfileType;

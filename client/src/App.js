@@ -9,6 +9,7 @@ import Header from "./components/Header/Header";
 import Routes from "./components/Routing/Routes";
 import ModalDialog from "./components/General/ModalDialog";
 import LandingContainer from "./components/LandingContainer";
+import ModalContainer from "./components/ModalContainer";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <Routes />
         </Router>
         <ModalDialog />
+        <ModalContainer />
       </ChakraProvider>
     </Provider>
   );

@@ -12,6 +12,7 @@ import useRouter from "../../hooks/useRouter";
 function DividendSchedule(props) {
   const { getScheduleSuccess, toggleFilter, schedule, typeList, filter } = props;
   const [{ type = "" }, history] = useRouter();
+
   const [loading, setLoading] = useState(true);
   const typeRef = useRef(null);
 
@@ -71,5 +72,8 @@ function DividendSchedule(props) {
 }
 
 const mapStateToProps = ({ schedule }) => ({ ...schedule });
-const mapActionToProps = { getScheduleSuccess, toggleFilter };
+const mapActionToProps = {
+  getScheduleSuccess,
+  toggleFilter,
+};
 export default connect(mapStateToProps, mapActionToProps)(DividendSchedule);

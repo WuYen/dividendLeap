@@ -1,7 +1,12 @@
 import { useCallback } from "react";
 import api from "../utils/api";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { addMyStockSuccess, removeMyStockSuccess, fetchMyStockSuccess } from "../store/Member/action";
+import {
+  addMyStockSuccess,
+  removeMyStockSuccess,
+  fetchMyStockSuccess,
+  fetchMyTypesSuccess,
+} from "../store/Member/action";
 
 const compare = (next, prev) => next === prev;
 
@@ -13,9 +18,12 @@ function useMyStock(stockNo) {
 
   const dispatch = useDispatch();
 
-  const onAdd = useCallback(() => {
-    handleAdd(dispatch)(stockNo);
-  }, [stockNo]);
+  const onAdd = useCallback(
+    (type) => {
+      handleAdd(dispatch)(type, stockNo);
+    },
+    [stockNo]
+  );
 
   const onRemove = useCallback(() => {
     handleRemove(dispatch)(myStock._id);
@@ -54,14 +62,27 @@ function handleFetch(dispatch) {
         return data;
       })
       .then((response) => {
-        response.success && dispatch(fetchMyStockSuccess(response.data.list));
+        response.success && dispatch(fetchMyStockSuccess({ list: response.data.list }));
+      });
+}
+
+function handleFetchWithTypes(dispatch) {
+  return () =>
+    api
+      .get(`/my/list?types=true`)
+      .then((data) => {
+        console.log("fetch my list and types result", data);
+        return data;
+      })
+      .then((response) => {
+        response.success && dispatch(fetchMyStockSuccess({ list: response.data.list, types: response.data.types }));
       });
 }
 
 function handleAdd(dispatch) {
-  return (stockNo) =>
+  return (type, stockNo) =>
     api
-      .get(`/my/list/add/${stockNo}`)
+      .get(`/my/list/add/${type}/${stockNo}`)
       .then((data) => {
         console.log("add my result", data);
         return data;
@@ -86,8 +107,23 @@ function handleRemove(dispatch) {
   };
 }
 
+function handleFetchMyTypes(dispatch) {
+  return () =>
+    api
+      .get(`/my/list/types`)
+      .then((data) => {
+        console.log("fetch my types result", data);
+        return data;
+      })
+      .then((response) => {
+        response.success && dispatch(fetchMyTypesSuccess(response.data));
+      });
+}
+
 export const MyStockAPI = {
   handleFetch,
   handleAdd,
   handleRemove,
+  handleFetchWithTypes,
+  handleFetchMyTypes,
 };

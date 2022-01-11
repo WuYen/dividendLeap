@@ -15,14 +15,24 @@ async function getList(query) {
 }
 
 /**
+ * 取得user清單的type
+ * @param {Object} query { account }
+ * @returns
+ */
+async function getListType(query) {
+  const data = await MyStockModel.getProfileType(query);
+  return data;
+}
+
+/**
  * Add new stock to user
- * @param {Object} query { account, stockNo }
+ * @param {Object} query { account, stockNo, type }
  * @returns
  */
 async function add(query) {
-  const { account, stockNo } = query;
+  const { account, stockNo, type } = query;
   let data = await MyStockModel.getProfile(query);
-  let payload = { stockNo };
+  let payload = { stockNo, type };
   if (data) {
     //user has profile, add to exist list
     data.list.push(payload);
@@ -36,7 +46,7 @@ async function add(query) {
     });
     saveResult = await myStock.save();
   }
-  return saveResult.list.find((x) => x.stockNo == stockNo);
+  return saveResult.list.find((x) => x.stockNo == stockNo && x.type == type);
 }
 
 /**
@@ -51,4 +61,4 @@ async function remove(query) {
   return item;
 }
 
-module.exports = { getList, add, remove };
+module.exports = { getList, add, remove, getListType };
