@@ -3,6 +3,7 @@ import { Button, SlideFade, IconButton, Stack, Checkbox } from "@chakra-ui/react
 import { CheckIcon, AddIcon } from "@chakra-ui/icons";
 import { useMyStock } from "../hooks/useMyStock";
 import useModal from "../hooks/useModal";
+import { shallowEqual, useSelector } from "react-redux";
 
 export default function MyStockButton(props) {
   const { stockNo, withText = true, ...rest } = props;
@@ -86,18 +87,25 @@ export default function MyStockButton(props) {
 }
 
 function AddToPanel(props) {
-  const [myStock, onAdd, onRemove] = useMyStock(props.stockNo);
+  const [, onAdd, onRemove] = useMyStock(props.stockNo);
+  const myType = useSelector(({ member }) => {
+    return member.myType;
+  }, shallowEqual);
   return (
     <Stack>
-      <Checkbox
-        value="我的清單"
-        onChange={(e) => {
-          console.log("onChange", e.target.checked);
-          e.target.checked ? onAdd("我的清單") : onRemove();
-        }}
-      >
-        我的清單
-      </Checkbox>
+      {myType.map((type) => {
+        return (
+          <Checkbox
+            key={type}
+            value={type}
+            onChange={(e) => {
+              e.target.checked ? onAdd(type) : onRemove();
+            }}
+          >
+            {type}
+          </Checkbox>
+        );
+      })}
     </Stack>
   );
 }

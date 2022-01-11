@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Text, Box, Grid, VStack, StackDivider, Button, Flex, Select } from "@chakra-ui/react";
+import { Input, Box, VStack, StackDivider, Flex, Select, Divider } from "@chakra-ui/react";
 import stockList from "../../utils/stockList";
 import MyStockButton from "../../components/MyStockButton";
 import MyListItem from "./MyListItem";
@@ -9,26 +9,27 @@ import { LoadingSpinner } from "../../components/Loading";
 const batchSize = 50;
 
 export default function LeftPanel(props) {
-  const { onSelect, typeList } = props;
+  const { onSelect, typeList, myType, myStock } = props;
   const [pageInfo, setPageInfo] = useState({
     type: "我的清單",
     isAdding: false,
-    list: props.myStock,
+    list: [], //props.myStock
     typeLoading: false,
   });
   const { isAdding, type, list, typeLoading } = pageInfo;
 
   useEffect(() => {
-    if (type == "我的清單") {
-      setPageInfo((x) => ({ ...x, list: props.myStock, typeLoading: false }));
-    } else {
+    if (myType.find((x) => x == type)) {
+      let typeData = myStock.filter((x) => x.type == type);
+      setPageInfo((x) => ({ ...x, list: typeData, typeLoading: false }));
+    } else if (typeList.find((x) => x == type)) {
       api.get(`/schedule/${type}`).then((response) => {
         console.log("fetch schedule", response);
         const { data, success } = response;
         success && setPageInfo((x) => ({ ...x, list: data.list, typeLoading: false }));
       });
     }
-  }, [type, props.myStock]);
+  }, [type, myStock, typeList]);
 
   return (
     <VStack divider={<StackDivider borderColor="gray.200" />} spacing={2} align="stretch">
@@ -46,7 +47,14 @@ export default function LeftPanel(props) {
             setPageInfo((x) => ({ ...x, type: value, typeLoading: true }));
           }}
         >
-          <option value="我的清單">我的清單</option>
+          {myType.map((type) => {
+            return (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            );
+          })}
+
           {typeList.map((type) => {
             return (
               <option key={type} value={type}>
@@ -70,20 +78,20 @@ export default function LeftPanel(props) {
           <LoadingSpinner />
         </Flex>
       ) : (
-        <MyList {...props} type={type} data={list} />
+        <MyList {...props} type={type} data={list} myType={myType} />
       )}
     </VStack>
   );
 }
 
 const MyList = React.memo((props) => {
-  const { data = [], kdList = [], selectedStockNo, onSelect, onRemove, type } = props;
+  const { data = [], kdList = [], selectedStockNo, onSelect, onRemove, type, myType } = props;
 
   return data.map((item) => (
     <MyListItem
       key={item._id}
       type={type}
-      enableDelete={type == "我的清單"}
+      enableDelete={myType.find((x) => x == type)}
       item={item}
       active={selectedStockNo == item.stockNo}
       kd={kdList.find((x) => x.stockNo == `${item.stockNo}`)}
