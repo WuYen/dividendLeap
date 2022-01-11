@@ -1,7 +1,12 @@
 import { useCallback } from "react";
 import api from "../utils/api";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { addMyStockSuccess, removeMyStockSuccess, fetchMyStockSuccess } from "../store/Member/action";
+import {
+  addMyStockSuccess,
+  removeMyStockSuccess,
+  fetchMyStockSuccess,
+  fetchMyTypesSuccess,
+} from "../store/Member/action";
 
 const compare = (next, prev) => next === prev;
 
@@ -66,7 +71,7 @@ function handleFetchWithTypes(dispatch) {
     api
       .get(`/my/list?types=true`)
       .then((data) => {
-        console.log("fetch my types result", data);
+        console.log("fetch my list and types result", data);
         return data;
       })
       .then((response) => {
@@ -102,9 +107,23 @@ function handleRemove(dispatch) {
   };
 }
 
+function handleFetchMyTypes(dispatch) {
+  return () =>
+    api
+      .get(`/my/list/types`)
+      .then((data) => {
+        console.log("fetch my types result", data);
+        return data;
+      })
+      .then((response) => {
+        response.success && dispatch(fetchMyTypesSuccess(response.data));
+      });
+}
+
 export const MyStockAPI = {
   handleFetch,
   handleAdd,
   handleRemove,
   handleFetchWithTypes,
+  handleFetchMyTypes,
 };

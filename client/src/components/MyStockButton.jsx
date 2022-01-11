@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, SlideFade, IconButton, Stack, Checkbox } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Button, SlideFade, IconButton, Stack, Checkbox, Divider, Input, Box } from "@chakra-ui/react";
 import { CheckIcon, AddIcon } from "@chakra-ui/icons";
 import { useMyStock, MyStockAPI } from "../hooks/useMyStock";
 import useModal from "../hooks/useModal";
@@ -13,7 +13,7 @@ export default function MyStockButton(props) {
   const handleEdit = () => {
     showModal({
       title: "儲存 " + stockNo + " 至...",
-      content: <AddToPanel stockNo={stockNo} />,
+      content: <EditPanel stockNo={stockNo} hideModal={hideModal} />,
       // footer: (
       //   <>
       //     <button
@@ -86,8 +86,8 @@ export default function MyStockButton(props) {
   }
 }
 
-function AddToPanel(props) {
-  const { stockNo } = props;
+function EditPanel(props) {
+  const { stockNo, hideModal } = props;
   const dispatch = useDispatch();
   const [myStocks, myType] = useSelector(({ member }) => {
     return [member.myStock.filter((x) => x.stockNo == stockNo), member.myType];
@@ -114,6 +114,62 @@ function AddToPanel(props) {
           </Checkbox>
         );
       })}
+      <Divider />
+      <AddPanel dispatch={dispatch} stockNo={stockNo} hideModal={hideModal} />
     </Stack>
+  );
+}
+
+function AddPanel(props) {
+  const { dispatch, stockNo, hideModal } = props;
+  const [isEditing, setIsEditing] = useState(false);
+  const [type, setType] = useState(false);
+  return (
+    <>
+      {!isEditing && (
+        <Button
+          colorScheme="teal"
+          variant="solid"
+          rounded="100"
+          size="sm"
+          fontSize="sm"
+          leftIcon={<AddIcon />}
+          _focus={{ outline: "none" }}
+          onClick={() => {
+            setIsEditing(true);
+          }}
+        >
+          建立新的清單
+        </Button>
+      )}
+      {isEditing && (
+        <>
+          <Input
+            placeholder="清單名稱"
+            variant="flushed"
+            type="text"
+            size="sm"
+            onChange={(e) => setType(e.target.value)}
+            _focus={{ outline: "none" }}
+          />
+          <Box width="100%" display={"flex"} justifyContent={"flex-end"}>
+            <Button
+              colorScheme="teal"
+              variant="outline"
+              width={"70px"}
+              size="sm"
+              onClick={() => {
+                MyStockAPI.handleAdd(dispatch)(type, stockNo);
+                // MyStockAPI.handleFetchMyTypes(dispatch)();
+                setIsEditing(false);
+                hideModal();
+              }}
+            >
+              完成
+            </Button>
+          </Box>
+        </>
+      )}
+    </>
   );
 }

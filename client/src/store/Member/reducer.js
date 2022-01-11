@@ -26,8 +26,14 @@ export default function reducer(state = initialState, { type, payload }) {
       };
     }
     case ACTION_TYPES.ADD_MY_STOCK_SUCCESS: {
+      let newMyType = null;
+      if (!state.myType.find((x) => x == payload.type)) {
+        newMyType = [...state.myType, payload.type];
+      }
+
       return {
         ...state,
+        ...(newMyType && { myType: newMyType }),
         myStock: [
           ...state.myStock,
           {
@@ -41,6 +47,12 @@ export default function reducer(state = initialState, { type, payload }) {
       return {
         ...state,
         myStock: tempMyStock,
+      };
+    }
+    case ACTION_TYPES.FETCH_MY_TYPES_SUCCESS: {
+      return {
+        ...state,
+        myType: payload,
       };
     }
     default:

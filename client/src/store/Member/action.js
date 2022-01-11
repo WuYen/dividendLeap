@@ -34,3 +34,10 @@ export function removeMyStockSuccess(payload) {
     payload: payload,
   };
 }
+
+export function fetchMyTypesSuccess(list) {
+  return {
+    type: ACTION_TYPES.FETCH_MY_TYPES_SUCCESS,
+    payload: list,
+  };
+}

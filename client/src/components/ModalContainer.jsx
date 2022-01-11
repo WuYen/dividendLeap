@@ -25,7 +25,7 @@ function ModalContainer(props) {
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton _focus={{ outline: "none" }} />
         <ModalBody>{React.isValidElement(content) && content}</ModalBody>
-        <ModalFooter>{React.isValidElement(footer) && footer}</ModalFooter>
+        {React.isValidElement(footer) && <ModalFooter>{footer}</ModalFooter>}
       </ModalContent>
     </Modal>
   );
