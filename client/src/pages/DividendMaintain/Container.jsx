@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Box } from "@chakra-ui/react";
-import api from "../../utils/api";
+import api, { ScheduleAPI } from "../../utils/api";
 
 import List from "./List.v2";
 import Form from "./Form.v2";
@@ -43,7 +43,7 @@ export default function DividendMaintain(props) {
 }
 
 function fetchList(props) {
-  return api.get(`/schedule/list`).then((data) => {
+  return ScheduleAPI.getList().then((data) => {
     console.log("fetchList result", data);
     return data;
   });

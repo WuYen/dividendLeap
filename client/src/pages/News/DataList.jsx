@@ -4,6 +4,7 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import MoreButton from "./MoreButton";
 import useSocket from "../../hooks/useSocket";
 import { api, auth, formatHelper } from "../../utils";
+import { NewsAPI } from "../../utils/api";
 
 export function Container(props) {
   const { date, keyWord, search = false } = props;
@@ -12,8 +13,7 @@ export function Container(props) {
   const isLoaded = useRef(false);
   useEffect(() => {
     if (date) {
-      api
-        .get(`/news/${date}/${keyWord}`)
+      NewsAPI.getByWords(date, keyWord)
         .then((data) => {
           console.log("fetchData result", data);
           return data;

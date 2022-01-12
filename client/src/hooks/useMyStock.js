@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import api from "../utils/api";
+import { MyAPI } from "../utils/api";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import {
   addMyStockSuccess,
@@ -55,8 +55,7 @@ export { useMyStock, useMyStocks };
 
 function handleFetch(dispatch) {
   return () =>
-    api
-      .get(`/my/list`)
+    MyAPI.getList()
       .then((data) => {
         console.log("fetch my result", data);
         return data;
@@ -68,8 +67,7 @@ function handleFetch(dispatch) {
 
 function handleFetchWithTypes(dispatch) {
   return () =>
-    api
-      .get(`/my/list?types=true`)
+    MyAPI.getListWithTypes()
       .then((data) => {
         console.log("fetch my list and types result", data);
         return data;
@@ -81,8 +79,7 @@ function handleFetchWithTypes(dispatch) {
 
 function handleAdd(dispatch) {
   return (type, stockNo) =>
-    api
-      .get(`/my/list/add/${type}/${stockNo}`)
+    MyAPI.add(type, stockNo)
       .then((data) => {
         console.log("add my result", data);
         return data;
@@ -95,8 +92,7 @@ function handleAdd(dispatch) {
 function handleRemove(dispatch) {
   return (id) => {
     const payload = JSON.stringify({ id: id });
-    api
-      .post(`/my/list/remove`, payload)
+    MyAPI.remove(payload)
       .then((data) => {
         console.log("remove my result", data);
         return data;
@@ -109,8 +105,7 @@ function handleRemove(dispatch) {
 
 function handleFetchMyTypes(dispatch) {
   return () =>
-    api
-      .get(`/my/list/types`)
+    MyAPI.getTypes()
       .then((data) => {
         console.log("fetch my types result", data);
         return data;

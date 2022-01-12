@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Box, Divider, useBreakpointValue } from "@chakra-ui/react";
-import api from "../../utils/api";
+import api, { ScheduleAPI } from "../../utils/api";
 import { formatHelper } from "../../utils";
 import * as MyStock from "../../pages/MyStock/Content";
 import Loading from "../../components/Loading";
@@ -24,7 +24,7 @@ export function usePageInfo(props) {
   });
 
   useEffect(() => {
-    api.get(`/schedule/detail/${stockNo}`).then((data) => {
+    ScheduleAPI.getDetail(stockNo).then((data) => {
       console.log("data", data);
       if (data.success) {
         setPageInfo({

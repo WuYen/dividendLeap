@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Grid, Button } from "@chakra-ui/react";
-import { api, formatHelper } from "../../utils";
+import { formatHelper } from "../../utils";
+import { ForecastAPI } from "../../utils/api";
 import { LoadingSpinner } from "../../components/Loading";
 import { FundamentalData } from "../../components/TradingViewWidget";
 import { FinMindNews2, useFinMindData } from "../News/FinMindNews";
@@ -19,7 +20,7 @@ export function useFetchData(stockNo) {
 
   useEffect(() => {
     isMount.current && setPage((x) => ({ ...x, loading: true }));
-    api.get(`/forecast/${stockNo}`).then((response) => {
+    ForecastAPI.getData(stockNo).then((response) => {
       if (response.success) {
         isMount.current && setPage({ list: response.data, isLoaded: false });
       }

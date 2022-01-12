@@ -5,7 +5,7 @@ import useRouter from "../../hooks/useRouter";
 import Content, { Container as ContentWrapper } from "./Content";
 import LeftPanel from "./LeftPanel";
 import { useMyStocks } from "../../hooks/useMyStock";
-import api from "../../utils/api";
+import api, { ForecastAPI, ScheduleAPI } from "../../utils/api";
 
 function Container(props) {
   const { myType } = props;
@@ -16,12 +16,12 @@ function Container(props) {
 
   useEffect(() => {
     !selectedStockNo && myStock.length && history.push(`/my/stock/${myStock[0].stockNo}`);
-    api.get(`/forecast/kd/list`).then((response) => {
+    ForecastAPI.getListKD().then((response) => {
       console.log("fetch kd list result", response);
       const { data, success } = response;
       success && setKDList(data);
     });
-    api.get(`/schedule/menu`).then((response) => {
+    ScheduleAPI.getMenu().then((response) => {
       console.log("fetch schedule menu", response);
       const { data, success } = response;
       success && setTypeList(data);

@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Box, Center, List, ListItem, Input } from "@chakra-ui/react";
-import api from "../../utils/api";
+import api, { ToolAPI } from "../../utils/api";
 
 export default function Page(props) {
   const inputRef = useRef();
@@ -11,7 +11,7 @@ export default function Page(props) {
           <ListItem>
             <button
               onClick={() => {
-                api.get("/tool/getNewSchedule");
+                ToolAPI.newSchedule();
               }}
             >
               Fetch New Schedule
@@ -20,7 +20,7 @@ export default function Page(props) {
           <ListItem>
             <button
               onClick={() => {
-                api.get("/tool/getAllDayInfo");
+                ToolAPI.updateDayInfo();
               }}
             >
               Get All Day Info
@@ -29,7 +29,7 @@ export default function Page(props) {
           <ListItem>
             <button
               onClick={() => {
-                api.get("/tool/reset/" + inputRef.current.value);
+                ToolAPI.resetForecastData(inputRef.current.value);
               }}
             >
               <Input placeholder="股票代號" ref={inputRef} />

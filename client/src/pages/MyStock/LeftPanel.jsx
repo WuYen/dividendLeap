@@ -3,7 +3,7 @@ import { Input, Box, VStack, StackDivider, Flex, Select, Divider } from "@chakra
 import stockList from "../../utils/stockList";
 import MyStockButton from "../../components/MyStockButton";
 import MyListItem from "./MyListItem";
-import api from "../../utils/api";
+import { ScheduleAPI } from "../../utils/api";
 import { LoadingSpinner } from "../../components/Loading";
 
 const batchSize = 50;
@@ -23,7 +23,7 @@ export default function LeftPanel(props) {
       let typeData = myStock.filter((x) => x.type == type);
       setPageInfo((x) => ({ ...x, list: typeData, typeLoading: false }));
     } else if (typeList.find((x) => x == type)) {
-      api.get(`/schedule/${type}`).then((response) => {
+      ScheduleAPI.getByType(type).then((response) => {
         console.log("fetch schedule", response);
         const { data, success } = response;
         success && setPageInfo((x) => ({ ...x, list: data.list, typeLoading: false }));

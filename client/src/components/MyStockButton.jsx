@@ -14,17 +14,6 @@ export default function MyStockButton(props) {
     showModal({
       title: "儲存 " + stockNo + " 至...",
       content: <EditPanel stockNo={stockNo} hideModal={hideModal} />,
-      // footer: (
-      //   <>
-      //     <button
-      //       onClick={() => {
-      //         hideModal();
-      //       }}
-      //     >
-      //       +建立新的清單
-      //     </button>
-      //   </>
-      // ),
     });
   };
 
@@ -160,7 +149,6 @@ function AddPanel(props) {
               size="sm"
               onClick={() => {
                 MyStockAPI.handleAdd(dispatch)(type, stockNo);
-                // MyStockAPI.handleFetchMyTypes(dispatch)();
                 setIsEditing(false);
                 hideModal();
               }}
