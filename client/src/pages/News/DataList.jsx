@@ -3,10 +3,11 @@ import { Box, List, ListItem, ListIcon, Link, Text, Fade, Stack, Skeleton, Cente
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import MoreButton from "./MoreButton";
 import useSocket from "../../hooks/useSocket";
-import { api, auth, formatHelper } from "../../utils";
+import { auth, formatHelper } from "../../utils";
 import { NewsAPI } from "../../utils/api";
 
 export function Container(props) {
+  ``;
   const { date, keyWord, search = false } = props;
   const [list, setList] = useState([]);
   const socket = useSocket();

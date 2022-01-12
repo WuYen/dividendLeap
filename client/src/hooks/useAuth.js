@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import api from "../utils/api";
+import { UserAPI } from "../utils/api";
 import auth from "../utils/auth";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { loginSuccess, logoutSuccess } from "../store/Member/action";
@@ -34,7 +34,7 @@ export const AuthAPI = {
 function handleLogin(dispatch) {
   return (values) => {
     const payload = JSON.stringify(values);
-    return api.post(`/user/login`, payload).then((response) => {
+    return UserAPI.login(payload).then((response) => {
       if (response && response.result.code == loginStatus.Success.code) {
         auth.token = response.token;
         if (dispatch) {

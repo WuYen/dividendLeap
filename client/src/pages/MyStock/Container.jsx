@@ -5,7 +5,7 @@ import useRouter from "../../hooks/useRouter";
 import Content, { Container as ContentWrapper } from "./Content";
 import LeftPanel from "./LeftPanel";
 import { useMyStocks } from "../../hooks/useMyStock";
-import api, { ForecastAPI, ScheduleAPI } from "../../utils/api";
+import { ForecastAPI, ScheduleAPI } from "../../utils/api";
 
 function Container(props) {
   const { myType } = props;

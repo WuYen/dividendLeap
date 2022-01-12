@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Box } from "@chakra-ui/react";
-import api, { ScheduleAPI } from "../../utils/api";
+import { ScheduleAPI } from "../../utils/api";
 
 import List from "./List.v2";
 import Form from "./Form.v2";
@@ -51,15 +51,21 @@ function fetchList(props) {
 
 function removeData(id) {
   const payload = JSON.stringify({ id: id });
-  return api.post(`/schedule/remove`, payload).then((data) => data);
+  return ScheduleAPI.remove(payload).then((data) => data);
 }
 
 function saveData(data) {
   const isAdd = !data.id;
   const payload = JSON.stringify(data);
-  const url = `/schedule/${isAdd ? "insert" : "update"}`;
-  return api.post(url, payload).then((data) => {
-    console.log("saveData result", data);
-    return data;
-  });
+  if (isAdd) {
+    return ScheduleAPI.add(payload).then((data) => {
+      console.log("add schedule result", data);
+      return data;
+    });
+  } else {
+    return ScheduleAPI.update(payload).then((data) => {
+      console.log("update schedule result", data);
+      return data;
+    });
+  }
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { api } from "../../utils";
+import { UserAPI } from "../../utils/api";
 import { Center, Box } from "@chakra-ui/layout";
 
 export default function Validation(props) {
@@ -16,7 +16,8 @@ export default function Validation(props) {
         token: t,
         result: null,
       });
-      api.post("/user/accountvalidate", JSON.stringify({ token: t })).then((res) => {
+
+      UserAPI.validate(JSON.stringify({ token: t })).then((res) => {
         setPageInfo({
           token: pageInfo.token,
           result: res.result,

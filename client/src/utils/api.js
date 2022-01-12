@@ -44,76 +44,45 @@ export default {
 };
 
 export const ScheduleAPI = {
-  getSchedule: (type) => {
-    return get(`/schedule`);
-  },
-  getByType: (type, search) => {
-    if (search) {
-      return get(`/schedule/${type}` + search);
-    }
-    return get(`/schedule/${type}`);
-  },
-  getList: () => {
-    return get(`/schedule/list`);
-  },
-  getDetail: (stockNo) => {
-    return get(`/schedule/detail/${stockNo}`);
-  },
-  getMenu: () => {
-    return get(`/schedule/menu`);
-  },
+  getSchedule: (type) => get(`/schedule`),
+  getByType: (type, search) => get(`/schedule/${type}` + search ? search : ""),
+  getList: () => get(`/schedule/list`),
+  getDetail: (stockNo) => get(`/schedule/detail/${stockNo}`),
+  getMenu: () => get(`/schedule/menu`),
+  add: (payload) => post(`/schedule/insert`, payload),
+  remove: (payload) => post(`/schedule/remove`, payload),
+  update: (payload) => post(`/schedule/update`, payload),
 };
 
 export const MyAPI = {
-  getList: () => {
-    return get(`/my/list`);
-  },
-  getTypes: () => {
-    return get(`/my/list/types`);
-  },
-  getListWithTypes: () => {
-    return get(`/my/list?types=true`);
-  },
-  add: (type, stockNo) => {
-    return get(`/my/list/add/${type}/${stockNo}`);
-  },
-  remove: (payload) => {
-    return post(`/my/list/remove`, payload);
-  },
+  getList: () => get(`/my/list`),
+  getTypes: () => get(`/my/list/types`),
+  getListWithTypes: () => get(`/my/list?types=true`),
+  add: (type, stockNo) => get(`/my/list/add/${type}/${stockNo}`),
+  remove: (payload) => post(`/my/list/remove`, payload),
 };
 
 export const ToolAPI = {
-  newSchedule: () => {
-    return get("/tool/getNewSchedule");
-  },
-  updateDayInfo: () => {
-    return get("/tool/getAllDayInfo");
-  },
-  resetForecastData: (stockNo) => {
-    return get("/tool/reset/" + stockNo);
-  },
+  newSchedule: () => get("/tool/getNewSchedule"),
+  updateDayInfo: () => get("/tool/getAllDayInfo"),
+  resetForecastData: (stockNo) => get("/tool/reset/" + stockNo),
 };
 
 export const ForecastAPI = {
-  getData: (stockNo) => {
-    return get(`/forecast/${stockNo}`);
-  },
-  getDayHistory: (stockNo) => {
-    return get(`/forecast/day/${stockNo}`);
-  },
-  getListKD: () => {
-    return get(`/forecast/kd/list`);
-  },
+  getData: (stockNo) => get(`/forecast/${stockNo}`),
+  getDayHistory: (stockNo) => get(`/forecast/day/${stockNo}`),
+  getListKD: () => get(`/forecast/kd/list`),
 };
 
 export const NewsAPI = {
-  getNews: (stockNo) => {
-    return get(`/news/stock/${stockNo}`);
-  },
-  getListKD: () => {
-    return get(`/forecast/kd/list`);
-  },
-  getByWords: (date, keyWord) => {
-    return get(`/news/${date}/${keyWord}`);
-  },
+  getNews: (stockNo) => get(`/news/stock/${stockNo}`),
+  getListKD: () => get(`/forecast/kd/list`),
+  getByWords: (date, keyWord) => get(`/news/${date}/${keyWord}`),
+};
+
+export const UserAPI = {
+  login: (payload) => post(`/user/login`, payload),
+  validate: (payload) => post(`/user/accountvalidate`, payload),
+  confirmOTP: (payload) => post("/user/OTP/confirm", payload),
+  generateOTP: (payload) => post("/user/OTP/confirm", payload),
 };
