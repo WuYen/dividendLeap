@@ -7,17 +7,23 @@ import { shallowEqual, useSelector, useDispatch } from "react-redux";
 
 export default function MyStockButton(props) {
   const { stockNo, withText = true, ...rest } = props;
-  const [myStock, onAdd, onRemove] = useMyStock(stockNo);
   const { showModal, hideModal } = useModal();
+
+  const dispatch = useDispatch();
+  const [myStocks, myType] = useSelector(({ member }) => {
+    return [member.myStock.filter((x) => x.stockNo == stockNo), member.myType];
+  }, shallowEqual);
 
   const handleEdit = () => {
     showModal({
       title: "儲存 " + stockNo + " 至...",
-      content: <EditPanel stockNo={stockNo} hideModal={hideModal} />,
+      content: (
+        <EditPanel stockNo={stockNo} hideModal={hideModal} dispatch={dispatch} myStocks={myStocks} myType={myType} />
+      ),
     });
   };
 
-  if (myStock) {
+  if (myStocks?.length > 0) {
     return withText ? (
       <Button
         colorScheme="teal"
@@ -76,11 +82,7 @@ export default function MyStockButton(props) {
 }
 
 function EditPanel(props) {
-  const { stockNo, hideModal } = props;
-  const dispatch = useDispatch();
-  const [myStocks, myType] = useSelector(({ member }) => {
-    return [member.myStock.filter((x) => x.stockNo == stockNo), member.myType];
-  }, shallowEqual);
+  const { stockNo, hideModal, dispatch, myStocks, myType } = props;
 
   return (
     <Stack>
