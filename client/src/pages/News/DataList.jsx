@@ -7,7 +7,6 @@ import { auth, formatHelper } from "../../utils";
 import { NewsAPI } from "../../utils/api";
 
 export function Container(props) {
-  ``;
   const { date, keyWord, search = false } = props;
   const [list, setList] = useState([]);
   const socket = useSocket();

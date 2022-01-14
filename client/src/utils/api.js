@@ -45,7 +45,7 @@ export default {
 
 export const ScheduleAPI = {
   getSchedule: (type) => get(`/schedule`),
-  getByType: (type, search) => get(`/schedule/${type}` + search ? search : ""),
+  getByType: (type, search) => get(`/schedule/${type}` + (search ? search : "")),
   getList: () => get(`/schedule/list`),
   getDetail: (stockNo) => get(`/schedule/detail/${stockNo}`),
   getMenu: () => get(`/schedule/menu`),
