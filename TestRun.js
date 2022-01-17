@@ -13,6 +13,7 @@ mongooseQuickSetup(async () => {
   //  const schedule = await ScheduleModel.getData();
   await fugleProvider.chart();
 });
+//fugleProvider.chartSocket();
 
 //node .\TestRun.js
 
