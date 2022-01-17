@@ -1,11 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Box, Divider, useBreakpointValue } from "@chakra-ui/react";
-import api from "../../utils/api";
-import { formatHelper } from "../../utils";
+import React, { useEffect, useState } from "react";
+import { Box, useBreakpointValue } from "@chakra-ui/react";
+import { ScheduleAPI } from "../../utils/api";
 import * as MyStock from "../../pages/MyStock/Content";
 import Loading from "../../components/Loading";
-import StockFrame from "./StockFrame";
-import ControlPanel from "./ControlPanel";
 
 const breakPoints = {
   base: "sm",
@@ -24,7 +21,7 @@ export function usePageInfo(props) {
   });
 
   useEffect(() => {
-    api.get(`/schedule/detail/${stockNo}`).then((data) => {
+    ScheduleAPI.getDetail(stockNo).then((data) => {
       console.log("data", data);
       if (data.success) {
         setPageInfo({

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Box } from "@chakra-ui/react";
 import { tryParseFloat } from "../../utils/formatHelper";
 import Loading from "../../components/Loading";
-import api from "../../utils/api";
+import { ScheduleAPI } from "../../utils/api";
 import { getScheduleSuccess, toggleFilter } from "../../store/Dividend/action";
 import ScheduleTable from "./ScheduleTable";
 import ControlPanel from "./ControlPanel";
@@ -35,8 +35,7 @@ function DividendSchedule(props) {
   useEffect(() => {
     if (type != typeRef.current || typeList.length == 0) {
       const search = typeList.length == 0 ? "?menu=true" : "";
-      const url = (`/schedule/${type}` || "") + search;
-      api.get(url).then(({ success, data }) => {
+      ScheduleAPI.getByType(type, search).then(({ success, data }) => {
         console.log("schedule data", success, data);
         if (success) {
           handleGetScheduleSuccess(data);

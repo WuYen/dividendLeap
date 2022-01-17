@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { api, auth } from "../../utils";
+import { auth } from "../../utils";
+import { UserAPI } from "../../utils/api";
 import { Center, Box, Heading } from "@chakra-ui/layout";
 import { Table, Tbody, Tr, Td, Button, OrderedList, ListItem, Input, Text, ButtonGroup } from "@chakra-ui/react";
 import * as Yup from "yup";
@@ -129,10 +130,8 @@ function OTPContainer(props) {
   const { isOpen } = props;
   const [qrCode, setQrCode] = useState();
   const handleSubmit = async (values, actions) => {
-    const { result } = await api.post(
-      "/user/OTP/confirm",
-      JSON.stringify({ account: auth.context.account, token: values })
-    );
+    const payload = JSON.stringify({ account: auth.context.account, token: values });
+    const { result } = await UserAPI.confirmOTP(payload);
     if (result) {
       // useToast()({
       //   title: "啟動成功",
@@ -142,7 +141,8 @@ function OTPContainer(props) {
     }
   };
   const getQrCode = async () => {
-    let res = await api.post("/user/OTP/generate", JSON.stringify({ account: auth.context.account, token: null }));
+    const payload = JSON.stringify({ account: auth.context.account, token: null });
+    let res = await UserAPI.generateOTP(payload);
     res && setQrCode(res.result);
   };
   //#endregion

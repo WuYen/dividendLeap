@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Switch, FormLabel, Button, Text, Flex, Spacer } from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
-import api from "../../utils/api";
+import { ToolAPI, ScheduleAPI } from "../../utils/api";
 import auth from "../../utils/auth";
 import KeyWord from "../../components/KeyWord";
 
@@ -61,10 +61,9 @@ function RefreshButton(props) {
         _focus={{ outline: "none" }}
         onClick={() => {
           setLoading(true);
-          api
-            .get("/tool/getNewSchedule")
+          ToolAPI.newSchedule()
             .then((res) => {
-              return api.get(`/schedule`);
+              return ScheduleAPI.getSchedule();
             })
             .then((res) => {
               console.log("result", res);

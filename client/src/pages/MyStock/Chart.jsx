@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
-import { api } from "../../utils";
+import { ForecastAPI } from "../../utils/api";
 import { formatDate, toDateString } from "../../utils/formatHelper";
 import "chartjs-adapter-moment";
 
@@ -11,7 +11,7 @@ export default function ChartContainer(props) {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    api.get(`/forecast/day/${stockNo}`).then((response) => {
+    ForecastAPI.getDayHistory(stockNo).then((response) => {
       console.log("chart result", response);
       response.success && setData(response.data);
     });

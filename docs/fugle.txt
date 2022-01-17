@@ -1,0 +1,17 @@
+富果台股 API
+https://medium.com/fugle/%E4%BD%BF%E7%94%A8fugle-realtime-api%E4%B8%B2%E6%8E%A5%E8%82%A1%E7%A5%A8%E5%8D%B3%E6%99%82%E8%A1%8C%E6%83%85-802f0ded6e0
+https://developer.fugle.tw/document/intraday/introduction
+https://developer.fugle.tw/article/line_notify_stock_price_alert
+
+
+兆豐API
+https://project.emega.com.tw/project/megaapi/
+
+
+元大API即時行情串接
+https://medium.com/coding-learning-sharing/%E5%85%83%E5%A4%A7api%E5%8D%B3%E6%99%82%E8%A1%8C%E6%83%85%E4%B8%B2%E6%8E%A5-%E5%9B%9B-254db59a945f
+
+
+永豐金API
+https://www.sinotrade.com.tw/ec/eleader1/API.htm
+https://www.sinotrade.com.tw/richclub/PythonAPI/video/01-%E7%94%A8-Python-%E4%B8%B2%E6%8E%A5%E5%88%B8%E5%95%86-API---%E5%8F%96%E5%BE%97%E6%AD%B7%E5%8F%B2-Tick-%E8%B3%87%E6%96%99%E8%88%87-K-%E6%A3%92-5fe06055f8acb91ca4fc04f3

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { api } from "../../utils";
+import { NewsAPI } from "../../utils/api";
 
 /*
 <FinMindNews stockNo={stockNo} loading={<DataList.Loading />}>
@@ -14,8 +14,7 @@ export default function FinMindNews(props) {
   const isLoaded = useRef(false);
 
   useEffect(() => {
-    api
-      .get(`/news/stock/${stockNo}`)
+    NewsAPI.getNews(stockNo)
       .then((data) => {
         console.log("fetchData result", data);
         return data;
@@ -47,8 +46,7 @@ export function useFinMindData(stockNo) {
   const [page, setPage] = useState({ list: [], isLoaded: false });
 
   useEffect(() => {
-    api
-      .get(`/news/stock/${stockNo}`)
+    NewsAPI.getNews(stockNo)
       .then((data) => {
         console.log("fetchData result", data);
         return data;
