@@ -16,7 +16,7 @@ export default function reducer(state = initialState, { type, payload }) {
     case ACTION_TYPES.LOGIN_SUCCESS:
       return { ...state, account: payload, isLogin: true };
     case ACTION_TYPES.LOGOUT_SUCCESS:
-      return { account: "", isLogin: false, myStock: [] };
+      return { account: "", isLogin: false, myStock: [], myType: [] };
     case ACTION_TYPES.FETCH_MY_STOCK_SUCCESS: {
       const { list, types } = payload;
       return {

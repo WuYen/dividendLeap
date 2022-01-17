@@ -1,33 +1,34 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Button, SlideFade, IconButton, Stack, Checkbox, Divider, Input, Box } from "@chakra-ui/react";
 import { CheckIcon, AddIcon } from "@chakra-ui/icons";
 import { useMyStock, MyStockAPI } from "../hooks/useMyStock";
+import useModal from "../hooks/useModal";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
-import { showModal, hideModal } from "../store/ModalDialog/action";
 
 export default function MyStockButton(props) {
   const { stockNo, withText = true, ...rest } = props;
-  const [myStocks, myType, isLogin] = useSelector(({ member }) => {
-    return [member.myStock.filter((x) => x.stockNo == stockNo), member.myType, member.isLogin];
-  }, shallowEqual);
-  const dispatch = useDispatch();
-  const handleHide = useCallback(() => {
-    dispatch(hideModal());
-  }, []);
+  const [myStock, onAdd, onRemove] = useMyStock(stockNo);
+  const { showModal, hideModal } = useModal();
 
   const handleEdit = () => {
-    let payload = {
+    showModal({
       title: "儲存 " + stockNo + " 至...",
-      content: (
-        <EditPanel stockNo={stockNo} onHideModal={handleHide} dispatch={dispatch} myStocks={myStocks} myType={myType} />
-      ),
-    };
-    dispatch(showModal(payload));
+      content: <EditPanel stockNo={stockNo} hideModal={hideModal} />,
+      // footer: (
+      //   <>
+      //     <button
+      //       onClick={() => {
+      //         hideModal();
+      //       }}
+      //     >
+      //       +建立新的清單
+      //     </button>
+      //   </>
+      // ),
+    });
   };
-  if (!isLogin) {
-    return null;
-  }
-  if (myStocks?.length > 0) {
+
+  if (myStock) {
     return withText ? (
       <Button
         colorScheme="teal"
@@ -86,7 +87,11 @@ export default function MyStockButton(props) {
 }
 
 function EditPanel(props) {
-  const { stockNo, onHideModal, dispatch, myStocks, myType } = props;
+  const { stockNo, hideModal } = props;
+  const dispatch = useDispatch();
+  const [myStocks, myType] = useSelector(({ member }) => {
+    return [member.myStock.filter((x) => x.stockNo == stockNo), member.myType];
+  }, shallowEqual);
 
   return (
     <Stack>
@@ -110,13 +115,13 @@ function EditPanel(props) {
         );
       })}
       <Divider />
-      <AddPanel dispatch={dispatch} stockNo={stockNo} onHideModal={onHideModal} />
+      <AddPanel dispatch={dispatch} stockNo={stockNo} hideModal={hideModal} />
     </Stack>
   );
 }
 
 function AddPanel(props) {
-  const { dispatch, stockNo, onHideModal } = props;
+  const { dispatch, stockNo, hideModal } = props;
   const [isEditing, setIsEditing] = useState(false);
   const [type, setType] = useState(false);
   return (
@@ -155,8 +160,9 @@ function AddPanel(props) {
               size="sm"
               onClick={() => {
                 MyStockAPI.handleAdd(dispatch)(type, stockNo);
+                // MyStockAPI.handleFetchMyTypes(dispatch)();
                 setIsEditing(false);
-                onHideModal();
+                hideModal();
               }}
             >
               完成
