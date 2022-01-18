@@ -26,25 +26,36 @@ async function httpClient(channel, stockNo = 2884) {
   return response;
 }
 
+let socketCount = 0;
+
 function socketClient(channel, stockNo = 2884, callBack) {
-  let ws = new WebSocket(url.buildWS({ channel, stockNo }));
-  ws.onopen = function () {
-    console.log("open connection");
-  };
+  if (socketCount < 5) {
+    socketCount++;
+    let ws = new WebSocket(url.buildWS({ channel, stockNo }));
+    ws.onopen = function () {
+      console.log("open connection");
+    };
 
-  ws.onclose = function () {
-    console.log("disconnected");
-  };
+    ws.onclose = function () {
+      socketCount--;
+      console.log("disconnected");
+    };
 
-  ws.onmessage = function (message) {
-    //console.log(`onmessage`, message);
-    console.log(`socketClient ${channel}`, JSON.parse(message.data));
-    callBack && callBack(JSON.parse(message.data));
-  };
+    ws.onmessage = function (message) {
+      //console.log(`onmessage`, message);
+      console.log(`socketClient ${channel}`, JSON.parse(message.data));
+      callBack && callBack(JSON.parse(message.data));
+    };
+    return ws; //ws.close():
+  }
+  throw new Error("exceed socket count limit");
 }
 
 module.exports = {
   channel,
   httpClient,
   socketClient,
+  get SocketCount() {
+    return socketCount;
+  },
 };
