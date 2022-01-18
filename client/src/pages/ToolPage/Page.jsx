@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Box, Center, List, ListItem, Input } from "@chakra-ui/react";
-import api, { ToolAPI } from "../../utils/api";
+import { ToolAPI, config } from "../../utils";
 import Socket from "../../components/Socket";
 
 export default function Page(props) {
@@ -37,9 +37,11 @@ export default function Page(props) {
               Reset Data
             </button>
           </ListItem>
-          <ListItem>
-            <Socket />
-          </ListItem>
+          {config.isDev && (
+            <ListItem>
+              <Socket />
+            </ListItem>
+          )}
         </List>
       </Center>
     </Box>
