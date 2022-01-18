@@ -2,9 +2,11 @@ const { mongooseQuickSetup } = require("./utilities/helper");
 const provider = require("./providers/kd.goodinfo");
 const KDModel = require("./models/KD");
 
-mongooseQuickSetup(async () => {
-  await DoWork();
-});
+async function run() {
+  mongooseQuickSetup(async () => {
+    await DoWork();
+  });
+}
 
 async function DoWork() {
   await KDModel.deleteMany({});

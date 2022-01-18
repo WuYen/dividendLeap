@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+const KDJob = require("../KDJob");
+const { mongooseQuickSetup } = require("../utilities/helper");
+
+mongooseQuickSetup(async () => {
+  await KDJob.DoWork();
+});
