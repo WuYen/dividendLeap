@@ -2,39 +2,32 @@ const helper = require("../utilities/requestCore");
 const config = require("../utilities/config");
 const WebSocket = require("isomorphic-ws");
 
-const version = "v0.3";
-const api = `api.fugle.tw/realtime/${version}/intraday`;
 const channel = {
-  quote: "quote",
-  chart: "chart",
-  meta: "meta",
-  dealts: "dealts",
-  volumes: "volumes",
+  quote: "quote", //提供盤中個股/指數逐筆交易金額、狀態、最佳五檔及統計資訊
+  chart: "chart", //提供盤中即時開高低收價量資料, 方便您繪製各種線圖
+  meta: "meta", //提供盤中個股/指數當日基本資訊
+  dealts: "dealts", //取得個股當日所有成交資訊（如: 個股價量、大盤總量)
+  volumes: "volumes", //提供盤中個股即時分價量
 };
 
 const url = {
   build({ channel, stockNo }) {
-    return `https://${api}/${channel}?symbolId=${stockNo}&apiToken=${config.FUGLE_TOKEN}`;
+    return `https://${config.FUGLE_URI}/${channel}?symbolId=${stockNo}&apiToken=${config.FUGLE_TOKEN}`;
   },
   buildWS({ channel, stockNo }) {
-    return `wss://${api}/${channel}?symbolId=${stockNo}&apiToken=${config.FUGLE_TOKEN}`;
+    return `wss://${config.FUGLE_URI}/${channel}?symbolId=${stockNo}&apiToken=${config.FUGLE_TOKEN}`;
   },
 };
 
-//提供盤中個股/指數逐筆交易金額、狀態、最佳五檔及統計資訊
-//https://api.fugle.tw/realtime/v0.3/intraday/quote?symbolId=2884&apiToken=demo
-
-async function chart(stockNo = 2884) {
-  //提供盤中即時開高低收價量資料, 方便您繪製各種線圖
-  var response = await helper.get(url.build({ channel: channel.chart, stockNo }));
-  console.log("chart response", response);
+async function httpClient(channel, stockNo = 2884) {
+  var response = await helper.get(url.build({ channel, stockNo }));
+  console.log(`httpClient ${channel}`, response);
 
   return response;
 }
 
-function chartSocket(stockNo = 2884) {
-  //提供盤中即時開高低收價量資料, 方便您繪製各種線圖
-  let ws = new WebSocket(url.buildWS({ channel: channel.chart, stockNo, ws: true }));
+function socketClient(channel, stockNo = 2884, callBack) {
+  let ws = new WebSocket(url.buildWS({ channel, stockNo }));
   ws.onopen = function () {
     console.log("open connection");
   };
@@ -45,20 +38,13 @@ function chartSocket(stockNo = 2884) {
 
   ws.onmessage = function (message) {
     //console.log(`onmessage`, message);
-    console.log(`data`, JSON.parse(message.data));
+    console.log(`socketClient ${channel}`, JSON.parse(message.data));
+    callBack && callBack(JSON.parse(message.data));
   };
 }
 
 module.exports = {
-  chart,
-  chartSocket,
+  channel,
+  httpClient,
+  socketClient,
 };
-
-//提供盤中個股/指數當日基本資訊
-//https://api.fugle.tw/realtime/v0.3/intraday/meta?symbolId=2884&apiToken=demo
-
-//取得個股當日所有成交資訊（如: 個股價量、大盤總量
-//https://api.fugle.tw/realtime/v0.3/intraday/dealts?symbolId=2884&apiToken=demo&limit=3
-
-//提供盤中個股即時分價量
-//https://api.fugle.tw/realtime/v0.3/intraday/volumes?symbolId=2884&apiToken=demo&limit=3

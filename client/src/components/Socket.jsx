@@ -31,13 +31,13 @@ export default function Socket(props) {
       }
     };
   }, [socket]);
-  const style = { padding: "5px", border: "1px solid black" };
+  const style = { padding: "5px", border: "1px solid black", margin: "2px" };
   return (
     <div>
-      <input style={{ border: "1px solid" }} ref={keywordRef}></input>
+      {/* <input style={style} ref={keywordRef}></input>
       <button style={style} onClick={search}>
         Search
-      </button>
+      </button> */}
       <button style={style} onClick={() => socket.connect()}>
         Connect
       </button>
@@ -51,15 +51,6 @@ export default function Socket(props) {
         }}
       >
         Send Test
-      </button>
-      <button
-        style={style}
-        onClick={() => {
-          console.log("userConnected", auth.context.account);
-          socket.emit("test", auth.context.account);
-        }}
-      >
-        userConnected
       </button>
     </div>
   );
