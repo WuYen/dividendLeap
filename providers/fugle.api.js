@@ -13,8 +13,11 @@ const channel = {
 };
 
 const url = {
-  build({ channel, stockNo, ws = false }) {
-    return (ws ? "wss://" : "https://") + `${api}/${channel}?symbolId=${stockNo}&apiToken=${config.FUGLE_TOKEN}`;
+  build({ channel, stockNo }) {
+    return `https://${api}/${channel}?symbolId=${stockNo}&apiToken=${config.FUGLE_TOKEN}`;
+  },
+  buildWS({ channel, stockNo }) {
+    return `wss://${api}/${channel}?symbolId=${stockNo}&apiToken=${config.FUGLE_TOKEN}`;
   },
 };
 
@@ -23,30 +26,26 @@ const url = {
 
 async function chart(stockNo = 2884) {
   //提供盤中即時開高低收價量資料, 方便您繪製各種線圖
-  //  wss://api.fugle.tw/realtime/v0.3/intraday/chart?symbolId=2884&apiToken=demo
+  var response = await helper.get(url.build({ channel: channel.chart, stockNo }));
+  console.log("chart response", response);
 
-  var data = await helper.get(url.build({ channel: channel.chart, stockNo }));
-  console.log("chart response", data);
+  return response;
 }
 
 function chartSocket(stockNo = 2884) {
   //提供盤中即時開高低收價量資料, 方便您繪製各種線圖
-  //  wss://api.fugle.tw/realtime/v0.3/intraday/chart?symbolId=2884&apiToken=demo
-  let ws = new WebSocket(url.build({ channel: channel.chart, stockNo, ws: true }));
-  ws.onopen = () => {
+  let ws = new WebSocket(url.buildWS({ channel: channel.chart, stockNo, ws: true }));
+  ws.onopen = function () {
     console.log("open connection");
   };
-  ws.onopen = function open() {
-    console.log("connected");
-    ws.send(Date.now());
-  };
 
-  ws.onclose = function close() {
+  ws.onclose = function () {
     console.log("disconnected");
   };
 
-  ws.onmessage = function incoming(data) {
-    console.log(`onmessage`, data);
+  ws.onmessage = function (message) {
+    //console.log(`onmessage`, message);
+    console.log(`data`, JSON.parse(message.data));
   };
 }
 

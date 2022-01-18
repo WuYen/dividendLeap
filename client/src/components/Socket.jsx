@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import useSocket from "../utils/useSocket";
+import useSocket from "../hooks/useSocket";
+import auth from "../utils/auth";
 
 export default function Socket(props) {
   const socket = useSocket();
@@ -30,21 +31,36 @@ export default function Socket(props) {
       }
     };
   }, [socket]);
-
+  const style = { padding: "5px", border: "1px solid black" };
   return (
     <div>
       <input style={{ border: "1px solid" }} ref={keywordRef}></input>
-      <button onClick={search}>Search</button>
-      <button onClick={() => socket.connect()}>Connect</button>
-      <button onClick={() => socket.disconnect()}>Disconnect</button>
+      <button style={style} onClick={search}>
+        Search
+      </button>
+      <button style={style} onClick={() => socket.connect()}>
+        Connect
+      </button>
+      <button style={style} onClick={() => socket.disconnect()}>
+        Disconnect
+      </button>
       <button
+        style={style}
         onClick={() => {
           socket.emit("test", "TTTTest");
         }}
       >
         Send Test
       </button>
-      {props.children(data)}
+      <button
+        style={style}
+        onClick={() => {
+          console.log("userConnected", auth.context.account);
+          socket.emit("test", auth.context.account);
+        }}
+      >
+        userConnected
+      </button>
     </div>
   );
 }

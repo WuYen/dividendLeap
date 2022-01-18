@@ -9,11 +9,11 @@ const dayInfoService = require("./services/dayInfoService");
 
 const stockNo = "2451"; //創見
 
-mongooseQuickSetup(async () => {
-  //  const schedule = await ScheduleModel.getData();
-  await fugleProvider.chart();
-});
-//fugleProvider.chartSocket();
+// mongooseQuickSetup(async () => {
+//   //  const schedule = await ScheduleModel.getData();
+//   await fugleProvider.chart();
+// });
+fugleProvider.chartSocket();
 
 //node .\TestRun.js
 
