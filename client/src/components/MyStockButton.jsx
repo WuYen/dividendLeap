@@ -9,24 +9,19 @@ export default function MyStockButton(props) {
   const { stockNo, withText = true, ...rest } = props;
   const [myStock, onAdd, onRemove] = useMyStock(stockNo);
   const { showModal, hideModal } = useModal();
-
+  const isLogin = useSelector(({ member }) => {
+    return member.isLogin;
+  }, shallowEqual);
   const handleEdit = () => {
     showModal({
       title: "儲存 " + stockNo + " 至...",
       content: <EditPanel stockNo={stockNo} hideModal={hideModal} />,
-      // footer: (
-      //   <>
-      //     <button
-      //       onClick={() => {
-      //         hideModal();
-      //       }}
-      //     >
-      //       +建立新的清單
-      //     </button>
-      //   </>
-      // ),
     });
   };
+
+  if (!isLogin) {
+    return null;
+  }
 
   if (myStock) {
     return withText ? (
