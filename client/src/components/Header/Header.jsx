@@ -4,7 +4,7 @@ import DesktopNav from "./DesktopNav";
 import MobileNav, { HamburgerButton } from "./MobileNav";
 import MemberNav from "./MemberNav";
 import BrandLogo from "./BrandLogo";
-import useAuth from "../../hooks/useAuth";
+import { useAuth } from "../../hooks";
 
 const NAV_ITEMS = [
   {

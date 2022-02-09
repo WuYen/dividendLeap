@@ -2,9 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { Box, List, ListItem, ListIcon, Link, Text, Fade, Stack, Skeleton, Center } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import MoreButton from "./MoreButton";
-import useSocket from "../../hooks/useSocket";
-import { auth, formatHelper } from "../../utils";
-import { NewsAPI } from "../../utils/api";
+import { useSocket } from "../../hooks";
+import { auth, formatHelper, NewsAPI } from "../../utils";
 
 export function Container(props) {
   const { date, keyWord, search = false } = props;

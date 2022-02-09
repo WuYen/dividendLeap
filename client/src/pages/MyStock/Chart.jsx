@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
-import { ForecastAPI } from "../../utils/api";
-import { formatDate, toDateString } from "../../utils/formatHelper";
+import { ForecastAPI, formatDate, toDateString } from "../../utils";
 import "chartjs-adapter-moment";
 
 const colors = ["#319795", "#9A9A96", "#AFAEAC", "#C3C3C1", "#D8D8D6"];

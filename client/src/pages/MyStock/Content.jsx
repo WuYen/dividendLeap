@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Grid, Button } from "@chakra-ui/react";
-import { formatHelper } from "../../utils";
-import { ForecastAPI } from "../../utils/api";
+import { formatHelper, ForecastAPI } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
 import { FundamentalData } from "../../components/TradingViewWidget";
 import { FinMindNews2, useFinMindData } from "../News/FinMindNews";
@@ -12,7 +11,7 @@ import ComputeStock from "./ComputeStock";
 import MyStockButton from "../../components/MyStockButton";
 import StockFrame from "../DividendDetail/StockFrame";
 import Chart from "./Chart";
-import useIsMounted from "../../hooks/useIsMounted";
+import { useIsMounted } from "../../hooks";
 
 export function useFetchData(stockNo) {
   const [page, setPage] = useState({ list: [], loading: true });
