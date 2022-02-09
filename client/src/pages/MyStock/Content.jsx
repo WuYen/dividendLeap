@@ -109,7 +109,7 @@ function Forecast(props) {
               <ComputeStock key={stockNo} eps={data.eps[0]} />
               目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
             </Box>
-            <InfoPanel data={data.eps} stockDetail={data.stockDetail} />
+            <InfoPanel data={data.eps} revenue={data.revenue} stockDetail={data.stockDetail} />
             <EpsList data={[data.eps[0]]} />
             <Box h="2" />
             <EpsList data={data.eps.slice(1)} isHistory={true} />

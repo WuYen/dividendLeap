@@ -8,6 +8,7 @@ const DayHistoryModel = require("../models/DayHistory");
 const helper = require("../utilities/helper");
 const stockDetailService = require("./stockDetailService");
 const { getRandomIntInclusive, delay } = require("../utilities/delay");
+const revenueProvider = require("../providers/revenue.finMind");
 
 function accumulateEps(data) {
   return data.reduce((accumulator, currentValue, currentIndex, array) => {
@@ -17,18 +18,21 @@ function accumulateEps(data) {
 
 // targetYear = 2022(明年)
 async function predictV2(stockNo = "2451", targetYear) {
-  let [epsData, dividendDetailData, dayInfoData, dividendInfoData, yearHistoryData, stockDetail] = await Promise.all([
-    EpsModel.getData(stockNo), //eps 資料全撈
-    DividendDetailModel.getByRange({
-      stockNo,
-      start: `${targetYear - 5}`,
-      end: `${targetYear - 1}`,
-    }), //先抓過去五年的DividendDetail
-    DayInfoModel.getData({ stockNo, date: helper.latestTradeDate() }),
-    DividendInfoModel.getData(stockNo),
-    YearHistoryModel.getData({ stockNo }),
-    stockDetailService.getDetail(stockNo, targetYear),
-  ]);
+  let [epsData, dividendDetailData, dayInfoData, dividendInfoData, yearHistoryData, stockDetail, revenue] =
+    await Promise.all([
+      EpsModel.getData(stockNo), //eps 資料全撈
+      DividendDetailModel.getByRange({
+        stockNo,
+        start: `${targetYear - 5}`,
+        end: `${targetYear - 1}`,
+      }), //先抓過去五年的DividendDetail
+      DayInfoModel.getData({ stockNo, date: helper.latestTradeDate() }),
+      DividendInfoModel.getData(stockNo),
+      YearHistoryModel.getData({ stockNo }),
+      stockDetailService.getDetail(stockNo, targetYear),
+      revenueProvider.getData({ year: targetYear, stockNo }),
+    ]);
+
   if (!yearHistoryData) {
     yearHistoryData = { data: [] };
   }
@@ -78,6 +82,7 @@ async function predictV2(stockNo = "2451", targetYear) {
     baseInfo: baseInfo,
     dayInfo: dayInfoData,
     stockDetail: stockDetail,
+    revenue: revenue,
     eps: [
       {
         year: `${targetYear}`,
