@@ -9,8 +9,8 @@ export default function InfoPanel(props) {
     { value: "", text: "去年同期EPS" },
     { value: "", text: "去年全年EPS" },
     { value: "", text: "去年全年獲利" },
-    { value: stockDetail.rateAvg5, text: "5年平均殖利率" },
-    { value: stockDetail.rateAvg10, text: "10年平均殖利率" },
+    { value: stockDetail.rateAvg5 + "%", text: "5年平均殖利率" },
+    { value: stockDetail.rateAvg10 + "%", text: "10年平均殖利率" },
   ];
 
   let total = [0, 0];
@@ -25,7 +25,7 @@ export default function InfoPanel(props) {
 
   displayData[0].value = ((total[0] / total[1]) * 100).toFixed(2) + "%";
   displayData[1].value = ((parseFloat(thisYear.totalEps) / parseFloat(lastYear.totalEps)) * 100).toFixed(2) + "%";
-  displayData[2].value = getRevenueRate(revenue);
+  displayData[2].value = getRevenueRate(revenue) + "%";
 
   return (
     <Box display="flex" m="2">
@@ -53,7 +53,7 @@ function getRevenueRate(revenue) {
   var revenueLast = revenue.filter((x) => x.revenue_year == 2020);
   var totalRevenueThis = revenueThis.reduce(sum, 0);
   var totalRevenueLast = revenueLast.reduce(sum, 0);
-  return ((totalRevenueThis / totalRevenueLast) * 100).toFixed(2) + "%";
+  return ((totalRevenueThis / totalRevenueLast) * 100).toFixed(2);
   // {
   //   country: "Taiwan";
   //   date: "2016-01-01";
