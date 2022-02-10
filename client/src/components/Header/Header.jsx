@@ -27,11 +27,11 @@ const NAV_ITEMS = [
     href: "/tool",
     auth: true,
   },
-  {
-    label: "Real Time",
-    href: "/realTime",
-    auth: true,
-  },
+  // { 暫時不做
+  //   label: "Real Time",
+  //   href: "/realTime",
+  //   auth: true,
+  // },
   // {
   //   label: "歷史列表",
   //   href: "/schedule/history",

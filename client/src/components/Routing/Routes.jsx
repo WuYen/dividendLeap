@@ -15,7 +15,6 @@ import {
   Validation,
   Settings,
 } from "../../pages/index";
-import StockSocket from "../StockSocket";
 
 export default function Routing(props) {
   return (
@@ -54,9 +53,6 @@ export default function Routing(props) {
         </PrivateRoute>
         <PrivateRoute path="/tool">
           <ToolPage />
-        </PrivateRoute>
-        <PrivateRoute path="/realTime">
-          <StockSocket />
         </PrivateRoute>
       </Switch>
     </ErrorBoundary>

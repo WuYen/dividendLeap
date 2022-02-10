@@ -1,5 +1,5 @@
 const socketIO = require("socket.io");
-const realTimeService = require("../services/realTimeService");
+// const realTimeService = require("../services/realTimeService");
 
 let instance = null;
 let onlineList = new Map();
@@ -32,7 +32,7 @@ function regisChannel(userId, socket) {
   });
 
   socket.on("watch", async function (stockNo) {
-    realTimeService.watch(stockNo);
+    // realTimeService.watch(stockNo);
   });
 
   socket.on("test", async function (msg) {
@@ -51,7 +51,7 @@ function leave(userID, socket) {
   socket.on("disconnect", function () {
     console.log("A user disconnected", userID, socket.id);
     onlineList.delete(userID);
-    realTimeService.unWatch(stockNo);
+    //realTimeService.unWatch(stockNo);
     console.log("user list[leave]", [...onlineList.keys()]);
   });
 }
