@@ -3,7 +3,7 @@ const DayInfoModel = require("../models/DayInfo");
 const DayHistoryModel = require("../models/DayHistory");
 const ScheduleModel = require("../models/Schedule");
 const StockDetailModel = require("../models/StockDetail");
-const { stock_dividend } = require("../providers/stockList");
+const StockListModel = require("../models/StockList");
 
 const { latestTradeDate, today } = require("../utilities/helper");
 
@@ -52,7 +52,7 @@ async function buildData(stockNo, year, latestTradDate) {
   //找今年的dividend info
   let dInfoTY =
     (await ScheduleModel.getByStockNo(stockNo)) ||
-    stock_dividend.find((x) => x.stockNo == stockNo && x.year == year) ||
+    StockListModel.stock_dividend.find((x) => x.stockNo == stockNo && x.year == year) ||
     dInfo.data.find((x) => x.year == year) ||
     (await DividendInfoModel.getData(stockNo, true)).data.find((x) => x.year == year) ||
     {};

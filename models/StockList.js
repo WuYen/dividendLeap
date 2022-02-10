@@ -2,15 +2,16 @@ const mongoose = require("mongoose");
 const provider = require("../providers/stockList");
 const highYield = require("../providers/highYield");
 
-const schema = new mongoose.Schema({
-  stockNo: String,
-  stockName: String,
-  updateDate: String,
-});
+// Schema
+const Schema = mongoose.Schema;
 
 const Model = mongoose.model(
   "StockList", // all stock no and name
-  schema
+  new Schema({
+    stockNo: String,
+    stockName: String,
+    updateDate: String,
+  })
 );
 
 module.exports = Model;

@@ -1,8 +1,5 @@
 const DayInfoModel = require("../models/DayInfo");
 const ScheduleModel = require("../models/Schedule");
-const highYield = require("../providers/highYield");
-const { stock_dividend } = require("../providers/stockList");
-
 const { today, latestTradeDate } = require("../utilities/helper");
 
 function afterDate(date) {
