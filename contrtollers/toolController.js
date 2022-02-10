@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { success } = require("../utilities/response");
+const socketManager = require("../utilities/socketManager");
 const { today, latestTradeDate } = require("../utilities/dateTime");
 const { getAllDayInfo } = require("../services/dayInfoService");
 const { update } = require("../services/scheduleService");
@@ -63,6 +64,21 @@ router.get("/reset/:stockNo", async function (req, res, next) {
       return res.send(success(result));
     }
     throw new Error("reset fail");
+  } catch (error) {
+    next(error);
+  }
+});
+
+//test socket
+router.get("/test/:account", async function (req, res, next) {
+  try {
+    let userId = req.params.account;
+    if (userId) {
+      socketManager.send(req.params.account);
+      return res.send(success({ meg: "received" }));
+    } else {
+      return res.send(success({ meg: "userId is empty" }));
+    }
   } catch (error) {
     next(error);
   }

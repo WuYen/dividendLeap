@@ -4,8 +4,7 @@ import * as Yup from "yup";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
 import { Box, ButtonGroup, Center, useToast } from "@chakra-ui/react";
 
-import useAuth from "../../hooks/useAuth";
-import useRouter from "../../hooks/useRouter";
+import { useRouter, useAuth } from "../../hooks";
 import { loginStatus } from "../../constants/status";
 import AlertComponent from "../../components/General/Alert";
 

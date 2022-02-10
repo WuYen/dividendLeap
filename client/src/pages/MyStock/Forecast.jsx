@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Box, Grid, Button } from "@chakra-ui/react";
-import { formatHelper, ForecastAPI } from "../../utils";
-import { LoadingSpinner } from "../../components/Loading";
+import { formatHelper } from "../../utils";
 import { FundamentalData } from "../../components/TradingViewWidget";
 import { FinMindNews2, useFinMindData } from "../News/FinMindNews";
 import DataList from "../News/DataList";
@@ -11,54 +10,8 @@ import ComputeStock from "./ComputeStock";
 import MyStockButton from "../../components/MyStockButton";
 import StockFrame from "../DividendDetail/StockFrame";
 import Chart from "./Chart";
-import { useIsMounted } from "../../hooks";
 
-export function useFetchData(stockNo) {
-  const [page, setPage] = useState({ list: [], loading: true });
-  const isMount = useIsMounted();
-
-  useEffect(() => {
-    isMount.current && setPage((x) => ({ ...x, loading: true }));
-    ForecastAPI.getData(stockNo).then((response) => {
-      if (response.success) {
-        isMount.current && setPage({ list: response.data, isLoaded: false });
-      }
-    });
-  }, [stockNo]);
-
-  return [page.list, page.loading];
-}
-
-export function Container(props) {
-  const { stockNo } = props;
-  const [data, loading] = useFetchData(stockNo);
-
-  return React.cloneElement(props.children, {
-    stockNo,
-    data,
-    loading,
-  });
-}
-
-export function Content(props) {
-  const { stockNo, data, loading } = props;
-
-  return (
-    <Box h="100%">
-      {loading ? (
-        <Box className="loading-container" textAlign="center" pt="10vh">
-          <LoadingSpinner />
-        </Box>
-      ) : (
-        <Forecast key={stockNo} stockNo={stockNo} data={data} />
-      )}
-    </Box>
-  );
-}
-
-export default React.memo(Content);
-
-function Forecast(props) {
+export default function Forecast(props) {
   const { data, stockNo } = props;
   const [showStockFrame, setShowStockFrame] = useState(false);
   return (
@@ -99,7 +52,6 @@ function Forecast(props) {
           Yahoo
         </Button>
       </Box>
-      {/* {!showStockFrame && (    )} */}
       <Box display={showStockFrame ? "none" : ""}>
         <Grid templateColumns="auto 460px" gap={4}>
           <Box>
@@ -109,7 +61,7 @@ function Forecast(props) {
               <ComputeStock key={stockNo} eps={data.eps[0]} />
               目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
             </Box>
-            <InfoPanel data={data.eps} revenue={data.revenue} stockDetail={data.stockDetail} />
+            <InfoPanel data={data.eps} stockDetail={data.stockDetail} />
             <EpsList data={[data.eps[0]]} />
             <Box h="2" />
             <EpsList data={data.eps.slice(1)} isHistory={true} />

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Switch, FormLabel, Button, Text, Flex, Spacer } from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
-import { ToolAPI, ScheduleAPI } from "../../utils/api";
-import auth from "../../utils/auth";
+import { ToolAPI, ScheduleAPI, auth } from "../../utils";
 import KeyWord from "../../components/KeyWord";
 
 export default function ControlPanel(props) {

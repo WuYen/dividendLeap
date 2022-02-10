@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../../utils";
-import { UserAPI } from "../../utils/api";
+import { auth, UserAPI } from "../../utils";
 import { Center, Box, Heading } from "@chakra-ui/layout";
 import { Table, Tbody, Tr, Td, Button, OrderedList, ListItem, Input, Text, ButtonGroup } from "@chakra-ui/react";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import { InputControl, ResetButton, SubmitButton } from "formik-chakra-ui";
-import useModalDialog from "../../hooks/useModalDialog";
+import { useModalDialog } from "../../hooks";
 import { useSelector } from "react-redux";
+
 //TODO: Settings Page
 export default function Settings(prop) {
   //TODO: need login page
