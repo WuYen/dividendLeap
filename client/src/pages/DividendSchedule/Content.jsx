@@ -1,13 +1,8 @@
-import React, { useEffect, useCallback, useState, useRef } from "react";
-import { connect } from "react-redux";
+import React from "react";
 import { Box } from "@chakra-ui/react";
-import { tryParseFloat } from "../../utils/formatHelper";
 import Loading from "../../components/Loading";
-import { ScheduleAPI } from "../../utils/api";
-import { getScheduleSuccess, toggleFilter } from "../../store/Dividend/action";
 import ScheduleTable from "./ScheduleTable";
 import ControlPanel from "./ControlPanel";
-import useRouter from "../../hooks/useRouter";
 
 export default function Content(props) {
   const {

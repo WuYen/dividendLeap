@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Button, SlideFade, IconButton, Stack, Checkbox, Divider, Input, Box } from "@chakra-ui/react";
 import { CheckIcon, AddIcon } from "@chakra-ui/icons";
-import { useMyStock, MyStockAPI } from "../hooks/useMyStock";
-import useModal from "../hooks/useModal";
+import { useModal, useMyStock, MyStockAPI } from "../hooks";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 
 export default function MyStockButton(props) {

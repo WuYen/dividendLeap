@@ -1,6 +1,5 @@
 import { useCallback } from "react";
-import { UserAPI } from "../utils/api";
-import auth from "../utils/auth";
+import { auth, UserAPI } from "../utils";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { loginSuccess, logoutSuccess } from "../store/Member/action";
 import { loginStatus } from "../constants/status";

@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import useSocket from "../hooks/useSocket";
-import auth from "../utils/auth";
+import { useSocket } from "../hooks";
 
 export default function Socket(props) {
   const socket = useSocket();

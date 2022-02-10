@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { MyStockAPI } from "../hooks/useMyStock";
-import useAuth from "../hooks/useAuth";
-import useRouter from "../hooks/useRouter";
+import { useAuth, useRouter, MyStockAPI } from "../hooks";
 
 export default function LandingContainer(props) {
   const dispatch = useDispatch();

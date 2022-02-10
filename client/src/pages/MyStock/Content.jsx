@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Grid, Button } from "@chakra-ui/react";
-import { formatHelper } from "../../utils";
-import { ForecastAPI } from "../../utils/api";
+import { formatHelper, ForecastAPI } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
 import { FundamentalData } from "../../components/TradingViewWidget";
 import { FinMindNews2, useFinMindData } from "../News/FinMindNews";
@@ -12,7 +11,7 @@ import ComputeStock from "./ComputeStock";
 import MyStockButton from "../../components/MyStockButton";
 import StockFrame from "../DividendDetail/StockFrame";
 import Chart from "./Chart";
-import useIsMounted from "../../hooks/useIsMounted";
+import { useIsMounted } from "../../hooks";
 
 export function useFetchData(stockNo) {
   const [page, setPage] = useState({ list: [], loading: true });
@@ -110,7 +109,7 @@ function Forecast(props) {
               <ComputeStock key={stockNo} eps={data.eps[0]} />
               目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
             </Box>
-            <InfoPanel data={data.eps} stockDetail={data.stockDetail} />
+            <InfoPanel data={data.eps} revenue={data.revenue} stockDetail={data.stockDetail} />
             <EpsList data={[data.eps[0]]} />
             <Box h="2" />
             <EpsList data={data.eps.slice(1)} isHistory={true} />

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { Box, Flex, Grid, Button } from "@chakra-ui/react";
-import { useMyStocks } from "../hooks/useMyStock";
+import { useMyStocks } from "../hooks";
 import manage from "../utils/fugleApi";
 
 export default function StockSocket(props) {

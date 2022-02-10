@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Input, Box, VStack, StackDivider, Flex, Select, Divider } from "@chakra-ui/react";
-import stockList from "../../utils/stockList";
 import MyStockButton from "../../components/MyStockButton";
 import MyListItem from "./MyListItem";
-import { ScheduleAPI } from "../../utils/api";
+import { ScheduleAPI, stockList } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
 
 const batchSize = 50;

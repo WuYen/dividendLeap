@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { formatDate } from "../../utils/formatHelper";
+import { formatDate } from "../../utils";
 import { Tr, Td, IconButton, ButtonGroup } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 

@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, Grid, VStack, StackDivider } from "@chakra-ui/react";
+import { Box, Grid } from "@chakra-ui/react";
 import { connect } from "react-redux";
-import useRouter from "../../hooks/useRouter";
 import Content, { Container as ContentWrapper } from "./Content";
 import LeftPanel from "./LeftPanel";
-import { useMyStocks } from "../../hooks/useMyStock";
-import { ForecastAPI, ScheduleAPI } from "../../utils/api";
+import { useMyStocks, useRouter } from "../../hooks";
+import { ForecastAPI, ScheduleAPI } from "../../utils";
 
 function Container(props) {
   const { myType } = props;
