@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import auth from "../../utils/auth";
+import { auth } from "../../utils";
 import { ChevronDownIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   Flex,

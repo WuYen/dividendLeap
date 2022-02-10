@@ -4,7 +4,7 @@ import DesktopNav from "./DesktopNav";
 import MobileNav, { HamburgerButton } from "./MobileNav";
 import MemberNav from "./MemberNav";
 import BrandLogo from "./BrandLogo";
-import useAuth from "../../hooks/useAuth";
+import { useAuth } from "../../hooks";
 
 const NAV_ITEMS = [
   {
@@ -27,6 +27,11 @@ const NAV_ITEMS = [
     href: "/tool",
     auth: true,
   },
+  // { 暫時不做
+  //   label: "Real Time",
+  //   href: "/realTime",
+  //   auth: true,
+  // },
   // {
   //   label: "歷史列表",
   //   href: "/schedule/history",

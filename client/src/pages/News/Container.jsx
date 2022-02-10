@@ -13,8 +13,7 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import { toDateString } from "../../utils/formatHelper";
-import auth from "../../utils/auth";
+import { toDateString, auth } from "../../utils";
 
 import MoreButton from "./MoreButton";
 import DataList from "./DataList";
