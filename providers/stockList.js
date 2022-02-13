@@ -7470,8 +7470,6 @@ var stock_dividend = [
   },
 ];
 
-module.exports = { getData, stocks_stolist, stock_dividend };
-
 // //[代號, 名稱, 成交, 現金股利, 除息交易日, 現金殖利率, 合計殖利率, 除息前價格, 填息花費日數, 2016現金殖利率, 2011現金殖利率, 股票股利]
 // stock_dividend.map((row) => {
 //   return {
@@ -7487,7 +7485,7 @@ module.exports = { getData, stocks_stolist, stock_dividend };
 //   };
 // });
 
-[
+var info1 = [
   {
     stockNo: 1101,
     stockName: "台泥",
@@ -12355,7 +12353,7 @@ module.exports = { getData, stocks_stolist, stock_dividend };
   },
 ];
 
-[
+var info2 = [
   {
     stockNo: 1240,
     stockName: "茂生農經",
@@ -17085,3 +17083,5 @@ module.exports = { getData, stocks_stolist, stock_dividend };
     type: "上櫃",
   },
 ];
+
+module.exports = { getData, stocks_stolist, stock_dividend, info1, info2 };

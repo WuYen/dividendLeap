@@ -2,7 +2,7 @@ const router = require("express").Router();
 const { success } = require("../utilities/response");
 const { getList, insert, update, remove } = require("../services/scheduleEditService");
 const { getDetail } = require("../services/stockDetailService");
-const { getSchedule, getScheduleFixed, getTypes } = require("../services/scheduleService");
+const { getSchedule, getScheduleV2, getTypes } = require("../services/scheduleService");
 
 //取得所有schedule type
 router.get("/menu", async function (req, res, next) {
@@ -20,7 +20,7 @@ router.get("/:type?", async function (req, res, next) {
   try {
     let type = req.params.type ? decodeURI(req.params.type) : "除權息預告";
     let result = { type, list: [] };
-    result.list = await getSchedule({ sourceType: type });
+    result.list = req.query.v2 ? await getScheduleV2({ sourceType: type }) : await getSchedule({ sourceType: type });
     req.query.menu && (result.menu = await getTypes());
     return res.send(success(result));
   } catch (error) {

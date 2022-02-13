@@ -18,5 +18,17 @@ module.exports = Model;
 module.exports.stock_dividend = provider.stock_dividend;
 module.exports.highYieldData = highYield.data;
 module.exports.getNameByNo = function (stockNo) {
+  var temp = provider.info1.find((x) => x.stockNo == stockNo);
+  if (!temp) {
+    temp = provider.info2.find((x) => x.stockNo == stockNo);
+  }
+
   return provider.stocks_stolist.find((x) => x[0] == stockNo);
+};
+module.exports.getInfoByNo = function (stockNo) {
+  var temp = provider.info1.find((x) => x.stockNo == stockNo);
+  if (!temp) {
+    temp = provider.info2.find((x) => x.stockNo == stockNo);
+  }
+  return temp;
 };
