@@ -11,10 +11,11 @@ import ListView from "../MyStock/ListView";
 
 function DividendSchedule(props) {
   const { getScheduleSuccess, toggleFilter, schedule, typeList, filter } = props;
-  const [{ type = "" }, history] = useRouter();
+  const [{ type = "", version = "v1" }, history] = useRouter();
 
   const [loading, setLoading] = useState(true);
   const typeRef = useRef(null);
+  const versionRef = useRef(null);
 
   const handleGetScheduleSuccess = useCallback(({ list, menu }) => {
     let payload = {
@@ -26,25 +27,26 @@ function DividendSchedule(props) {
   }, []);
 
   const handleUpdatePath = useCallback(
-    (label) => {
-      history.push(`/schedule?type=${label}`);
+    ({ label, version }) => {
+      history.push(`/schedule?type=${label}&version=${version}`);
     },
     [history]
   );
 
   useEffect(() => {
-    if (type != typeRef.current || typeList.length == 0) {
-      const search = typeList.length == 0 ? "?menu=true&v2=true" : "?v2=true";
+    if (type != typeRef.current || version != versionRef.current || typeList.length == 0) {
+      const search = typeList.length == 0 ? `?menu=true&version=${version}` : `?version=${version}`;
       ScheduleAPI.getByType(type, search).then(({ success, data }) => {
         console.log("schedule data", success, data);
         if (success) {
           handleGetScheduleSuccess(data);
-          handleUpdatePath(data.type);
+          handleUpdatePath({ label: data.type, version });
           typeRef.current = data.type;
+          versionRef.current = version;
         }
       });
     }
-  }, [type]);
+  }, [type, version]);
 
   const filtedData = filter && type == "除權息預告" ? schedule.filter((x) => tryParseFloat(x.rate) > 5) : schedule;
 
@@ -58,18 +60,22 @@ function DividendSchedule(props) {
             filter={filter}
             count={filtedData.length}
             type={type}
+            version={version}
             typeList={typeList}
             onSetLoading={setLoading}
             onToggleFilter={toggleFilter}
             onUpdatePath={handleUpdatePath}
             getScheduleSuccess={handleGetScheduleSuccess}
           />
-          <Grid m="2" gridTemplateColumns="1fr" gridGap="4">
-            {schedule.map((d) => (
-              <ListView data={d} />
-            ))}
-          </Grid>
-          {/* <ScheduleTable filtedData={filtedData} filter={filter} type={type} /> */}
+          {version == "v2" ? (
+            <Grid m="2" gridTemplateColumns="1fr" gridGap="4">
+              {schedule.map((d, index) => (
+                <ListView key={index} data={d} />
+              ))}
+            </Grid>
+          ) : (
+            <ScheduleTable filtedData={filtedData} filter={filter} type={type} />
+          )}
         </>
       )}
     </Box>

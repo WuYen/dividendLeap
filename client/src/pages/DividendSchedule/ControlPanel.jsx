@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Switch, FormLabel, Button, Text, Flex, Spacer } from "@chakra-ui/react";
+import { Switch, FormLabel, Button, Text, Flex, Spacer, Box } from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { ToolAPI, ScheduleAPI, auth } from "../../utils";
 import KeyWord from "../../components/KeyWord";
 
 export default function ControlPanel(props) {
-  const { typeList, filter, onToggleFilter, count, onSetLoading, type, onUpdatePath } = props;
+  const { typeList, filter, onToggleFilter, count, onSetLoading, type, onUpdatePath, version } = props;
 
   return (
     <>
@@ -21,7 +21,7 @@ export default function ControlPanel(props) {
               onClick={() => {
                 if (!isActive) {
                   onSetLoading(true);
-                  onUpdatePath(label);
+                  onUpdatePath({ label, version });
                 }
               }}
             />
@@ -31,6 +31,19 @@ export default function ControlPanel(props) {
         <Text>筆數: {count}</Text>
       </Flex>
       <Flex alignItems="center" px={4}>
+        <Switch
+          id="dtype"
+          colorScheme="teal"
+          isChecked={version == "v2"}
+          onChange={() => {
+            onSetLoading(true);
+            onUpdatePath({ label: type, version: version == "v1" ? "v2" : "v1" });
+          }}
+        />
+        <FormLabel htmlFor="dtype" mb="0">
+          切換顯示
+        </FormLabel>
+        <Box w="2"></Box>
         {type == "除權息預告" && (
           <>
             <Switch id="filter" colorScheme="teal" isChecked={filter} onChange={onToggleFilter} />

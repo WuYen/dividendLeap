@@ -75,7 +75,7 @@ async function predictV2(stockNo = "2451", targetYear) {
   let prevPayoutRate = dividendDetailData[0].payoutRatio;
   let estimateDividend = (totalEps * prevPayoutRate).toFixed(2);
 
-  let baseInfo = StockListModel.getNameByNo(stockNo);
+  let baseInfo = StockListModel.getInfoByNo(stockNo);
 
   return {
     stockNo: stockNo,

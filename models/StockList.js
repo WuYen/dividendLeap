@@ -17,18 +17,27 @@ const Model = mongoose.model(
 module.exports = Model;
 module.exports.stock_dividend = provider.stock_dividend;
 module.exports.highYieldData = highYield.data;
-module.exports.getNameByNo = function (stockNo) {
-  var temp = provider.info1.find((x) => x.stockNo == stockNo);
-  if (!temp) {
-    temp = provider.info2.find((x) => x.stockNo == stockNo);
-  }
+// module.exports.getNameByNo = function (stockNo) {
+//   var temp = provider.info1.find((x) => x.stockNo == stockNo);
+//   if (!temp) {
+//     temp = provider.info2.find((x) => x.stockNo == stockNo);
+//   }
 
-  return provider.stocks_stolist.find((x) => x[0] == stockNo);
-};
+//   return provider.stocks_stolist.find((x) => x[0] == stockNo);
+// };
 module.exports.getInfoByNo = function (stockNo) {
-  var temp = provider.info1.find((x) => x.stockNo == stockNo);
-  if (!temp) {
-    temp = provider.info2.find((x) => x.stockNo == stockNo);
+  var result = provider.info1.find((x) => x.stockNo == stockNo);
+  if (!result) {
+    result = provider.info2.find((x) => x.stockNo == stockNo);
   }
-  return temp;
+  if (!result) {
+    var d = provider.stocks_stolist.find((x) => x[0] == stockNo);
+    d &&
+      (result = {
+        stockNo: d[0],
+        stockName: d[1],
+        industry: "",
+      });
+  }
+  return result;
 };
