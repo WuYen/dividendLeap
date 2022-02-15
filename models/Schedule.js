@@ -16,7 +16,7 @@ const Model = mongoose.model(
     cashDividen: Number, //現金股利0.4
     others: Array, //其他不再上面定義的欄位
     updateDate: String,
-    sourceType: String, //twse、manual、wearn and any other list topic
+    sourceType: String, //(清單名稱) 0056,除權息預告...
   })
 );
 
