@@ -14,6 +14,16 @@ const Model = mongoose.model(
   })
 );
 
+// const Model = mongoose.model(
+//   "Meta",
+//   new Schema({
+//     stockNo: String, //股票代號
+//     stockName: String, //股票中文簡稱
+//     industry: String, //產業別
+//     updateDate: String,
+//   })
+// );
+
 module.exports = Model;
 module.exports.stock_dividend = provider.stock_dividend;
 module.exports.highYieldData = highYield.data;

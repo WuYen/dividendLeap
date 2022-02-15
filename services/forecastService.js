@@ -9,6 +9,8 @@ const helper = require("../utilities/helper");
 const stockDetailService = require("./stockDetailService");
 const { getRandomIntInclusive, delay } = require("../utilities/delay");
 const revenueProvider = require("../providers/revenue.finMind");
+const ForecastCacheModel = require("../models/ForecastCache");
+const { today, latestTradeDate } = require("../utilities/dateTime");
 
 function accumulateEps(data) {
   return data.reduce((accumulator, currentValue, currentIndex, array) => {
@@ -16,7 +18,25 @@ function accumulateEps(data) {
   }, 0);
 }
 
-// targetYear = 2022(明年)
+async function predictCache(stockNo = "2451", targetYear) {
+  const latestTradDate = latestTradeDate();
+
+  //從 ForecastCache 抓資料 query:{stockNo, priceDate:latestTradDate}
+  let { cache, isExpire } = await ForecastCacheModel.getData({
+    stockNo,
+    priceDate: latestTradDate,
+  });
+
+  if (!cache || isExpire) {
+    let data = await predictV2(stockNo, targetYear);
+    cache = { stockNo, priceDate: latestTradDate, payload: data };
+    ForecastCacheModel.saveData(cache); // no need to wait
+  }
+
+  return cache.payload;
+}
+
+// targetYear = 2022
 async function predictV2(stockNo = "2451", targetYear) {
   let [epsData, dividendDetailData, dayInfoData, dividendInfoData, yearHistoryData, stockDetail, revenue] =
     await Promise.all([
@@ -106,12 +126,13 @@ function resetDataSource(stockNo) {
     DayInfoModel.reset({ stockNo, date: helper.latestTradeDate() }),
     YearHistoryModel.reset({ stockNo }),
     DayHistoryModel.reset({ stockNo, year: (new Date().getFullYear() - 1).toString() }),
+    ForecastCacheModel.removeCache(stockNo),
   ]);
   //DayHistoryModel.reset({ stockNo, year: new Date().getFullYear().toString() }),
   return "success";
 }
 
 module.exports = {
-  predict: predictV2,
+  predict: predictCache,
   resetDataSource: resetDataSource,
 };
