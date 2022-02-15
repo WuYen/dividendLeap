@@ -9,12 +9,13 @@ async function run() {
 }
 
 async function DoWork() {
-  let list = await ScheduleModel.getData({ sourceType: "0056成份" });
+  let list = await ScheduleModel.getData({ sourceType: "高殖利率" });
   let results = [];
   console.log("list length", list.length);
   for (let index = 0; index < list.length; index++) {
     let temp = await job(index, list[index].stockNo);
-    results.push(temp);
+    temp && results.push(temp);
+    index % 10 == 0 && (await delay(40000));
   }
   console.log("result", `source length:${list.length}, result length:${results.length}`);
 }
@@ -35,6 +36,14 @@ function delay() {
     setTimeout(function () {
       res("continue");
     }, 1800);
+  });
+}
+
+function delay(t) {
+  return new Promise((res, rej) => {
+    setTimeout(function () {
+      res("continue");
+    }, t);
   });
 }
 run();

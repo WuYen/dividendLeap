@@ -26,20 +26,23 @@ export default function ListView(props) {
         rounded="xl"
         minW={"700px"}
         _hover={{ boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.40)" }}
-        cursor="pointer"
-        onClick={(e) => {
-          var url = `/detail/${meta.no}/${meta.nm}`;
-          e.ctrlKey ? window.open(url) : history.push(url);
-        }}
       >
         <Flex alignItems="center">
           <Flex fontSize="20px" fontWeight="600" alignItems="center" w="220px">
-            <Box mr="2" color="teal.600">
-              {meta.nm}
-            </Box>
-            <Box mr="4" color="teal.500" fontWeight="500">
-              {meta.no}
-            </Box>
+            <Flex
+              cursor="pointer"
+              onClick={(e) => {
+                var url = `/detail/${meta.no}/${meta.nm}`;
+                e.ctrlKey ? window.open(url) : history.push(url);
+              }}
+            >
+              <Box mr="2" color="teal.600">
+                {meta.nm}
+              </Box>
+              <Box mr="4" color="teal.500" fontWeight="500">
+                {meta.no}
+              </Box>
+            </Flex>
             <Box fontSize="sm" color="teal.400" backgroundColor="teal.50" px="2" rounded={"full"} maxW="80px">
               {meta.industry}
             </Box>

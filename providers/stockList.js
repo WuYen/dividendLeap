@@ -3660,7 +3660,7 @@ var stockList = [
   {
     stockNo: "2347",
     stockName: "聯強",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -3954,7 +3954,7 @@ var stockList = [
   {
     stockNo: "2414",
     stockName: "精技",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -4038,7 +4038,7 @@ var stockList = [
   {
     stockNo: "2430",
     stockName: "燦坤",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -4894,31 +4894,31 @@ var stockList = [
   {
     stockNo: "2801",
     stockName: "彰銀",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2809",
     stockName: "京城銀",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2812",
     stockName: "台中銀",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2816",
     stockName: "旺旺保",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2820",
     stockName: "華票",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -4930,19 +4930,19 @@ var stockList = [
   {
     stockNo: "2832",
     stockName: "台產",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2834",
     stockName: "臺企銀",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2836",
     stockName: "高雄銀",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -4954,7 +4954,7 @@ var stockList = [
   {
     stockNo: "2838",
     stockName: "聯邦銀",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -4972,55 +4972,55 @@ var stockList = [
   {
     stockNo: "2845",
     stockName: "遠東銀",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2849",
     stockName: "安泰銀",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2850",
     stockName: "新產",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2851",
     stockName: "中再保",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2852",
     stockName: "第一保",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2855",
     stockName: "統一證",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2867",
     stockName: "三商壽",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2880",
     stockName: "華南金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2881",
     stockName: "富邦金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -5038,7 +5038,7 @@ var stockList = [
   {
     stockNo: "2882",
     stockName: "國泰金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -5056,31 +5056,31 @@ var stockList = [
   {
     stockNo: "2883",
     stockName: "開發金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2884",
     stockName: "玉山金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2885",
     stockName: "元大金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2886",
     stockName: "兆豐金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2887",
     stockName: "台新金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -5092,25 +5092,25 @@ var stockList = [
   {
     stockNo: "2888",
     stockName: "新光金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2889",
     stockName: "國票金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2890",
     stockName: "永豐金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2891",
     stockName: "中信金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -5128,13 +5128,13 @@ var stockList = [
   {
     stockNo: "2892",
     stockName: "第一金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
     stockNo: "2897",
     stockName: "王道銀行",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -5332,7 +5332,7 @@ var stockList = [
   {
     stockNo: "3010",
     stockName: "華立",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -5435,7 +5435,7 @@ var stockList = [
   {
     stockNo: "3028",
     stockName: "增你強",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -5465,7 +5465,7 @@ var stockList = [
   {
     stockNo: "3033",
     stockName: "威健",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -5483,7 +5483,7 @@ var stockList = [
   {
     stockNo: "3036",
     stockName: "文曄",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -5580,7 +5580,7 @@ var stockList = [
   {
     stockNo: "3048",
     stockName: "益登",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -5616,7 +5616,7 @@ var stockList = [
   {
     stockNo: "3055",
     stockName: "蔚華科",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -5971,7 +5971,7 @@ var stockList = [
   {
     stockNo: "3209",
     stockName: "全科",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -6013,7 +6013,7 @@ var stockList = [
   {
     stockNo: "3224",
     stockName: "三顧",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
 
@@ -6056,7 +6056,7 @@ var stockList = [
   {
     stockNo: "3232",
     stockName: "昱捷",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -6236,7 +6236,7 @@ var stockList = [
   {
     stockNo: "3312",
     stockName: "弘憶股",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -6333,7 +6333,7 @@ var stockList = [
   {
     stockNo: "3360",
     stockName: "尚立",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -6501,7 +6501,7 @@ var stockList = [
   {
     stockNo: "3444",
     stockName: "利機",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -6694,7 +6694,7 @@ var stockList = [
   {
     stockNo: "3528",
     stockName: "安馳",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -7232,7 +7232,7 @@ var stockList = [
   {
     stockNo: "3702",
     stockName: "大聯大",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -9331,7 +9331,7 @@ var stockList = [
   {
     stockNo: "5434",
     stockName: "崇越",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -9740,7 +9740,7 @@ var stockList = [
   {
     stockNo: "5876",
     stockName: "上海商銀",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -9752,7 +9752,7 @@ var stockList = [
   {
     stockNo: "5880",
     stockName: "合庫金",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -9794,7 +9794,7 @@ var stockList = [
   {
     stockNo: "6005",
     stockName: "群益證",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -9830,7 +9830,7 @@ var stockList = [
   {
     stockNo: "6024",
     stockName: "群益期",
-    industry: "金融保險業",
+    industry: "金融保險",
     type: "上市",
   },
   {
@@ -9896,7 +9896,7 @@ var stockList = [
   {
     stockNo: "6113",
     stockName: "亞矽",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -9926,7 +9926,7 @@ var stockList = [
   {
     stockNo: "6118",
     stockName: "建達",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -10106,7 +10106,7 @@ var stockList = [
   {
     stockNo: "6154",
     stockName: "順發",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -10287,7 +10287,7 @@ var stockList = [
   {
     stockNo: "6189",
     stockName: "豐藝",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -10499,7 +10499,7 @@ var stockList = [
   {
     stockNo: "6227",
     stockName: "茂綸",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -10656,7 +10656,7 @@ var stockList = [
   {
     stockNo: "6265",
     stockName: "方土昶",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -10674,7 +10674,7 @@ var stockList = [
   {
     stockNo: "6270",
     stockName: "倍微",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -10729,7 +10729,7 @@ var stockList = [
   {
     stockNo: "6281",
     stockName: "全國電",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -12261,7 +12261,7 @@ var stockList = [
   {
     stockNo: "6776",
     stockName: "展碁國際",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -12621,7 +12621,7 @@ var stockList = [
   {
     stockNo: "8032",
     stockName: "光菱",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -12735,13 +12735,13 @@ var stockList = [
   {
     stockNo: "8067",
     stockName: "志旭",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
     stockNo: "8068",
     stockName: "全達",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -12753,7 +12753,7 @@ var stockList = [
   {
     stockNo: "8070",
     stockName: "長華*",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -12765,7 +12765,7 @@ var stockList = [
   {
     stockNo: "8072",
     stockName: "陞泰",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {
@@ -12807,7 +12807,7 @@ var stockList = [
   {
     stockNo: "8084",
     stockName: "巨虹",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -12862,7 +12862,7 @@ var stockList = [
   {
     stockNo: "8096",
     stockName: "擎亞電子",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上櫃",
   },
   {
@@ -12928,7 +12928,7 @@ var stockList = [
   {
     stockNo: "8112",
     stockName: "至上",
-    industry: "電子通路業",
+    industry: "電子通路",
     type: "上市",
   },
   {

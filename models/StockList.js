@@ -28,6 +28,6 @@ module.exports = Model;
 module.exports.stock_dividend = provider.stock_dividend;
 module.exports.highYieldData = highYield.data;
 module.exports.getInfoByNo = function (stockNo) {
-  var result = provider.stockList.find((x) => x[0] == stockNo);
+  var result = provider.stockList.find((x) => x.stockNo == stockNo);
   return result || {};
 };
