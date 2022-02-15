@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, useBreakpointValue } from "@chakra-ui/react";
-import { ScheduleAPI } from "../../utils/api";
 import * as MyStock from "../../pages/MyStock/Content";
-import Loading from "../../components/Loading";
 
 const breakPoints = {
   base: "sm",
@@ -10,55 +8,8 @@ const breakPoints = {
   md: "md",
 };
 
-export function usePageInfo(props) {
-  const { stockNo, name } = props;
-  const [pageInfo, setPageInfo] = useState({
-    isLoading: true,
-    hasError: false,
-    data: null,
-    stockNo,
-    name,
-  });
-
-  useEffect(() => {
-    ScheduleAPI.getDetail(stockNo).then((data) => {
-      console.log("data", data);
-      if (data.success) {
-        setPageInfo({
-          stockNo,
-          name,
-          isLoading: false,
-          data: data.data,
-        });
-      } else {
-        setPageInfo({
-          stockNo,
-          name,
-          isLoading: false,
-          data: null,
-          hasError: true,
-        });
-      }
-    });
-  }, [stockNo]);
-
-  return [pageInfo, setPageInfo];
-}
-
-export default function Content(props) {
-  const { name, stockNo, data, hasError, isLoading } = props;
-
-  return isLoading ? (
-    <Loading />
-  ) : hasError ? (
-    <div>Data not available</div>
-  ) : (
-    <Detail stockNo={stockNo} name={name} data={data} />
-  );
-}
-
 export function Detail(props) {
-  const { stockNo, name, data } = props;
+  const { stockNo } = props;
   const variant = useBreakpointValue(breakPoints);
   const [myData, myLoading] = MyStock.useFetchData(stockNo);
 
@@ -68,6 +19,53 @@ export function Detail(props) {
     </Box>
   );
 }
+
+// export function usePageInfo(props) {
+//   const { stockNo, name } = props;
+//   const [pageInfo, setPageInfo] = useState({
+//     isLoading: true,
+//     hasError: false,
+//     data: null,
+//     stockNo,
+//     name,
+//   });
+
+//   useEffect(() => {
+//     ScheduleAPI.getDetail(stockNo).then((data) => {
+//       console.log("data", data);
+//       if (data.success) {
+//         setPageInfo({
+//           stockNo,
+//           name,
+//           isLoading: false,
+//           data: data.data,
+//         });
+//       } else {
+//         setPageInfo({
+//           stockNo,
+//           name,
+//           isLoading: false,
+//           data: null,
+//           hasError: true,
+//         });
+//       }
+//     });
+//   }, [stockNo]);
+
+//   return [pageInfo, setPageInfo];
+// }
+
+// export default function Content(props) {
+//   const { name, stockNo, data, hasError, isLoading } = props;
+
+//   return isLoading ? (
+//     <Loading />
+//   ) : hasError ? (
+//     <div>Data not available</div>
+//   ) : (
+//     <Detail stockNo={stockNo} name={name} data={data} />
+//   );
+// }
 
 // function Display(props) {
 //   const { stockNo, name, data = {} } = props;

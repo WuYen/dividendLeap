@@ -18,7 +18,7 @@ export default function Forecast(props) {
     <Box>
       <Box display="flex" alignItems="center" position="relative">
         <Box color="teal">
-          {data.baseInfo[0]} {data.baseInfo[1]}
+          {data.baseInfo.stockNo} {data.baseInfo.stockName}
         </Box>
         <Box w="2" />
         <MyStockButton stockNo={stockNo} />

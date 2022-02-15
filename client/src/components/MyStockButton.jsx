@@ -11,7 +11,9 @@ export default function MyStockButton(props) {
   const isLogin = useSelector(({ member }) => {
     return member.isLogin;
   }, shallowEqual);
-  const handleEdit = () => {
+  const handleEdit = (e) => {
+    console.log("e", e);
+    e.stopPropagation();
     showModal({
       title: "儲存 " + stockNo + " 至...",
       content: <EditPanel stockNo={stockNo} hideModal={hideModal} />,
