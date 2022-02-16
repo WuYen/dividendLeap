@@ -29,7 +29,27 @@ export default function ListView(props) {
       >
         <Flex alignItems="center">
           <Flex fontSize="20px" fontWeight="600" alignItems="center" w="220px">
-            <Flex
+            <Link
+              display={"flex"}
+              color="teal.500"
+              _hover={{
+                textDecoration: "none",
+                color: "teal.800",
+              }}
+              as={RouterLink}
+              _focus={{ outline: "none" }}
+              to={{
+                pathname: `/detail/${meta.no}/${meta.nm}`,
+              }}
+            >
+              <Box mr="2" color="teal.600">
+                {meta.nm}
+              </Box>
+              <Box mr="4" color="teal.500" fontWeight="500">
+                {meta.no}
+              </Box>
+            </Link>
+            {/* <Flex
               cursor="pointer"
               onClick={(e) => {
                 var url = `/detail/${meta.no}/${meta.nm}`;
@@ -42,7 +62,7 @@ export default function ListView(props) {
               <Box mr="4" color="teal.500" fontWeight="500">
                 {meta.no}
               </Box>
-            </Flex>
+            </Flex> */}
             <Box fontSize="sm" color="teal.400" backgroundColor="teal.50" px="2" rounded={"full"} maxW="80px">
               {meta.industry}
             </Box>

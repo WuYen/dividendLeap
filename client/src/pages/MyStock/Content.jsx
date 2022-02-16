@@ -98,6 +98,66 @@ function Forecast(props) {
         >
           Yahoo
         </Button>
+        <Box w="2" />
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          rounded="100"
+          size="sm"
+          fontSize="sm"
+          _focus={{ outline: "none" }}
+          onClick={() => {
+            const url = `https://www.cmoney.tw/forum/stock/${stockNo}`;
+            window.open(url, "_blank").focus();
+          }}
+        >
+          Cmoney
+        </Button>
+        <Box w="2" />
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          rounded="100"
+          size="sm"
+          fontSize="sm"
+          _focus={{ outline: "none" }}
+          onClick={() => {
+            const url = `https://www.fugle.tw/ai/${stockNo}`;
+            window.open(url, "_blank").focus();
+          }}
+        >
+          Fugle
+        </Button>
+        <Box w="2" />
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          rounded="100"
+          size="sm"
+          fontSize="sm"
+          _focus={{ outline: "none" }}
+          onClick={() => {
+            const url = `https://statementdog.com/analysis/${stockNo}`;
+            window.open(url, "_blank").focus();
+          }}
+        >
+          財報狗
+        </Button>
+        <Box w="2" />
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          rounded="100"
+          size="sm"
+          fontSize="sm"
+          _focus={{ outline: "none" }}
+          onClick={() => {
+            const url = `https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=${stockNo}`;
+            window.open(url, "_blank").focus();
+          }}
+        >
+          GoodInfo
+        </Button>
       </Box>
       <Box display={showStockFrame ? "none" : ""}>
         <Grid templateColumns="auto 460px" gap={4}>
