@@ -38,6 +38,8 @@
     "qrcode": "^1.4.4",
     "socket.io": "^4.1.3",
     "speakeasy": "^2.0.0",
+    "winston": "^3.6.0",
+    "winston-mongodb": "^5.0.7",
     "ws": "^8.4.2"
   },
   "engines": {
