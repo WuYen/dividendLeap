@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Box, Grid, Button } from "@chakra-ui/react";
 import { formatHelper, ForecastAPI } from "../../utils";
 import { LoadingSpinner } from "../../components/Loading";
@@ -84,80 +84,7 @@ function Forecast(props) {
           顯示切換
         </Button>
         <Box w="2" />
-        <Button
-          colorScheme="teal"
-          variant="outline"
-          rounded="100"
-          size="sm"
-          fontSize="sm"
-          _focus={{ outline: "none" }}
-          onClick={() => {
-            const url = `https://tw.stock.yahoo.com/quote/${stockNo}/revenue`;
-            window.open(url, "_blank").focus();
-          }}
-        >
-          Yahoo
-        </Button>
-        <Box w="2" />
-        <Button
-          colorScheme="teal"
-          variant="outline"
-          rounded="100"
-          size="sm"
-          fontSize="sm"
-          _focus={{ outline: "none" }}
-          onClick={() => {
-            const url = `https://www.cmoney.tw/forum/stock/${stockNo}`;
-            window.open(url, "_blank").focus();
-          }}
-        >
-          Cmoney
-        </Button>
-        <Box w="2" />
-        <Button
-          colorScheme="teal"
-          variant="outline"
-          rounded="100"
-          size="sm"
-          fontSize="sm"
-          _focus={{ outline: "none" }}
-          onClick={() => {
-            const url = `https://www.fugle.tw/ai/${stockNo}`;
-            window.open(url, "_blank").focus();
-          }}
-        >
-          Fugle
-        </Button>
-        <Box w="2" />
-        <Button
-          colorScheme="teal"
-          variant="outline"
-          rounded="100"
-          size="sm"
-          fontSize="sm"
-          _focus={{ outline: "none" }}
-          onClick={() => {
-            const url = `https://statementdog.com/analysis/${stockNo}`;
-            window.open(url, "_blank").focus();
-          }}
-        >
-          財報狗
-        </Button>
-        <Box w="2" />
-        <Button
-          colorScheme="teal"
-          variant="outline"
-          rounded="100"
-          size="sm"
-          fontSize="sm"
-          _focus={{ outline: "none" }}
-          onClick={() => {
-            const url = `https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=${stockNo}`;
-            window.open(url, "_blank").focus();
-          }}
-        >
-          GoodInfo
-        </Button>
+        <OutLinkButtons stockNo={stockNo} />
       </Box>
       <Box display={showStockFrame ? "none" : ""}>
         <Grid templateColumns="auto 460px" gap={4}>
@@ -169,9 +96,7 @@ function Forecast(props) {
               目前股價: {data.dayInfo.price} ({formatHelper.formatDate(data.dayInfo.date)})
             </Box>
             <InfoPanel data={data.eps} revenue={data.revenue} stockDetail={data.stockDetail} />
-            <EpsList data={[data.eps[0]]} />
-            <Box h="2" />
-            <EpsList data={data.eps.slice(1)} isHistory={true} />
+            <EpsList data={data.eps} />
             <Box h="2" />
             <FinMindNews2
               fetchData={{ useFetch: useFinMindData, params: stockNo }}
@@ -190,4 +115,35 @@ function Forecast(props) {
       </Box>
     </Box>
   );
+}
+
+function OutLinkButtons(props) {
+  const { stockNo } = props;
+  const list = [
+    { text: "Yahoo", url: `https://tw.stock.yahoo.com/quote/${stockNo}/revenue` },
+    { text: "Cmoney", url: `https://www.cmoney.tw/forum/stock/${stockNo}` },
+    { text: "Fugle", url: `https://www.fugle.tw/ai/${stockNo}` },
+    { text: "財報狗", url: `https://statementdog.com/analysis/${stockNo}` },
+    { text: "GoodInfo", url: `https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=${stockNo}` },
+  ];
+  return list.map((info) => {
+    return (
+      <Fragment key={info.text}>
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          rounded="100"
+          size="sm"
+          fontSize="sm"
+          _focus={{ outline: "none" }}
+          onClick={() => {
+            window.open(info.url, "_blank").focus();
+          }}
+        >
+          {info.text}
+        </Button>
+        <Box w="2" />
+      </Fragment>
+    );
+  });
 }
