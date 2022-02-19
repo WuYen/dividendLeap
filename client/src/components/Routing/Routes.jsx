@@ -1,58 +1,38 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import ErrorBoundary from "../ErrorBoundary";
+import ErrorBoundary from "../commons/ErrorBoundary";
 import PrivateRoute from "./PrivateRoute";
 import {
-  Login,
-  Registration,
-  ResetPassword,
-  DividendSchedule,
-  DividendDetail,
-  DividendMaintain,
-  News,
-  MyStock,
-  ToolPage,
-  Validation,
-  Settings,
-} from "../../pages/index";
+  DividendDetailContainer,
+  UserContainer,
+  ScheduleContainer,
+  MyStockContainer,
+  NewsContainer,
+  ToolContainer,
+} from "../containers";
 
 export default function Routing(props) {
   return (
     <ErrorBoundary>
       <Switch>
         <Route path="/detail/:stockNo/:name?">
-          <DividendDetail />
-        </Route>
-        <Route path="/schedule/maintain">
-          <DividendMaintain />
+          <DividendDetailContainer />
         </Route>
         <Route path="/news">
-          <News />
+          <NewsContainer />
         </Route>
-        <Route path="/user/registration">
-          <Registration />
-        </Route>
-        <Route path="/user/login">
-          <Login />
-        </Route>
-        <Route path="/user/validation">
-          <Validation />
-        </Route>
-        <Route path="/user/settings">
-          <Settings />
-        </Route>
-        <Route path="/user/resetpassword">
-          <ResetPassword />
+        <Route path="/user/:pageType">
+          <UserContainer />
         </Route>
         <Route path={["/", "/schedule"]} exact>
-          <DividendSchedule />
+          <ScheduleContainer />
         </Route>
 
         <PrivateRoute path="/my/stock/:stockNo?">
-          <MyStock />
+          <MyStockContainer />
         </PrivateRoute>
         <PrivateRoute path="/tool">
-          <ToolPage />
+          <ToolContainer />
         </PrivateRoute>
       </Switch>
     </ErrorBoundary>

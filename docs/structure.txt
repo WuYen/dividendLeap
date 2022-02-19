@@ -1,6 +1,5 @@
 src
 └───server.js               # App entry point
-└───middleware.js           # Common middleware
 └───/models                 # Centralize all data related models and providers
     └───Model.js            # Define mongoose model and common CRUD function
 └───/controllers            # Routing entry point and controller for diffent API channel
@@ -9,27 +8,17 @@ src
 └───/utilities              # Helpers, common functions and middleware
 └───/client                 # Client side react project
 
-src
-└───server.js               # 進入點, 啟動express跟db連線, apply middleware.js
-└───middleware.js           # 所有用到的middleware統一收在這邊去註冊
-└───/models                 # 定義資料
-    └───Model.js            # 定義資料model, schema 跟 常用的CRUD function
-└───/controllers            # 定義API的route
-└───/services               # 使用repository組出畫面用的資料, 驗證資料然後呼叫repository做CRUD
-└───/providers              # 從網路爬資料下來然後存到DB
-└───/utilities              # 常用的funcion
-└───/client                 # React 前端
 
-//Refer to: https://www.taniarascia.com/react-architecture-directory-structure/
 client
 └───/src
     └───/assets             # Global static assets such as images, svgs, company logo, etc
-    └───/components         # Global shared/reusable components
-    └───/constants          # Enum and constant string
+    └───/components         # All coponents live in here
+        └───/commons        # Share components
+        └───/container      # Fetch data and palce layout to build page
+        └───/..             # Component that categorize by function
     └───/hooks              # All custom hooks 
-    └───/pages              # The majority of the app would be contained here
-    └───/store              # Global Redux store and reduce per module
-    └───/utils              # Utilities, helpers, constants, and the like
-    └─── App.js             # Root component
+    └───/stores             # Global Redux store and reduce per module
+    └───/utilities          # Utilities, helpers, constants, and the like
+    └───App.js              # Root component
     └───index.js            # Entry point
     

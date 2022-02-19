@@ -1,12 +1,12 @@
 import { useCallback } from "react";
-import { MyAPI } from "../utils";
+import { MyAPI } from "../utilities";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import {
   addMyStockSuccess,
   removeMyStockSuccess,
   fetchMyStockSuccess,
   fetchMyTypesSuccess,
-} from "../store/Member/action";
+} from "../stores/Member/action";
 
 const compare = (next, prev) => next === prev;
 

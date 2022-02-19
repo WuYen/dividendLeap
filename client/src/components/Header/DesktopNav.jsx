@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
-import { auth } from "../../utils";
+import { auth } from "../../utilities";
 
 export default function DesktopNav(props) {
   const { navItems } = props;

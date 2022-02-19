@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { auth, UserAPI } from "../utils";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { loginSuccess, logoutSuccess } from "../store/Member/action";
-import { loginStatus } from "../constants/status";
+import { auth, UserAPI } from "../utilities";
+import { useSelector, useDispatch } from "react-redux";
+import { loginSuccess, logoutSuccess } from "../stores/Member/action";
+import { loginStatus } from "../utilities/constants";
 import { MyStockAPI } from "./useMyStock";
 
 const compare = (next, prev) => next.account === prev.account && next.isLogin === prev.isLogin;
