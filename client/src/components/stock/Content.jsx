@@ -97,15 +97,15 @@ function Forecast(props) {
             </Box>
             <InfoPanel data={data.eps} revenue={data.revenue} stockDetail={data.stockDetail} />
             <EpsList data={data.eps} />
+          </Box>
+          <Box>
+            <FundamentalData stockNo={stockNo} />
             <Box h="2" />
             <FinMindNews2
               fetchData={{ useFetch: useFinMindData, params: stockNo }}
               loading={DataList.Loading}
               list={DataList.List}
             />
-          </Box>
-          <Box>
-            <FundamentalData stockNo={stockNo} />
           </Box>
         </Grid>
       </Box>

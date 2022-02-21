@@ -1,5 +1,5 @@
 const auth = require("../utilities/auth");
-const { loginStatus, registerStatus, activity } = require("../client/src/constants/status");
+const { loginStatus, registerStatus, activity } = require("../client/src/utilities/constants");
 const { getData, setData, updateData } = require("../models/UserInfo");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");

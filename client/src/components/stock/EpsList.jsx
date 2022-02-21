@@ -68,7 +68,7 @@ function TableRowTemplate(props) {
         <Td isNumeric>{d.q[2]?.eps || "--"}</Td>
         <Td isNumeric>{d.q[3]?.eps || "--"}</Td>
         <Td isNumeric>{d.totalEps}</Td>
-        <Td>{isHistory ? d.cashDividend : d.estimateDividend}</Td>
+        <Td isNumeric>{isHistory ? d.cashDividend : d.estimateDividend}</Td>
         <Td>{d.rate}</Td>
         <Td>{`${month}-${day}`}</Td>
         <Td isNumeric>{d.dPrice}</Td>
