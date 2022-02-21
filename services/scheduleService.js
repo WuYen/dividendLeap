@@ -1,8 +1,6 @@
 const DayInfoModel = require("../models/DayInfo");
 const ScheduleModel = require("../models/Schedule");
 const StockListModel = require("../models/StockList");
-const revenueProvider = require("../providers/revenue.finMind");
-const EpsModel = require("../models/Eps");
 const ForecastCacheModel = require("../models/ForecastCache");
 const { today, latestTradeDate } = require("../utilities/helper");
 

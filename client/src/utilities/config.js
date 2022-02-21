@@ -1,4 +1,4 @@
-const useLocalServer = false;
+const useLocalServer = true;
 
 const isDev = process.env.NODE_ENV === "development";
 
