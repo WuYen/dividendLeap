@@ -25,3 +25,12 @@ async function getData(query) {
 }
 
 module.exports = { getData };
+
+//   {
+//     "date": "2022-02-01",
+//     "stock_id": "2880",
+//     "country": "Taiwan",
+//     "revenue": 4137675000,
+//     "revenue_month": 1,
+//     "revenue_year": 2022
+// }
