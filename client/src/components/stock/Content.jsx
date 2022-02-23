@@ -7,6 +7,7 @@ import { FinMindNews2, useFinMindData } from "../news/FinMindNews";
 import DataList from "../news/DataList";
 import InfoPanel from "./InfoPanel";
 import EpsList from "./EpsList";
+import RevenueList from "./RevenueList";
 import ComputeStock from "./ComputeStock";
 import MyStockButton from "../stock/MyStockButton";
 import StockFrame from "./StockFrame";
@@ -97,6 +98,7 @@ function Forecast(props) {
             </Box>
             <InfoPanel data={data.eps} revenue={data.revenue} stockDetail={data.stockDetail} />
             <EpsList data={data.eps} />
+            <RevenueList data={data.revenue} />
           </Box>
           <Box>
             <FundamentalData stockNo={stockNo} />
