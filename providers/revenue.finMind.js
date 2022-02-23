@@ -23,14 +23,33 @@ async function getData(query) {
     return null;
   }
 }
+function processData(stockNo, data) {
+  const tdStr = today();
+  //distinct data year
+  let yearSet = new Set();
+  data.forEach((x) => {
+    yearSet.add(x.revenue_year);
+  });
 
-module.exports = { getData };
+  let entities = [...yearSet].map((y) => {
+    let yd = data
+      .filter((x) => x.revenue_year == y)
+      .map((c) => {
+        return {
+          month: c.revenue_month,
+          date: c.date.replace(/\D/g, ""),
+          revenue: c.revenue,
+        };
+      });
 
-//   {
-//     "date": "2022-02-01",
-//     "stock_id": "2880",
-//     "country": "Taiwan",
-//     "revenue": 4137675000,
-//     "revenue_month": 1,
-//     "revenue_year": 2022
-// }
+    return {
+      stockNo: stockNo,
+      year: y, //revenue_year "2021"
+      data: yd,
+      updateDate: tdStr,
+    };
+  });
+  return entities;
+}
+
+module.exports = { getData, processData };
