@@ -149,8 +149,8 @@ function getRevenueRate(revenue) {
   var sum = (acc, next) => {
     return acc + next.revenue;
   };
-  var revenueThis = revenue.filter((x) => x.revenue_year == 2021);
-  var revenueLast = revenue.filter((x) => x.revenue_year == 2020);
+  var revenueThis = revenue.find((x) => x.year == 2021).data;
+  var revenueLast = revenue.find((x) => x.year == 2020).data;
   var totalRevenueThis = revenueThis.reduce(sum, 0);
   var totalRevenueLast = revenueLast.reduce(sum, 0);
   return ((totalRevenueThis / totalRevenueLast) * 100).toFixed(2);

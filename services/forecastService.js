@@ -5,11 +5,12 @@ const DayInfoModel = require("../models/DayInfo");
 const StockListModel = require("../models/StockList");
 const YearHistoryModel = require("../models/YearHistory");
 const DayHistoryModel = require("../models/DayHistory");
+const RevenueModel = require("../models/Revenue");
+const ForecastCacheModel = require("../models/ForecastCache");
+
 const helper = require("../utilities/helper");
 const stockDetailService = require("./stockDetailService");
 const { getRandomIntInclusive, delay } = require("../utilities/delay");
-const revenueProvider = require("../providers/revenue.finMind");
-const ForecastCacheModel = require("../models/ForecastCache");
 const { today, latestTradeDate } = require("../utilities/dateTime");
 
 function accumulateEps(data) {
@@ -50,7 +51,7 @@ async function predictV2(stockNo = "2451", targetYear) {
       DividendInfoModel.getData(stockNo),
       YearHistoryModel.getData({ stockNo }),
       stockDetailService.getDetail(stockNo, targetYear),
-      revenueProvider.getData({ year: targetYear, stockNo }),
+      RevenueModel.getData({ stockNo }),
     ]);
 
   if (!yearHistoryData) {

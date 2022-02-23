@@ -21,12 +21,11 @@ const Model = mongoose.model(
   })
 );
 
-async function getData(stockNo) {
-  const query = { stockNo };
+async function getData(query) {
   let data = await Model.findOne(query).exec();
   if (!data) {
-    let rawData = await provider.getData({ year: 2022, stockNo });
-    let entities = provider.processData(stockNo, rawData);
+    let rawData = await provider.getData({ year: new Date().getFullYear(), stockNo: query.stockNo }); //一次抓五年
+    let entities = provider.processData(query.stockNo, rawData);
     data = await Model.insertMany(entities);
   }
   return data;

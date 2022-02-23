@@ -49,17 +49,9 @@ function getRevenueRate(revenue) {
   var sum = (acc, next) => {
     return acc + next.revenue;
   };
-  var revenueThis = revenue.filter((x) => x.revenue_year == 2021);
-  var revenueLast = revenue.filter((x) => x.revenue_year == 2020);
-  var totalRevenueThis = revenueThis.reduce(sum, 0);
-  var totalRevenueLast = revenueLast.reduce(sum, 0);
-  return ((totalRevenueThis / totalRevenueLast) * 100).toFixed(2);
-  // {
-  //   country: "Taiwan";
-  //   date: "2016-01-01";
-  //   revenue: 5867232000;
-  //   revenue_month: 12;
-  //   revenue_year: 2015;
-  //   stock_id: "1102";
-  // }
+  var rThis = revenue.find((x) => x.year == 2021).data;
+  var rLast = revenue.find((x) => x.year == 2020).data;
+  var totalThis = rThis.reduce(sum, 0);
+  var totalLast = rLast.reduce(sum, 0);
+  return ((totalThis / totalLast) * 100).toFixed(2);
 }
