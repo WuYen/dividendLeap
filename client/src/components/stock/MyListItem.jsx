@@ -1,6 +1,7 @@
 import React from "react";
-import { Box, Grid, Text } from "@chakra-ui/react";
+import { Box, Grid, Text, IconButton } from "@chakra-ui/react";
 import { stockList } from "../../utilities";
+import { MinusIcon } from "@chakra-ui/icons";
 
 export default function MyListItem(props) {
   const { item, active, onSelect, onRemove, kd, enableDelete } = props;
@@ -10,7 +11,14 @@ export default function MyListItem(props) {
   } else {
     const name = `${item.stockNo} ${info[1]}`;
     return (
-      <Grid templateColumns="1fr auto" gap={2} alignItems="center">
+      <Grid
+        templateColumns="1fr auto"
+        gap={2}
+        alignItems="center"
+        _hover={{ backgroundColor: "gray.100" }}
+        px="2"
+        borderBottom={"1px dashed #CBD5E0"}
+      >
         <Box
           color={active ? "teal.500" : "grey.500"}
           onClick={() => {
@@ -18,7 +26,6 @@ export default function MyListItem(props) {
           }}
           width="100%"
           cursor="pointer"
-          _hover={{ backgroundColor: "gray.100" }}
           paddingY="1"
         >
           <Text>{name}</Text>
@@ -28,17 +35,17 @@ export default function MyListItem(props) {
           </Box>
         </Box>
         {enableDelete && (
-          <Text
-            paddingY="1"
-            cursor="pointer"
-            _hover={{ backgroundColor: "red.100" }}
+          <IconButton
+            colorScheme="teal"
+            _focus={{ outline: "none" }}
+            rounded="100"
             onClick={() => {
               window.confirm("確認刪除: " + name) == true && onRemove(item._id);
             }}
-            textAlign="end"
-          >
-            刪除
-          </Text>
+            size="xs"
+            variant="outline"
+            icon={<MinusIcon />}
+          />
         )}
       </Grid>
     );
