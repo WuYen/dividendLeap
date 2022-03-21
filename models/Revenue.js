@@ -23,7 +23,7 @@ const Model = mongoose.model(
 
 async function getData(query) {
   let data = await Model.find(query).exec();
-  if (!data) {
+  if (!data || data.length == 0) {
     let rawData = await provider.getData({ year: new Date().getFullYear(), stockNo: query.stockNo }); //一次抓五年
     let entities = provider.processData(query.stockNo, rawData);
     data = await Model.insertMany(entities);
