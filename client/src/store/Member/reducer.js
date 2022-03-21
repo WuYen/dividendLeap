@@ -1,5 +1,5 @@
 import * as ACTION_TYPES from "./actionType";
-import auth from "../../utils/auth";
+import { auth } from "../../utilities";
 
 export const initialState = {
   account: auth.context.account,

@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import io from "socket.io-client";
-import { socketAPI, auth } from "../utils";
+import { socketAPI, auth } from "../utilities";
 
 let socketInstance = null;
 

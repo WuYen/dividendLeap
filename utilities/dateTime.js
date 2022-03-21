@@ -58,6 +58,7 @@ function getMonthRange(n = 1) {
   return [toDateString(start), toDateString(end)];
 }
 
+/** 取得yyyymmdd */
 function toDateString(date) {
   const { year, month, day } = getDateFragment(date);
   return `${year}${month}${day}`;

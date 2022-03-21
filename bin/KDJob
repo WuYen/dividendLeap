@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const KDJob = require("../KDJob");
+const KDJob = require("../jobs/KDJob");
 const { mongooseQuickSetup } = require("../utilities/helper");
 
 mongooseQuickSetup(async () => {

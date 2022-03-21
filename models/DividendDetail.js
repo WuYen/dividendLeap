@@ -61,3 +61,24 @@ module.exports = Model;
 module.exports.getData = getData;
 module.exports.getByRange = getByRange;
 module.exports.reset = reset;
+
+//Combine DividendDetail and DividendInfoV2 to single model
+// 除息年度
+// 除息日期
+// 除權息前股價
+// 填息天數
+// 填息日期
+
+// EPS
+// 現金股利
+// 分配率
+// 現金殖利率
+
+// 公積股利
+// 公積+現金股利
+// 公積+現金股利合計殖利率
+
+// 股票股利
+// 股票殖利率
+
+// 合計殖利率
