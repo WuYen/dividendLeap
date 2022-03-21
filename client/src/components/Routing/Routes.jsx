@@ -9,7 +9,7 @@ import {
   MyStockContainer,
   NewsContainer,
   ToolContainer,
-} from "../containers";
+} from "../container";
 
 export default function Routing(props) {
   return (

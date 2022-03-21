@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { openModalDialog, closeModalDialog } from "../stores/ModalDialog/action";
+import { openModalDialog, closeModalDialog } from "../store/ModalDialog/action";
 
 export default function useModalDialog(props) {
   const dispatch = useDispatch();

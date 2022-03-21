@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import { Provider } from "react-redux";
-import store from "./stores/store";
+import store from "./store/store";
 
 import Header from "./components/header/Header";
 import Routes from "./components/routing/Routes";

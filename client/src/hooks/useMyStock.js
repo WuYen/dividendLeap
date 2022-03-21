@@ -6,7 +6,7 @@ import {
   removeMyStockSuccess,
   fetchMyStockSuccess,
   fetchMyTypesSuccess,
-} from "../stores/Member/action";
+} from "../store/Member/action";
 
 const compare = (next, prev) => next === prev;
 

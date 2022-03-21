@@ -17,7 +17,7 @@ client
         └───/container      # Fetch data and palce layout to build page
         └───/..             # Component that categorize by function
     └───/hooks              # All custom hooks 
-    └───/stores             # Global Redux store and reduce per module
+    └───/store              # Global Redux store and reduce per module
     └───/utilities          # Utilities, helpers, constants, and the like
     └───App.js              # Root component
     └───index.js            # Entry point

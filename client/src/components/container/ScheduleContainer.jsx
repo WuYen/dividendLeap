@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Box, Grid } from "@chakra-ui/react";
 import Loading from "../commons/Loading";
 import { ScheduleAPI, tryParseFloat } from "../../utilities";
-import { getScheduleSuccess, toggleFilter } from "../../stores/Dividend/action";
+import { getScheduleSuccess, toggleFilter } from "../../store/Dividend/action";
 import ScheduleTable from "../schedule/ScheduleTable";
 import ControlPanel from "../schedule/ControlPanel";
 import { useRouter } from "../../hooks";

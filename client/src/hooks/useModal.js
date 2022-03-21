@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { showModal, hideModal } from "../stores/ModalDialog/action";
+import { showModal, hideModal } from "../store/ModalDialog/action";
 
 export default function useModal(props) {
   const dispatch = useDispatch();

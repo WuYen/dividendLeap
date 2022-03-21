@@ -9,7 +9,7 @@ import {
   ModalCloseButton,
 } from "@chakra-ui/react";
 import { connect } from "react-redux";
-import { hideModal } from "../../stores/ModalDialog/action";
+import { hideModal } from "../../store/ModalDialog/action";
 
 function ModalContainer(props) {
   const { title = "", isOpen, content, footer } = props;
