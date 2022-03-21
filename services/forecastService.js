@@ -31,7 +31,7 @@ async function predictCache(stockNo = "2451", targetYear) {
   if (!cache || isExpire) {
     let data = await predictV2(stockNo, targetYear);
     cache = { stockNo, priceDate: latestTradDate, payload: data };
-    ForecastCacheModel.saveData(cache); // no need to wait
+    await ForecastCacheModel.saveData(cache);
   }
 
   return cache.payload;
