@@ -9,8 +9,8 @@ export default function InfoPanel(props) {
     { value: "", text: "去年同期EPS" },
     { value: "", text: "去年全年EPS" },
     { value: "", text: "去年全年獲利" },
-    { value: stockDetail.rateAvg5 + "%", text: "5年平均殖利率" },
-    { value: stockDetail.rateAvg10 + "%", text: "10年平均殖利率" },
+    { value: isNaN(stockDetail.rateAvg5) ? "--" : stockDetail.rateAvg5 + "%", text: "5年平均殖利率" },
+    { value: isNaN(stockDetail.rateAvg10) ? "--" : stockDetail.rateAvg10 + "%", text: "10年平均殖利率" },
   ];
 
   let total = [0, 0];
@@ -25,7 +25,7 @@ export default function InfoPanel(props) {
 
   displayData[0].value = ((total[0] / total[1]) * 100).toFixed(2) + "%";
   displayData[1].value = ((parseFloat(thisYear.totalEps) / parseFloat(lastYear.totalEps)) * 100).toFixed(2) + "%";
-  displayData[2].value = getRevenueRate(revenue) + "%";
+  displayData[2].value = getRevenueRate(revenue);
 
   return (
     <Box display="flex" m="2">
@@ -45,13 +45,16 @@ export default function InfoPanel(props) {
   );
 }
 
-function getRevenueRate(revenue) {
+function getRevenueRate(revenue = []) {
   var sum = (acc, next) => {
     return acc + next.revenue;
   };
-  var rThis = revenue.find((x) => x.year == 2021).data;
-  var rLast = revenue.find((x) => x.year == 2020).data;
-  var totalThis = rThis.reduce(sum, 0);
-  var totalLast = rLast.reduce(sum, 0);
-  return ((totalThis / totalLast) * 100).toFixed(2);
+  var rThis = revenue.find((x) => x.year == 2021)?.data;
+  var rLast = revenue.find((x) => x.year == 2020)?.data;
+  if (rThis && rLast) {
+    var totalThis = rThis.reduce(sum, 0);
+    var totalLast = rLast.reduce(sum, 0);
+    return ((totalThis / totalLast) * 100).toFixed(2) + "%";
+  }
+  return "--";
 }
