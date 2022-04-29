@@ -1,12 +1,12 @@
-const mongoose = require("mongoose");
-const provider = require("../providers/schedule.twse");
+const mongoose = require('mongoose');
+const provider = require('../providers/schedule.twse');
 
 // Schema
 const Schema = mongoose.Schema;
 
 // Model
 const Model = mongoose.model(
-  "Schedule", // dividend schedule
+  'Schedule', // dividend schedule
   new Schema({
     stockNo: String,
     stockName: String,
@@ -22,7 +22,7 @@ const Model = mongoose.model(
 
 async function getData(query = {}) {
   let data = await Model.find(query).exec();
-  if (data.length == 0 && query.sourceType == "除權息預告") {
+  if (data.length == 0 && query.sourceType == '除權息預告') {
     data = await updateAll();
   }
   return data;
@@ -34,7 +34,7 @@ async function getData(query = {}) {
  */
 async function updateAll() {
   let entity = await provider.getData();
-  await Model.deleteMany({ sourceType: "除權息預告" });
+  await Model.deleteMany({ sourceType: '除權息預告' });
   let data = await Model.insertMany(entity);
   return data;
 }
@@ -44,13 +44,18 @@ async function getByStockNo(stockNo) {
   return data;
 }
 
+async function getByQuery(query) {
+  let data = await Model.find(query).exec();
+  return data;
+}
+
 async function getTypes() {
-  let data = await Model.distinct("sourceType");
+  let data = await Model.distinct('sourceType');
   return data;
 }
 
 async function getDistinctNo() {
-  let data = await Model.distinct("stockNo");
+  let data = await Model.distinct('stockNo');
   return data;
 }
 
@@ -60,3 +65,4 @@ module.exports.getDistinctNo = getDistinctNo;
 module.exports.updateAll = updateAll;
 module.exports.getByStockNo = getByStockNo;
 module.exports.getTypes = getTypes;
+module.exports.getByQuery = getByQuery;
