@@ -1,8 +1,8 @@
-const DayInfoModel = require("../models/DayInfo");
-const ScheduleModel = require("../models/Schedule");
-const StockListModel = require("../models/StockList");
-const ForecastCacheModel = require("../models/ForecastCache");
-const { today, latestTradeDate } = require("../utilities/helper");
+const DayInfoModel = require('../models/DayInfo');
+const ScheduleModel = require('../models/Schedule');
+const StockListModel = require('../models/StockList');
+const ForecastCacheModel = require('../models/ForecastCache');
+const { today, latestTradeDate } = require('../utilities/helper');
 
 function afterDate(date) {
   return (item) => item.date > date;
@@ -27,7 +27,7 @@ async function getSchedule(query) {
   ]);
 
   const filtedData =
-    query.sourceType == "除權息預告" ? schedule.filter(afterDate(today())).sort(byTime) : schedule.sort(byTime);
+    query.sourceType == '除權息預告' ? schedule.filter(afterDate(today())).sort(byTime) : schedule.sort(byTime);
 
   const result = filtedData.map((x) => {
     let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
@@ -57,7 +57,7 @@ async function getScheduleV2(query) {
   ]);
 
   const filtedData =
-    query.sourceType == "除權息預告" ? schedule.filter(afterDate(today())).sort(byTime) : schedule.sort(byTime);
+    query.sourceType == '除權息預告' ? schedule.filter(afterDate(today())).sort(byTime) : schedule.sort(byTime);
 
   var stockNoList = filtedData.map((x) => x.stockNo);
   const cacheList = await ForecastCacheModel.find({
@@ -70,7 +70,7 @@ async function getScheduleV2(query) {
     let data = cacheList.find((y) => y.stockNo == x.stockNo);
     let result = { meta: {}, dividend: {}, info: [] };
     if (data) {
-      const { baseInfo, dayInfo } = data.payload;
+      const { baseInfo, dayInfo, dividend } = data.payload;
       result.meta = {
         no: baseInfo.stockNo,
         nm: baseInfo.stockName,
@@ -78,6 +78,17 @@ async function getScheduleV2(query) {
         price: dayInfo.price, // "當前股價"
         priceDt: dayInfo.date, // "當前股價 取樣日期"
       };
+
+      try {
+        result.dividend = {
+          date: dividend.date,
+          cash: dividend.cashDividen,
+          rate: ((dividend.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%"
+        };
+      } catch (error) {
+        console.log('今年殖利率計算失敗: ' + result.meta.no, error);
+        result.dividend = {};
+      }
     } else {
       result.meta = {
         no: x.stockNo,
@@ -88,7 +99,7 @@ async function getScheduleV2(query) {
         let stockInfo = StockListModel.getInfoByNo(x.stockNo);
         result.meta.industry = stockInfo.industry;
       } catch (error) {
-        console.log("industry error", x.stockNo, error);
+        console.log('industry error', x.stockNo, error);
       }
 
       let dayInfo = dayInfoCollection.find((y) => y.stockNo == x.stockNo);
@@ -96,17 +107,18 @@ async function getScheduleV2(query) {
         result.meta.price = dayInfo.price; // "當前股價"
         result.meta.priceDt = dayInfo.date; // "當前股價 取樣日期"
       }
-    }
-
-    try {
-      result.dividend = {
-        date: x.date,
-        cash: x.cashDividen,
-        rate: ((x.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%"
-      };
-    } catch (error) {
-      console.log("今年殖利率計算失敗", error);
-      result.dividend = {};
+      try {
+        if (query.sourceType == '除權息預告') {
+          result.dividend = {
+            date: x.date,
+            cash: x.cashDividen,
+            rate: ((x.cashDividen / dayInfo.price) * 100).toFixed(2), //"今年殖利率%"
+          };
+        }
+      } catch (error) {
+        console.log('今年殖利率計算失敗: ' + result.meta.no, error);
+        result.dividend = {};
+      }
     }
 
     try {
@@ -124,19 +136,19 @@ async function getScheduleV2(query) {
         });
 
         result.info = [
-          { key: "eps1", value: ((total[0] / total[1]) * 100).toFixed(2), text: "去年同期EPS" },
+          { key: 'eps1', value: ((total[0] / total[1]) * 100).toFixed(2), text: '去年同期EPS' },
           {
-            key: "eps2",
+            key: 'eps2',
             value: ((parseFloat(thisYear.totalEps) / parseFloat(lastYear.totalEps)) * 100).toFixed(2),
-            text: "去年全年EPS",
+            text: '去年全年EPS',
           },
-          { key: "revenue", value: getRevenueRate(data.payload.revenue), text: "去年全年獲利" },
-          { key: "yield5", value: data.payload.stockDetail.rateAvg5, text: "5年平均殖利率" },
-          { key: "yield10", value: data.payload.stockDetail.rateAvg10, text: "10年平均殖利率" },
+          { key: 'revenue', value: getRevenueRate(data.payload.revenue), text: '去年全年獲利' },
+          { key: 'yield5', value: data.payload.stockDetail.rateAvg5, text: '5年平均殖利率' },
+          { key: 'yield10', value: data.payload.stockDetail.rateAvg10, text: '10年平均殖利率' },
         ];
       }
     } catch (error) {
-      console.log("eps related info error", error);
+      console.log('eps related info error', error);
       result.info = [];
     }
 
