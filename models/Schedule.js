@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const provider = require('../providers/schedule.twse');
+const provider0056 = require('../providers/schedule.0056');
 
 // Schema
 const Schema = mongoose.Schema;
@@ -39,6 +40,13 @@ async function updateAll() {
   return data;
 }
 
+async function update0056() {
+  let entity = await provider0056.getData();
+  await Model.deleteMany({ sourceType: '0056成份' });
+  let data = await Model.insertMany(entity);
+  return data;
+}
+
 async function getByStockNo(stockNo) {
   let data = await Model.findOne({ stockNo }).exec();
   return data;
@@ -66,3 +74,4 @@ module.exports.updateAll = updateAll;
 module.exports.getByStockNo = getByStockNo;
 module.exports.getTypes = getTypes;
 module.exports.getByQuery = getByQuery;
+module.exports.update0056 = update0056;

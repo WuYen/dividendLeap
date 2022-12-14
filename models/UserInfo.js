@@ -1,16 +1,17 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Schema
 const Schema = mongoose.Schema;
 
 // Model
 const Model = mongoose.model(
-  "UserInfo",
+  'UserInfo',
   new Schema({
     account: String,
     password: String,
     name: String,
     email: String,
+    lineToken: String,
     auth: {
       role: Number,
       twofe: Object,

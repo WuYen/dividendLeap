@@ -1,12 +1,13 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-router.use("/api/schedule", require("./scheduleController"));
-router.use("/api/my", require("./myController"));
-router.use("/api/news", require("./newsController"));
-router.use("/api/user", require("./userController"));
-router.use("/api/tool", require("./toolController"));
-router.use("/api/forecast", require("./forecastController"));
+router.use('/api/schedule', require('./scheduleController'));
+router.use('/api/my', require('./myController'));
+router.use('/api/news', require('./newsController'));
+router.use('/api/user', require('./userController'));
+router.use('/api/tool', require('./toolController'));
+router.use('/api/forecast', require('./forecastController'));
+router.use('/line', require('./lineController'));
 
 //error handling middleware
 router.use(function (err, req, res, next) {

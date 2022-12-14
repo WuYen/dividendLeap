@@ -157,8 +157,24 @@ function resetDataSource(stockNo) {
   return 'success';
 }
 
+async function rebuildData() {
+  let data = await ForecastCacheModel.distinct('stockNo');
+  let targetYear = '2022';
+  let count = 0;
+
+  for (let index = 0; index < data.length; index++) {
+    const stockNo = data[index];
+    let payload = await predictCache(stockNo, targetYear);
+    delay(getRandomIntInclusive(600, 1600));
+    console.log('rebuildData:' + stockNo + ' finish');
+    count++;
+  }
+  return count;
+}
+
 module.exports = {
   predict: predictCache,
   resetDataSource: resetDataSource,
   predictV2: predictV2,
+  rebuildData,
 };
