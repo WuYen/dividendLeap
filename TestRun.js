@@ -2,7 +2,7 @@ const { mongooseQuickSetup, latestTradeDate, today } = require('./utilities/help
 
 const provider = require('./providers/kd.goodinfo');
 const fugleProvider = require('./providers/fugle.api');
-const RevenueModel = require('./models/Revenue');
+const ScheduleModel = require('./models/Schedule');
 const MyStockModel = require('./models/MyStock');
 const EpsModel = require('./models/Eps');
 const dayInfoService = require('./services/dayInfoService');
@@ -13,12 +13,12 @@ const stockNo = '2451'; //創見
 
 mongooseQuickSetup(async () => {
   //  let result = await EpsModel.resetAll();
-
-  const result = await forecastService.rebuildData();
+  const result = await ScheduleModel.update0056();
+  // const result = await forecastService.rebuildData();
   // const result = await EpsModel.find({
   //   updateDate: '20220531',
   // }).distinct('stockNo');
-  console.log('forecastService rebuild count', result);
+  console.log('ScheduleModel update0056', result);
 });
 // fugleProvider.chartSocket();
 
